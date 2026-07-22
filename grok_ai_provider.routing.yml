@@ -1,0 +1,7 @@
+grok_ai_provider.settings_form:
+  path: '/admin/config/ai/providers/grok'
+  defaults:
+    _form: '\Drupal\grok_ai_provider\Form\GrokAiProviderConfigForm'
+    _title: 'Set up Grok authentication'
+  requirements:
+    _permission: 'administer ai providers'

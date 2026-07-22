@@ -1,0 +1,5 @@
+grok_ai_provider.settings_menu:
+  title: 'Grok authentication'
+  description: 'Configure access to the xAI API.'
+  route_name: grok_ai_provider.settings_form
+  parent: ai.admin_providers
