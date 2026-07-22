@@ -59,6 +59,44 @@ final class GrokAiProviderTest extends TestCase {
 
     self::assertArrayHasKey('reasoning_effort', $provider->getModelSettings('grok-4.5-latest'));
     self::assertArrayNotHasKey('reasoning_effort', $provider->getModelSettings('grok-3-mini'));
+    self::assertArrayNotHasKey('web_search', $provider->getModelSettings('grok-3-mini', [
+      'web_search' => ['type' => 'boolean'],
+    ]));
+  }
+
+  /**
+   * Tests Responses text, metadata, citations, and usage normalization.
+   */
+  public function testNormalizesResponsesOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeResponsesOutput');
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'id' => 'resp_123',
+      'status' => 'completed',
+      'output' => [
+        ['type' => 'web_search_call', 'id' => 'search_1'],
+        [
+          'type' => 'message',
+          'content' => [[
+            'type' => 'output_text',
+            'text' => 'A researched answer.',
+            'annotations' => [['type' => 'url_citation', 'url' => 'https://example.com']],
+          ]],
+        ],
+      ],
+      'usage' => [
+        'input_tokens' => 10,
+        'output_tokens' => 7,
+        'total_tokens' => 17,
+        'output_tokens_details' => ['reasoning_tokens' => 3],
+        'input_tokens_details' => ['cached_tokens' => 2],
+      ],
+    ]);
+
+    self::assertSame('A researched answer.', $output->getNormalized()->getText());
+    self::assertSame('resp_123', $output->getMetadata()['response_id']);
+    self::assertSame('https://example.com', $output->getMetadata()['annotations'][0]['url']);
+    self::assertSame(17, $output->getTokenUsage()->total);
+    self::assertSame(3, $output->getTokenUsage()->reasoning);
   }
 
   /**

@@ -8,3 +8,45 @@ grok_ai_provider.settings:
     host:
       type: string
       label: 'The xAI API base URL'
+    transport:
+      type: string
+      label: 'Transport selection mode'
+    store_responses:
+      type: boolean
+      label: 'Allow xAI to store Responses API requests'
+    hosted_tools:
+      type: mapping
+      label: 'Permitted xAI hosted tools'
+      mapping:
+        web_search:
+          type: boolean
+          label: 'Permit Web Search'
+        x_search:
+          type: boolean
+          label: 'Permit X Search'
+        code_interpreter:
+          type: boolean
+          label: 'Permit Code Interpreter'
+        file_search:
+          type: boolean
+          label: 'Permit Collections Search'
+        mcp:
+          type: boolean
+          label: 'Permit remote MCP tools'
+    mcp_servers:
+      type: sequence
+      label: 'Allowlisted remote MCP servers'
+      sequence:
+        type: mapping
+        mapping:
+          label:
+            type: string
+            label: 'Server label'
+          url:
+            type: string
+            label: 'Server URL'
+          allowed_tools:
+            type: sequence
+            label: 'Allowed MCP tool names'
+            sequence:
+              type: string

@@ -66,3 +66,114 @@ chat:
       type: 'integer'
       default: 0
       required: false
+    use_responses_api:
+      label: 'Use Responses API'
+      description: 'Use xAI Responses even when no hosted tool is selected.'
+      type: 'boolean'
+      default: false
+      required: false
+    web_search:
+      label: 'Web Search'
+      description: 'Allow Grok to search and browse the web. This must also be permitted in the provider settings.'
+      type: 'boolean'
+      default: false
+      required: false
+    web_allowed_domains:
+      label: 'Allowed web domains'
+      description: 'Optional comma-separated domain allowlist, with a maximum of five domains.'
+      type: 'string'
+      default: ''
+      required: false
+    web_excluded_domains:
+      label: 'Excluded web domains'
+      description: 'Optional comma-separated domain denylist, with a maximum of five domains. Do not combine with allowed domains.'
+      type: 'string'
+      default: ''
+      required: false
+    web_image_search:
+      label: 'Web image search'
+      description: 'Allow Web Search to find images for the response.'
+      type: 'boolean'
+      default: false
+      required: false
+    web_image_understanding:
+      label: 'Web image understanding'
+      description: 'Allow Grok to inspect images found while browsing.'
+      type: 'boolean'
+      default: false
+      required: false
+    x_search:
+      label: 'X Search'
+      description: 'Allow Grok to search X. This must also be permitted in the provider settings.'
+      type: 'boolean'
+      default: false
+      required: false
+    x_allowed_handles:
+      label: 'Allowed X handles'
+      description: 'Optional comma-separated X handle allowlist.'
+      type: 'string'
+      default: ''
+      required: false
+    x_excluded_handles:
+      label: 'Excluded X handles'
+      description: 'Optional comma-separated X handle denylist.'
+      type: 'string'
+      default: ''
+      required: false
+    x_from_date:
+      label: 'X search start date'
+      description: 'Optional inclusive date in YYYY-MM-DD format.'
+      type: 'string'
+      default: ''
+      required: false
+    x_to_date:
+      label: 'X search end date'
+      description: 'Optional inclusive date in YYYY-MM-DD format.'
+      type: 'string'
+      default: ''
+      required: false
+    x_image_understanding:
+      label: 'X image understanding'
+      description: 'Allow Grok to inspect images found on X.'
+      type: 'boolean'
+      default: false
+      required: false
+    x_video_understanding:
+      label: 'X video understanding'
+      description: 'Allow Grok to inspect videos found on X.'
+      type: 'boolean'
+      default: false
+      required: false
+    code_interpreter:
+      label: 'Code Interpreter'
+      description: 'Allow Grok to execute Python in xAI’s isolated environment.'
+      type: 'boolean'
+      default: false
+      required: false
+    file_search:
+      label: 'Collections Search'
+      description: 'Allow Grok to search the configured xAI collections.'
+      type: 'boolean'
+      default: false
+      required: false
+    collection_ids:
+      label: 'Collection IDs'
+      description: 'Comma-separated xAI collection IDs available to this request.'
+      type: 'string'
+      default: ''
+      required: false
+    file_search_max_results:
+      label: 'Maximum collection results'
+      description: 'Maximum number of collection search results.'
+      type: 'integer'
+      default: 10
+      required: false
+      constraints:
+        min: 1
+        max: 50
+    mcp_servers:
+      label: 'Remote MCP servers'
+      description: 'Comma-separated labels of allowlisted MCP servers to expose to Grok.'
+      type: 'string'
+      default: ''
+      required: false

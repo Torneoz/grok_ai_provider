@@ -1,0 +1,4 @@
+services:
+  grok_ai_provider.responses_client:
+    class: Drupal\grok_ai_provider\Service\XaiResponsesClient
+    arguments: ['@http_client']

@@ -20,12 +20,27 @@ discovery; it does not make a billable chat request during configuration.
 - Drupal AI function tools
 - JSON and structured responses on supported models
 - Token usage and rate-limit metadata exposed by the API
+- Automatic dual transport: ordinary requests use Chat Completions and
+  hosted-tool requests use the Responses API
+- Opt-in xAI Web Search, X Search, Code Interpreter, Collections Search,
+  and allowlisted remote MCP servers
+- Responses citations, response IDs, hosted-tool output, and reasoning usage
+  preserved in `ChatOutput` metadata and raw output
 
 The API base URL defaults to `https://api.x.ai/v1` and can be changed in the
 advanced settings for testing or compatible gateways.
 
-## Current scope
+## Hosted tools
 
-This version does not expose xAI Responses API features such as hosted web or
-X search, citations, code interpreter, collections, stateful response IDs,
-image generation, or voice APIs.
+Hosted tools must first be permitted at site level on the provider settings
+form. They are still disabled for individual requests until selected in that
+request's model configuration. Remote MCP entries require HTTPS and an
+explicit allowed-tools list.
+
+Responses are not stored by xAI unless an administrator opts in. Drupal
+function tools continue to use Chat Completions so the existing Drupal AI tool
+execution loop remains unchanged.
+
+Streaming Responses requests, stateful response continuation, collection/file
+management, image generation, and voice APIs are not yet included. Streaming
+ordinary chat continues to work through Chat Completions.

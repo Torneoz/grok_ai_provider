@@ -1,2 +1,11 @@
 api_key: ''
 host: 'https://api.x.ai/v1'
+transport: auto
+store_responses: false
+hosted_tools:
+  web_search: false
+  x_search: false
+  code_interpreter: false
+  file_search: false
+  mcp: false
+mcp_servers: []

@@ -1,0 +1,34 @@
+<?php
+
+/**
+ * @file
+ * Install and update hooks for the Grok AI Provider module.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Adds Responses transport and hosted-tool configuration defaults.
+ */
+function grok_ai_provider_update_10001(): void {
+  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+  if ($config->get('transport') === NULL) {
+    $config->set('transport', 'auto');
+  }
+  if ($config->get('store_responses') === NULL) {
+    $config->set('store_responses', FALSE);
+  }
+  if ($config->get('hosted_tools') === NULL) {
+    $config->set('hosted_tools', [
+      'web_search' => FALSE,
+      'x_search' => FALSE,
+      'code_interpreter' => FALSE,
+      'file_search' => FALSE,
+      'mcp' => FALSE,
+    ]);
+  }
+  if ($config->get('mcp_servers') === NULL) {
+    $config->set('mcp_servers', []);
+  }
+  $config->save(TRUE);
+}
