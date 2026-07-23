@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\grok_ai_provider\Form;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\ai\AiProviderPluginManager;
@@ -18,12 +20,27 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private const CONFIG_NAME = 'grok_ai_provider.settings';
 
   /**
+   * The AI provider plugin manager.
+   */
+  private readonly AiProviderPluginManager $aiProviderManager;
+
+  /**
+   * The Key repository.
+   */
+  private readonly KeyRepositoryInterface $keyRepository;
+
+  /**
    * Constructs the configuration form.
    */
   public function __construct(
-    private readonly AiProviderPluginManager $aiProviderManager,
-    private readonly KeyRepositoryInterface $keyRepository,
+    ConfigFactoryInterface $config_factory,
+    TypedConfigManagerInterface $typed_config_manager,
+    AiProviderPluginManager $ai_provider_manager,
+    KeyRepositoryInterface $key_repository,
   ) {
+    parent::__construct($config_factory, $typed_config_manager);
+    $this->aiProviderManager = $ai_provider_manager;
+    $this->keyRepository = $key_repository;
   }
 
   /**
@@ -31,6 +48,8 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public static function create(ContainerInterface $container): static {
     return new static(
+      $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('ai.provider'),
       $container->get('key.repository'),
     );
@@ -66,6 +85,12 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
+      '#open' => FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
     ];
     $form['advanced']['host'] = [
       '#type' => 'url',
@@ -111,8 +136,15 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $selected_default = (string) array_key_first($models);
     }
     $form['connection'] = [
-      '#type' => 'container',
+      '#type' => 'details',
+      '#title' => $this->t('Test connection'),
+      '#open' => TRUE,
       '#attributes' => ['id' => 'grok-connection-wrapper'],
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
     ];
     $form['connection']['test_connection'] = [
       '#type' => 'submit',
