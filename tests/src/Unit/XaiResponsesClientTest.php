@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok_ai_provider\Unit;
 
+use Drupal\ai\Exception\AiAccessDeniedException;
+use Drupal\ai\Exception\AiBadRequestException;
+use Drupal\ai\Exception\AiRateLimitException;
+use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\grok_ai_provider\Service\XaiResponsesClient;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -37,6 +43,53 @@ final class XaiResponsesClientTest extends TestCase {
     );
 
     self::assertSame('resp_123', $response['id']);
+  }
+
+  /**
+   * Tests provider-neutral HTTP exception mapping.
+   *
+   * @dataProvider errorMappingProvider
+   */
+  public function testMapsHttpErrors(int $status, string $expected_exception): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->method('request')->willThrowException(new RequestException(
+      'Request failed',
+      new Request('POST', 'https://api.x.ai/v1/responses'),
+      new Response($status, [], '{"error":{"message":"Useful API detail"}}'),
+    ));
+
+    $this->expectException($expected_exception);
+    $this->expectExceptionMessage('Useful API detail');
+    (new XaiResponsesClient($http_client))->create(
+      'https://api.x.ai/v1',
+      'secret',
+      ['model' => 'grok-4.5'],
+    );
+  }
+
+  /**
+   * Provides HTTP statuses and their Drupal AI exceptions.
+   */
+  public static function errorMappingProvider(): array {
+    return [
+      'bad request' => [400, AiBadRequestException::class],
+      'unauthorized' => [401, AiAccessDeniedException::class],
+      'forbidden' => [403, AiAccessDeniedException::class],
+      'rate limited' => [429, AiRateLimitException::class],
+      'server error' => [500, AiResponseErrorException::class],
+    ];
+  }
+
+  /**
+   * Tests that an API key is mandatory.
+   */
+  public function testRejectsMissingApiKey(): void {
+    $this->expectException(AiAccessDeniedException::class);
+    (new XaiResponsesClient($this->createMock(ClientInterface::class)))->create(
+      'https://api.x.ai/v1',
+      '',
+      ['model' => 'grok-4.5'],
+    );
   }
 
 }

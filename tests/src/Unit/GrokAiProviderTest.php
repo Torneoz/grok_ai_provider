@@ -95,8 +95,43 @@ final class GrokAiProviderTest extends TestCase {
     self::assertSame('A researched answer.', $output->getNormalized()->getText());
     self::assertSame('resp_123', $output->getMetadata()['response_id']);
     self::assertSame('https://example.com', $output->getMetadata()['annotations'][0]['url']);
+    self::assertSame(['https://example.com'], $output->getMetadata()['citations']);
     self::assertSame(17, $output->getTokenUsage()->total);
     self::assertSame(3, $output->getTokenUsage()->reasoning);
+  }
+
+  /**
+   * Tests that incomplete Responses output is never presented as successful.
+   */
+  public function testRejectsIncompleteResponse(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeResponsesOutput');
+    $this->expectException(\Drupal\ai\Exception\AiResponseErrorException::class);
+    $this->expectExceptionMessage('incomplete');
+    $method->invoke($this->newProviderWithoutConstructor(), [
+      'id' => 'resp_incomplete',
+      'status' => 'incomplete',
+      'incomplete_details' => ['reason' => 'max_output_tokens'],
+      'output' => [],
+    ]);
+  }
+
+  /**
+   * Tests strict date, domain, and X handle validation helpers.
+   */
+  public function testFilterValueValidation(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $date_method = new \ReflectionMethod(GrokAiProvider::class, 'isIsoDate');
+    $domain_method = new \ReflectionMethod(GrokAiProvider::class, 'isValidDomain');
+    $handles_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeXHandles');
+
+    self::assertTrue($date_method->invoke($provider, '2026-07-24'));
+    self::assertFalse($date_method->invoke($provider, '2026-02-30'));
+    self::assertTrue($domain_method->invoke($provider, 'example.com'));
+    self::assertFalse($domain_method->invoke($provider, 'https://example.com/path'));
+    self::assertSame(['xai', 'open_ai'], $handles_method->invoke($provider, '@xai, open_ai'));
+
+    $this->expectException(\Drupal\ai\Exception\AiBadRequestException::class);
+    $handles_method->invoke($provider, 'invalid-handle');
   }
 
   /**

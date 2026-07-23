@@ -1,6 +1,8 @@
 api_key: ''
 host: 'https://api.x.ai/v1'
+default_model: 'grok-4.5-latest'
 transport: auto
+request_timeout: 300
 store_responses: false
 hosted_tools:
   web_search: false

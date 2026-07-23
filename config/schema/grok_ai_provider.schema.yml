@@ -8,9 +8,15 @@ grok_ai_provider.settings:
     host:
       type: string
       label: 'The xAI API base URL'
+    default_model:
+      type: string
+      label: 'Default Grok chat model'
     transport:
       type: string
       label: 'Transport selection mode'
+    request_timeout:
+      type: integer
+      label: 'Responses API request timeout in seconds'
     store_responses:
       type: boolean
       label: 'Allow xAI to store Responses API requests'

@@ -91,6 +91,63 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#default_value' => (bool) $config->get('store_responses'),
       '#description' => $this->t('Disabled by default. When disabled, the provider sends store=false and does not use server-side conversation continuation.'),
     ];
+    $form['advanced']['request_timeout'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Responses request timeout'),
+      '#default_value' => (int) ($config->get('request_timeout') ?: 300),
+      '#min' => 10,
+      '#max' => 3600,
+      '#field_suffix' => $this->t('seconds'),
+      '#required' => TRUE,
+    ];
+
+    $models = (array) $form_state->get('grok_models');
+    $configured_default = (string) ($config->get('default_model') ?: 'grok-4.5-latest');
+    if ($models === []) {
+      $models = [$configured_default => $configured_default];
+    }
+    $selected_default = (string) ($form_state->getValue('default_model') ?: $configured_default);
+    if (!isset($models[$selected_default])) {
+      $selected_default = (string) array_key_first($models);
+    }
+    $form['connection'] = [
+      '#type' => 'container',
+      '#attributes' => ['id' => 'grok-connection-wrapper'],
+    ];
+    $form['connection']['test_connection'] = [
+      '#type' => 'submit',
+      '#name' => 'test_connection',
+      '#value' => $this->t('Test connection and load models'),
+      '#submit' => ['::testConnection'],
+      '#limit_validation_errors' => [
+        ['api_key'],
+        ['host'],
+      ],
+      '#ajax' => [
+        'callback' => '::connectionAjax',
+        'wrapper' => 'grok-connection-wrapper',
+        'progress' => ['type' => 'throbber'],
+      ],
+    ];
+    $form['connection']['default_model'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Default Grok model'),
+      '#options' => $models,
+      '#default_value' => $selected_default,
+      '#description' => $form_state->get('grok_models') === NULL
+        ? $this->t('Test the connection to load the models available to the selected API key.')
+        : $this->t('Used as this provider’s default chat, vision, tools, and structured-output model.'),
+      '#required' => TRUE,
+    ];
+    if ($status = $form_state->get('grok_connection_status')) {
+      $form['connection']['status'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['messages', $status['type'] === 'error' ? 'messages--error' : 'messages--status'],
+        ],
+        'message' => ['#plain_text' => $status['message']],
+      ];
+    }
 
     $permissions = (array) $config->get('hosted_tools');
     $form['hosted_tools'] = [
@@ -131,30 +188,39 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     parent::validateForm($form, $form_state);
+    if (($form_state->getTriggeringElement()['#name'] ?? '') === 'test_connection') {
+      return;
+    }
+    $host = rtrim((string) $form_state->getValue('host'), '/');
+    if (parse_url($host, PHP_URL_SCHEME) !== 'https') {
+      $form_state->setErrorByName('host', $this->t('The API base URL must use HTTPS to protect the API key.'));
+    }
+    if (parse_url($host, PHP_URL_HOST) === NULL || parse_url($host, PHP_URL_USER) !== NULL || parse_url($host, PHP_URL_PASS) !== NULL || parse_url($host, PHP_URL_QUERY) !== NULL || parse_url($host, PHP_URL_FRAGMENT) !== NULL) {
+      $form_state->setErrorByName('host', $this->t('Enter an HTTPS API base URL without credentials, a query, or a fragment.'));
+    }
+    if (!in_array($form_state->getValue('transport'), ['auto', 'chat_completions', 'responses'], TRUE)) {
+      $form_state->setErrorByName('transport', $this->t('Select a valid transport.'));
+    }
     try {
       $form_state->setValue('mcp_servers', $this->parseMcpServers((string) $form_state->getValue('mcp_servers')));
     }
     catch (\InvalidArgumentException $exception) {
       $form_state->setErrorByName('mcp_servers', $exception->getMessage());
     }
-    $key_id = (string) $form_state->getValue('api_key');
-    $key = $this->keyRepository->getKey($key_id);
-    $api_key = $key?->getKeyValue();
-    if (!$api_key) {
-      $form_state->setErrorByName('api_key', $this->t('The selected Key does not contain an API key.'));
+    if ($form_state->hasAnyErrors()) {
       return;
     }
 
-    $host = rtrim((string) $form_state->getValue('host'), '/');
-    /** @var \Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider $provider */
-    $provider = $this->aiProviderManager->createInstance('grok');
-    $provider->setAuthentication($api_key);
-    $provider->setConfiguration(['host' => $host]);
-
     try {
-      if ($provider->getConfiguredModels('chat') === []) {
-        $form_state->setErrorByName('api_key', $this->t('xAI did not return any accessible Grok models for this key.'));
+      $models = $this->discoverModels(
+        (string) $form_state->getValue('api_key'),
+        $host,
+      );
+      $default_model = (string) $form_state->getValue('default_model');
+      if (!isset($models[$default_model])) {
+        $form_state->setErrorByName('default_model', $this->t('Select a model available to the current API key. Test the connection to refresh the model list.'));
       }
+      $form_state->set('grok_models', $models);
     }
     catch (\Throwable $exception) {
       $form_state->setErrorByName('api_key', $this->t('Could not authenticate with xAI: @message', ['@message' => $exception->getMessage()]));
@@ -168,14 +234,97 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $this->config(self::CONFIG_NAME)
       ->set('api_key', $form_state->getValue('api_key'))
       ->set('host', rtrim((string) $form_state->getValue('host'), '/'))
+      ->set('default_model', $form_state->getValue('default_model'))
       ->set('transport', $form_state->getValue('transport'))
+      ->set('request_timeout', max(10, min(3600, (int) $form_state->getValue('request_timeout'))))
       ->set('store_responses', (bool) $form_state->getValue('store_responses'))
       ->set('hosted_tools', array_map('boolval', (array) $form_state->getValue('hosted_tools')))
       ->set('mcp_servers', (array) $form_state->getValue('mcp_servers'))
       ->save();
 
-    $this->aiProviderManager->defaultIfNone('chat', 'grok', 'grok-4.5-latest');
+    $this->aiProviderManager->defaultIfNone('chat', 'grok', (string) $form_state->getValue('default_model'));
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Tests the credentials and rebuilds the available default-model options.
+   */
+  public function testConnection(array &$form, FormStateInterface $form_state): void {
+    try {
+      $models = $this->discoverModels(
+        (string) $form_state->getValue('api_key'),
+        rtrim((string) $form_state->getValue('host'), '/'),
+      );
+      $preferred = $this->preferredModel($models);
+      $form_state->set('grok_models', $models);
+      $form_state->setValue('default_model', $preferred);
+      $form_state->set('grok_connection_status', [
+        'type' => 'status',
+        'message' => (string) $this->formatPlural(
+          count($models),
+          'Connection successful. One Grok model is available.',
+          'Connection successful. @count Grok models are available.',
+        ),
+      ]);
+    }
+    catch (\Throwable $exception) {
+      $form_state->set('grok_models', NULL);
+      $form_state->set('grok_connection_status', [
+        'type' => 'error',
+        'message' => (string) $this->t('Connection failed: @message', ['@message' => $exception->getMessage()]),
+      ]);
+    }
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Returns the AJAX-rebuilt connection controls.
+   */
+  public function connectionAjax(array &$form, FormStateInterface $form_state): array {
+    return $form['connection'];
+  }
+
+  /**
+   * Discovers chat models using unsaved key and endpoint form values.
+   */
+  private function discoverModels(string $key_id, string $host): array {
+    if (
+      parse_url($host, PHP_URL_SCHEME) !== 'https' ||
+      parse_url($host, PHP_URL_HOST) === NULL ||
+      parse_url($host, PHP_URL_USER) !== NULL ||
+      parse_url($host, PHP_URL_PASS) !== NULL ||
+      parse_url($host, PHP_URL_QUERY) !== NULL ||
+      parse_url($host, PHP_URL_FRAGMENT) !== NULL
+    ) {
+      throw new \InvalidArgumentException('Enter a valid HTTPS API base URL.');
+    }
+    $key = $this->keyRepository->getKey($key_id);
+    $api_key = $key?->getKeyValue();
+    if (!$api_key) {
+      throw new \InvalidArgumentException('The selected Key does not contain an API key.');
+    }
+
+    /** @var \Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider $provider */
+    $provider = $this->aiProviderManager->createInstance('grok');
+    $provider->setAuthentication($api_key);
+    $provider->setConfiguration(['host' => $host]);
+    $models = $provider->getConfiguredModels('chat');
+    if ($models === []) {
+      throw new \RuntimeException('xAI did not return any accessible Grok models for this key.');
+    }
+    return $models;
+  }
+
+  /**
+   * Selects the best available default without assuming an alias exists.
+   */
+  private function preferredModel(array $models): string {
+    foreach (['grok-4.5-latest', 'grok-4.5'] as $preferred) {
+      if (isset($models[$preferred])) {
+        return $preferred;
+      }
+    }
+    return (string) array_key_first($models);
   }
 
   /**
@@ -183,6 +332,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   private function parseMcpServers(string $value): array {
     $servers = [];
+    $labels = [];
     foreach (preg_split('/\R/', trim($value)) ?: [] as $line_number => $line) {
       if (trim($line) === '') {
         continue;
@@ -194,13 +344,25 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       if (parse_url($parts[1], PHP_URL_SCHEME) !== 'https') {
         throw new \InvalidArgumentException((string) $this->t('MCP server URLs must use HTTPS (line @line).', ['@line' => $line_number + 1]));
       }
+      if (parse_url($parts[1], PHP_URL_USER) !== NULL || parse_url($parts[1], PHP_URL_PASS) !== NULL || parse_url($parts[1], PHP_URL_FRAGMENT) !== NULL) {
+        throw new \InvalidArgumentException((string) $this->t('MCP server URLs cannot contain credentials or fragments (line @line).', ['@line' => $line_number + 1]));
+      }
       if (!preg_match('/^[a-zA-Z0-9_-]+$/', $parts[0])) {
         throw new \InvalidArgumentException((string) $this->t('MCP server labels may contain only letters, numbers, underscores, and hyphens (line @line).', ['@line' => $line_number + 1]));
       }
-      $allowed_tools = array_values(array_filter(array_map('trim', explode(',', $parts[2]))));
+      if (isset($labels[$parts[0]])) {
+        throw new \InvalidArgumentException((string) $this->t('MCP server label @label is duplicated.', ['@label' => $parts[0]]));
+      }
+      $allowed_tools = array_values(array_unique(array_filter(array_map('trim', explode(',', $parts[2])))));
       if ($allowed_tools === []) {
         throw new \InvalidArgumentException((string) $this->t('MCP allowlist line @line must name at least one allowed tool.', ['@line' => $line_number + 1]));
       }
+      foreach ($allowed_tools as $tool) {
+        if (!preg_match('/^[a-zA-Z0-9_.-]+$/', $tool)) {
+          throw new \InvalidArgumentException((string) $this->t('MCP tool name @tool contains unsupported characters.', ['@tool' => $tool]));
+        }
+      }
+      $labels[$parts[0]] = TRUE;
       $servers[] = [
         'label' => $parts[0],
         'url' => $parts[1],

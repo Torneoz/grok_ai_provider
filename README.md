@@ -12,6 +12,8 @@ entity containing an xAI API key, then visit:
 
 Select the Key and save the form. The provider validates access using model
 discovery; it does not make a billable chat request during configuration.
+Use **Test connection and load models** to verify unsaved credentials and
+populate the default-model selector with the models accessible to that key.
 
 ## Supported features
 
@@ -43,4 +45,9 @@ execution loop remains unchanged.
 
 Streaming Responses requests, stateful response continuation, collection/file
 management, image generation, and voice APIs are not yet included. Streaming
-ordinary chat continues to work through Chat Completions.
+ordinary chat continues to work through Chat Completions, including when the
+provider-wide transport preference is Responses. Hosted tools are never
+silently removed from a streamed request.
+
+Responses requests have a configurable timeout between 10 and 3600 seconds.
+API and remote MCP endpoints must use HTTPS.
