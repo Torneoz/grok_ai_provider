@@ -22,12 +22,12 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   /**
    * The AI provider plugin manager.
    */
-  private readonly AiProviderPluginManager $aiProviderManager;
+  private ?AiProviderPluginManager $aiProviderManager = NULL;
 
   /**
    * The Key repository.
    */
-  private readonly KeyRepositoryInterface $keyRepository;
+  private ?KeyRepositoryInterface $keyRepository = NULL;
 
   /**
    * Constructs the configuration form.
@@ -274,7 +274,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ->set('mcp_servers', (array) $form_state->getValue('mcp_servers'))
       ->save();
 
-    $this->aiProviderManager->defaultIfNone('chat', 'grok', (string) $form_state->getValue('default_model'));
+    $this->getAiProviderManager()->defaultIfNone('chat', 'grok', (string) $form_state->getValue('default_model'));
     parent::submitForm($form, $form_state);
   }
 
@@ -330,14 +330,14 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     ) {
       throw new \InvalidArgumentException('Enter a valid HTTPS API base URL.');
     }
-    $key = $this->keyRepository->getKey($key_id);
+    $key = $this->getKeyRepository()->getKey($key_id);
     $api_key = $key?->getKeyValue();
     if (!$api_key) {
       throw new \InvalidArgumentException('The selected Key does not contain an API key.');
     }
 
     /** @var \Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider $provider */
-    $provider = $this->aiProviderManager->createInstance('grok');
+    $provider = $this->getAiProviderManager()->createInstance('grok');
     $provider->setAuthentication($api_key);
     $provider->setConfiguration(['host' => $host]);
     $models = $provider->getConfiguredModels('chat');
@@ -357,6 +357,26 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       }
     }
     return (string) array_key_first($models);
+  }
+
+  /**
+   * Gets the provider manager after normal or cached form reconstruction.
+   */
+  private function getAiProviderManager(): AiProviderPluginManager {
+    if (!$this->aiProviderManager instanceof AiProviderPluginManager) {
+      $this->aiProviderManager = \Drupal::service('ai.provider');
+    }
+    return $this->aiProviderManager;
+  }
+
+  /**
+   * Gets the Key repository after normal or cached form reconstruction.
+   */
+  private function getKeyRepository(): KeyRepositoryInterface {
+    if (!$this->keyRepository instanceof KeyRepositoryInterface) {
+      $this->keyRepository = \Drupal::service('key.repository');
+    }
+    return $this->keyRepository;
   }
 
   /**
