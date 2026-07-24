@@ -258,22 +258,21 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $module_info = $module_list->getExtensionInfo('grok_ai_provider');
     $version = (string) ($module_info['version'] ?? '1.0.0-alpha1');
     $form['about'] = [
-      '#type' => 'container',
+      '#type' => 'details',
+      '#title' => $this->t('About'),
+      '#open' => FALSE,
       '#attributes' => [
         'class' => ['grok-ai-provider-about'],
       ],
       '#weight' => 1000,
-      'title' => [
-        '#markup' => '<h2>' . $this->t('About') . '</h2>',
-      ],
       'built_by' => [
-        '#markup' => '<div>' . $this->t('Built By Crocodiles 🐊') . '</div>',
+        '#markup' => '<p><strong>' . $this->t('Built By Crocodiles 🐊') . '</strong></p>',
       ],
       'version' => [
-        '#markup' => '<div>' . $this->t('Version: @version', ['@version' => $version]) . '</div>',
+        '#markup' => '<p>' . $this->t('Version: @version', ['@version' => $version]) . '</p>',
       ],
       'disclaimer' => [
-        '#markup' => '<div>' . $this->t('Not affiliated with, or endorsed by SpaceXAi') . '</div>',
+        '#markup' => '<p>' . $this->t('Not affiliated with, or endorsed by SpaceXAi') . '</p>',
       ],
     ];
 

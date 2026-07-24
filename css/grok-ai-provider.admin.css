@@ -23,13 +23,22 @@
 
 .grok-ai-provider-about {
   margin-block-start: 2rem;
-  padding-block-start: 1rem;
-  color: #555;
-  border-block-start: 1px solid #d3d4d9;
+  color: #232429;
+  background: #fff;
 }
 
-.grok-ai-provider-about h2 {
-  margin-block: 0 0.5rem;
-  color: inherit;
+.grok-ai-provider-about summary {
+  color: #232429;
+  font-weight: 700;
+}
+
+.grok-ai-provider-about p {
+  margin-block: 0 0.75rem;
+  color: #232429;
   font-size: 1rem;
+  line-height: 1.5;
+}
+
+.grok-ai-provider-about p:last-child {
+  margin-block-end: 0;
 }
