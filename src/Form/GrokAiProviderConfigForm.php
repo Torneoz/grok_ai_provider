@@ -269,10 +269,10 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         '#markup' => '<p><strong>' . $this->t('Built By Crocodiles 🐊') . '</strong></p>',
       ],
       'version' => [
-        '#markup' => '<p>' . $this->t('Version: @version', ['@version' => $version]) . '</p>',
+        '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('Version: @version', ['@version' => $version]) . '</p>',
       ],
       'disclaimer' => [
-        '#markup' => '<p>' . $this->t('Not affiliated with, or endorsed by SpaceXAi') . '</p>',
+        '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('This project is not affiliated with, funded, or endorsed by SpaceXAi or its subsidiaries. Copyright on all assets is retained by the owners.') . '</p>',
       ],
     ];
 
