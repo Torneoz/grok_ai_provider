@@ -23,18 +23,10 @@
 
 .grok-ai-provider-about {
   margin-block-start: 2rem;
-  color: #232429;
-  background: #fff;
-}
-
-.grok-ai-provider-about summary {
-  color: #232429;
-  font-weight: 700;
 }
 
 .grok-ai-provider-about p {
   margin-block: 0 0.75rem;
-  color: #232429;
   font-size: 1rem;
   line-height: 1.5;
 }
