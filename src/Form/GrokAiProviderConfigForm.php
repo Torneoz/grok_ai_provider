@@ -74,6 +74,28 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config(self::CONFIG_NAME);
+    $module_list = \Drupal::service('extension.list.module');
+    $module_path = $module_list->getPath('grok_ai_provider');
+
+    $form['#attached']['library'][] = 'grok_ai_provider/config_form';
+    $form['branding'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['grok-ai-provider-branding'],
+      ],
+      '#weight' => -100,
+      'logo' => [
+        '#theme' => 'image',
+        '#uri' => $module_path . '/assets/grok-logo.svg',
+        '#alt' => $this->t('Grok'),
+        '#attributes' => [
+          'class' => ['grok-ai-provider-branding__logo'],
+        ],
+      ],
+      'name' => [
+        '#markup' => '<div class="grok-ai-provider-branding__name">' . $this->t('Grok AI Provider') . '</div>',
+      ],
+    ];
 
     $form['api_key'] = [
       '#type' => 'key_select',
@@ -231,7 +253,31 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ],
     ];
 
-    return parent::buildForm($form, $form_state);
+    $form = parent::buildForm($form, $form_state);
+
+    $module_info = $module_list->getExtensionInfo('grok_ai_provider');
+    $version = (string) ($module_info['version'] ?? '1.0.0-alpha1');
+    $form['about'] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => ['grok-ai-provider-about'],
+      ],
+      '#weight' => 1000,
+      'title' => [
+        '#markup' => '<h2>' . $this->t('About') . '</h2>',
+      ],
+      'built_by' => [
+        '#markup' => '<div>' . $this->t('Built By Crocodiles 🐊') . '</div>',
+      ],
+      'version' => [
+        '#markup' => '<div>' . $this->t('Version: @version', ['@version' => $version]) . '</div>',
+      ],
+      'disclaimer' => [
+        '#markup' => '<div>' . $this->t('Not affiliated with, or endorsed by SpaceXAi') . '</div>',
+      ],
+    ];
+
+    return $form;
   }
 
   /**

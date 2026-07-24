@@ -1,0 +1,4 @@
+config_form:
+  css:
+    theme:
+      css/grok-ai-provider.admin.css: {}
