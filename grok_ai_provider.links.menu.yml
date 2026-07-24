@@ -3,3 +3,10 @@ grok_ai_provider.settings_menu:
   description: 'Configure access to the xAI API.'
   route_name: grok_ai_provider.settings_form
   parent: ai.admin_providers
+
+grok_ai_provider.torneo_settings_menu:
+  title: 'Grok AI provider'
+  description: 'Configure Grok authentication, models, transports, and hosted tools.'
+  route_name: grok_ai_provider.settings_form
+  parent: torneo.admin
+  weight: 11
