@@ -189,15 +189,31 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#tree' => TRUE,
     ];
     foreach ([
-      'web_search' => $this->t('Permit Web Search'),
-      'x_search' => $this->t('Permit X Search'),
-      'code_interpreter' => $this->t('Permit Code Interpreter'),
-      'file_search' => $this->t('Permit Collections Search'),
-      'mcp' => $this->t('Permit allowlisted remote MCP servers'),
-    ] as $key => $label) {
+      'web_search' => [
+        'label' => $this->t('Permit Web Search'),
+        'description' => $this->t('Allows Grok to search and browse the public web for current information. Requests can optionally restrict searches to allowed or excluded domains and enable image search or image understanding. xAI charges separately for hosted search calls.'),
+      ],
+      'x_search' => [
+        'label' => $this->t('Permit X Search'),
+        'description' => $this->t('Allows Grok to search public posts, users, and threads on X. Individual requests can restrict handles and dates or enable image and video understanding. xAI charges separately for hosted search calls.'),
+      ],
+      'code_interpreter' => [
+        'label' => $this->t('Permit Code Interpreter'),
+        'description' => $this->t('Allows Grok to write and execute Python in an isolated environment managed by xAI. It is useful for calculations and data analysis. The environment has no access to this Drupal site unless data is included in the prompt, and tool calls may incur additional charges.'),
+      ],
+      'file_search' => [
+        'label' => $this->t('Permit Collections Search'),
+        'description' => $this->t('Allows Grok to search xAI collections containing previously uploaded documents. Individual requests must provide permitted collection IDs. Collection storage, retrieval, and search can incur additional xAI charges.'),
+      ],
+      'mcp' => [
+        'label' => $this->t('Permit allowlisted remote MCP servers'),
+        'description' => $this->t('Allows xAI to connect Grok to explicitly allowlisted remote MCP servers. Each server must use HTTPS and expose only the tool names listed below. Enable this only for trusted servers because MCP tools may read or modify external systems.'),
+      ],
+    ] as $key => $tool) {
       $form['hosted_tools'][$key] = [
         '#type' => 'checkbox',
-        '#title' => $label,
+        '#title' => $tool['label'],
+        '#description' => $tool['description'],
         '#default_value' => (bool) ($permissions[$key] ?? FALSE),
       ];
     }
