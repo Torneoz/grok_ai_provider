@@ -86,7 +86,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#weight' => -100,
       'logo' => [
         '#theme' => 'image',
-        '#uri' => $module_path . '/assets/grok-logo.svg',
+        '#uri' => $module_path . '/assets/Grok_Logomark_Light.svg',
         '#alt' => $this->t('Grok'),
         '#attributes' => [
           'class' => ['grok-ai-provider-branding__logo'],
