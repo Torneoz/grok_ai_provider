@@ -1,5 +1,5 @@
-name: Grok AI Provider
-description: Provides Grok models from xAI to the Drupal AI module.
+name: Grok xAi Provider
+description: Provides Grok models from xAI to the Drupal AI modules.
 package: AI Providers
 type: module
 core_version_requirement: ^10.3 || ^11

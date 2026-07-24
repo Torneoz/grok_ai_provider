@@ -49,6 +49,6 @@ function grok_ai_provider_update_10002(): void {
 function grok_ai_provider_update_10003(): void {
   $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
   if ($config->get('default_model') === NULL) {
-    $config->set('default_model', 'grok-4.5-latest')->save(TRUE);
+    $config->set('default_model', 'grok-4.5')->save(TRUE);
   }
 }

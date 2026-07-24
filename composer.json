@@ -1,0 +1,17 @@
+{
+    "name": "torneoz/grok_ai_provider",
+    "description": "Provides Grok models from xAI to the Drupal AI module.",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "homepage": "https://github.com/Torneoz/grok_ai_provider",
+    "support": {
+        "issues": "https://github.com/Torneoz/grok_ai_provider/issues",
+        "source": "https://github.com/Torneoz/grok_ai_provider"
+    },
+    "require": {
+        "php": ">=8.1",
+        "drupal/core": "^10.3 || ^11",
+        "drupal/ai": "^1.4",
+        "drupal/key": "^1.22"
+    }
+}
