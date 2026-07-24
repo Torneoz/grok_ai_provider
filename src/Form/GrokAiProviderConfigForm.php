@@ -85,6 +85,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
+      '#description' => $this->t('These settings control how the provider connects to xAI and selects between the legacy Chat Completions transport and the newer Responses transport. The defaults are appropriate for most sites. Change them only when required by your hosting environment, privacy policy, or integration workflow.'),
       '#open' => FALSE,
       '#states' => [
         'visible' => [
@@ -96,6 +97,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#type' => 'url',
       '#title' => $this->t('API base URL'),
       '#default_value' => $config->get('host') ?: 'https://api.x.ai/v1',
+      '#description' => $this->t('The HTTPS base URL used for xAI inference and model-discovery requests. Keep the official <code>https://api.x.ai/v1</code> endpoint unless your organization uses an approved xAI-compatible gateway or regional proxy. URLs containing credentials, query strings, or fragments are rejected to protect the selected API key.'),
       '#required' => TRUE,
     ];
     $form['advanced']['transport'] = [
@@ -107,14 +109,14 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         'responses' => $this->t('Responses API for compatible requests'),
       ],
       '#default_value' => $config->get('transport') ?: 'auto',
-      '#description' => $this->t('Automatic preserves Chat Completions for ordinary Drupal AI requests and selects Responses when a hosted tool is requested.'),
+      '#description' => $this->t('<strong>Automatic</strong> uses Chat Completions for ordinary Drupal AI and Drupal function-tool requests, then switches to Responses when an xAI-hosted tool is requested. <strong>Chat Completions only</strong> provides the broadest compatibility but prevents hosted Web Search, X Search, Code Interpreter, Collections Search, and remote MCP. <strong>Responses API</strong> prefers Responses for compatible non-streaming requests; Drupal function tools and ordinary streaming continue to use Chat Completions until equivalent Responses support is available.'),
       '#required' => TRUE,
     ];
     $form['advanced']['store_responses'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Allow xAI to store Responses API requests'),
       '#default_value' => (bool) $config->get('store_responses'),
-      '#description' => $this->t('Disabled by default. When disabled, the provider sends store=false and does not use server-side conversation continuation.'),
+      '#description' => $this->t('Controls xAI server-side storage for requests sent through the Responses API. It is disabled by default, causing the provider to send <code>store=false</code>. Enable it only when your privacy and data-retention policies allow prompts, uploaded content, tool activity, and responses to be retained by xAI. Storage is required for future workflows that continue a conversation using a previous response ID, but it is not required for normal Drupal AI chat history.'),
     ];
     $form['advanced']['request_timeout'] = [
       '#type' => 'number',
@@ -123,6 +125,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#min' => 10,
       '#max' => 3600,
       '#field_suffix' => $this->t('seconds'),
+      '#description' => $this->t('The maximum time Drupal waits for a synchronous Responses API request. Hosted searches, code execution, collections, MCP calls, and reasoning models may take longer than ordinary chat. Increase this value for complex workflows, or reduce it to release PHP workers sooner when an upstream request stalls. Your web server, PHP runtime, reverse proxy, or hosting platform may enforce a shorter timeout.'),
       '#required' => TRUE,
     ];
 
