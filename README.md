@@ -65,3 +65,8 @@ generated `.po` or `.pot` files for Drupal.org releases; Drupal.org extracts
 the source strings and publishes the project translation packages
 automatically. Sites can enable the core Language, Interface Translation, and
 Configuration Translation modules to install and manage translations.
+
+## Torneoz
+
+This module is part of the [Torneoz project](https://torneoz.org), a global
+management AI system for Drupal.
