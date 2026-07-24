@@ -51,3 +51,17 @@ silently removed from a streamed request.
 
 Responses requests have a configurable timeout between 10 and 3600 seconds.
 API and remote MCP endpoints must use HTTPS.
+
+## Translations
+
+All administrative labels, descriptions, validation messages, provider-setting
+metadata, and user-facing API errors use Drupal's String Translation API.
+Routing, menu-link, module information, and configuration-schema labels use
+Drupal's standard translatable YAML locations.
+
+Published releases can be translated through
+[Drupal's translation system](https://localize.drupal.org/). Do not commit
+generated `.po` or `.pot` files for Drupal.org releases; Drupal.org extracts
+the source strings and publishes the project translation packages
+automatically. Sites can enable the core Language, Interface Translation, and
+Configuration Translation modules to install and manage translations.

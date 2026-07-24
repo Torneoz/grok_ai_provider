@@ -272,7 +272,10 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('Version: @version', ['@version' => $version]) . '</p>',
       ],
       'framework' => [
-        '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('A part of the <a href="https://torneoz.org" title="Torneoz is a global management AI system for Drupal." target="_blank" rel="noopener noreferrer">Torneoz</a> framework') . '</p>',
+        '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('A part of the <a href=":url" title="@title" target="_blank" rel="noopener noreferrer">Torneoz</a> framework', [
+          ':url' => 'https://torneoz.org',
+          '@title' => $this->t('Torneoz is a global management AI system for Drupal.'),
+        ]) . '</p>',
       ],
       'disclaimer' => [
         '#markup' => '<p class="grok-ai-provider-about__supporting-text">' . $this->t('This project is not affiliated with, funded, or endorsed by SpaceXAi or its subsidiaries. Copyright on all assets is retained by the owners.') . '</p>',
@@ -395,12 +398,12 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       parse_url($host, PHP_URL_QUERY) !== NULL ||
       parse_url($host, PHP_URL_FRAGMENT) !== NULL
     ) {
-      throw new \InvalidArgumentException('Enter a valid HTTPS API base URL.');
+      throw new \InvalidArgumentException((string) $this->t('Enter a valid HTTPS API base URL.'));
     }
     $key = $this->getKeyRepository()->getKey($key_id);
     $api_key = $key?->getKeyValue();
     if (!$api_key) {
-      throw new \InvalidArgumentException('The selected Key does not contain an API key.');
+      throw new \InvalidArgumentException((string) $this->t('The selected Key does not contain an API key.'));
     }
 
     /** @var \Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider $provider */
@@ -409,7 +412,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $provider->setConfiguration(['host' => $host]);
     $models = $provider->getConfiguredModels('chat');
     if ($models === []) {
-      throw new \RuntimeException('xAI did not return any accessible Grok models for this key.');
+      throw new \RuntimeException((string) $this->t('xAI did not return any accessible Grok models for this key.'));
     }
     return $models;
   }

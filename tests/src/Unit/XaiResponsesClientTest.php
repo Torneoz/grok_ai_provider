@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok_ai_provider\Unit;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Exception\AiAccessDeniedException;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiRateLimitException;
@@ -36,7 +38,7 @@ final class XaiResponsesClientTest extends TestCase {
       )
       ->willReturn(new Response(200, [], '{"id":"resp_123","output":[]}'));
 
-    $response = (new XaiResponsesClient($http_client))->create(
+    $response = $this->createResponsesClient($http_client)->create(
       'https://api.x.ai/v1/',
       'secret',
       ['model' => 'grok-4.5'],
@@ -60,7 +62,7 @@ final class XaiResponsesClientTest extends TestCase {
 
     $this->expectException($expected_exception);
     $this->expectExceptionMessage('Useful API detail');
-    (new XaiResponsesClient($http_client))->create(
+    $this->createResponsesClient($http_client)->create(
       'https://api.x.ai/v1',
       'secret',
       ['model' => 'grok-4.5'],
@@ -85,11 +87,32 @@ final class XaiResponsesClientTest extends TestCase {
    */
   public function testRejectsMissingApiKey(): void {
     $this->expectException(AiAccessDeniedException::class);
-    (new XaiResponsesClient($this->createMock(ClientInterface::class)))->create(
+    $this->createResponsesClient($this->createMock(ClientInterface::class))->create(
       'https://api.x.ai/v1',
       '',
       ['model' => 'grok-4.5'],
     );
+  }
+
+  /**
+   * Creates the client with a minimal string-translation service.
+   */
+  private function createResponsesClient(ClientInterface $http_client): XaiResponsesClient {
+    $translation = $this->createMock(TranslationInterface::class);
+    $translation->method('translate')
+      ->willReturnCallback(static fn(string $string, array $arguments = [], array $options = []): TranslatableMarkup => new TranslatableMarkup(
+        $string,
+        $arguments,
+        $options,
+        $translation,
+      ));
+    $translation->method('translateString')
+      ->willReturnCallback(static fn(TranslatableMarkup $string): string => strtr(
+        $string->getUntranslatedString(),
+        $string->getArguments(),
+      ));
+
+    return new XaiResponsesClient($http_client, $translation);
   }
 
 }

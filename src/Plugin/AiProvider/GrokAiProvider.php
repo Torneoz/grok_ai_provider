@@ -6,6 +6,7 @@ namespace Drupal\grok_ai_provider\Plugin\AiProvider;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ai\Attribute\AiProvider;
 use Drupal\ai\Base\OpenAiBasedProviderClientBase;
@@ -30,6 +31,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   label: new TranslatableMarkup('Grok (xAI)'),
 )]
 final class GrokAiProvider extends OpenAiBasedProviderClientBase {
+
+  use StringTranslationTrait;
 
   /**
    * The default xAI API base URL.
@@ -79,11 +82,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       $response = $this->client->models()->list()->toArray();
     }
     catch (\Throwable $exception) {
-      throw new AiResponseErrorException('Unable to retrieve models from xAI: ' . $exception->getMessage(), $exception->getCode(), $exception);
+      throw new AiResponseErrorException((string) $this->t('Unable to retrieve models from xAI: @message', [
+        '@message' => $exception->getMessage(),
+      ]), $exception->getCode(), $exception);
     }
 
     if (!isset($response['data']) || !is_array($response['data'])) {
-      throw new AiResponseErrorException('xAI returned an invalid model-list payload.');
+      throw new AiResponseErrorException((string) $this->t('xAI returned an invalid model-list payload.'));
     }
     $models = $this->filterModels($response['data'], $capabilities);
     asort($models);
@@ -132,8 +137,8 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       unset($generalConfig['frequency_penalty'], $generalConfig['presence_penalty']);
       $generalConfig['reasoning_effort'] = [
         'type' => 'select',
-        'label' => 'Reasoning effort',
-        'description' => 'Controls how much reasoning effort the model uses.',
+        'label' => $this->t('Reasoning effort'),
+        'description' => $this->t('Controls how much reasoning effort the model uses.'),
         'default' => 'medium',
         'required' => FALSE,
         'constraints' => [
@@ -142,7 +147,120 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       ];
     }
 
+    $translations = $this->modelSettingTranslations();
+    foreach ($generalConfig as $key => &$setting) {
+      if (isset($translations[$key]) && is_array($setting)) {
+        $setting['label'] = $translations[$key]['label'];
+        $setting['description'] = $translations[$key]['description'];
+      }
+    }
+    unset($setting);
+
     return $generalConfig;
+  }
+
+  /**
+   * Returns extractable translations for settings loaded from definition YAML.
+   */
+  private function modelSettingTranslations(): array {
+    return [
+      'max_tokens' => [
+        'label' => $this->t('Max tokens'),
+        'description' => $this->t('The maximum number of tokens generated in the response.'),
+      ],
+      'temperature' => [
+        'label' => $this->t('Temperature'),
+        'description' => $this->t('Sampling temperature. Change temperature or Top P, but normally not both.'),
+      ],
+      'top_p' => [
+        'label' => $this->t('Top P'),
+        'description' => $this->t('Nucleus sampling probability. Change Top P or temperature, but normally not both.'),
+      ],
+      'frequency_penalty' => [
+        'label' => $this->t('Frequency penalty'),
+        'description' => $this->t('Penalizes tokens according to how often they already occur.'),
+      ],
+      'presence_penalty' => [
+        'label' => $this->t('Presence penalty'),
+        'description' => $this->t('Penalizes tokens that have already occurred.'),
+      ],
+      'seed' => [
+        'label' => $this->t('Seed'),
+        'description' => $this->t('Requests deterministic sampling on a best-effort basis.'),
+      ],
+      'use_responses_api' => [
+        'label' => $this->t('Use Responses API'),
+        'description' => $this->t('Use xAI Responses even when no hosted tool is selected.'),
+      ],
+      'web_search' => [
+        'label' => $this->t('Web Search'),
+        'description' => $this->t('Allow Grok to search and browse the web. This must also be permitted in the provider settings.'),
+      ],
+      'web_allowed_domains' => [
+        'label' => $this->t('Allowed web domains'),
+        'description' => $this->t('Optional comma-separated domain allowlist, with a maximum of five domains.'),
+      ],
+      'web_excluded_domains' => [
+        'label' => $this->t('Excluded web domains'),
+        'description' => $this->t('Optional comma-separated domain denylist, with a maximum of five domains. Do not combine with allowed domains.'),
+      ],
+      'web_image_search' => [
+        'label' => $this->t('Web image search'),
+        'description' => $this->t('Allow Web Search to find images for the response.'),
+      ],
+      'web_image_understanding' => [
+        'label' => $this->t('Web image understanding'),
+        'description' => $this->t('Allow Grok to inspect images found while browsing.'),
+      ],
+      'x_search' => [
+        'label' => $this->t('X Search'),
+        'description' => $this->t('Allow Grok to search X. This must also be permitted in the provider settings.'),
+      ],
+      'x_allowed_handles' => [
+        'label' => $this->t('Allowed X handles'),
+        'description' => $this->t('Optional comma-separated X handle allowlist.'),
+      ],
+      'x_excluded_handles' => [
+        'label' => $this->t('Excluded X handles'),
+        'description' => $this->t('Optional comma-separated X handle denylist.'),
+      ],
+      'x_from_date' => [
+        'label' => $this->t('X search start date'),
+        'description' => $this->t('Optional inclusive date in YYYY-MM-DD format.'),
+      ],
+      'x_to_date' => [
+        'label' => $this->t('X search end date'),
+        'description' => $this->t('Optional inclusive date in YYYY-MM-DD format.'),
+      ],
+      'x_image_understanding' => [
+        'label' => $this->t('X image understanding'),
+        'description' => $this->t('Allow Grok to inspect images found on X.'),
+      ],
+      'x_video_understanding' => [
+        'label' => $this->t('X video understanding'),
+        'description' => $this->t('Allow Grok to inspect videos found on X.'),
+      ],
+      'code_interpreter' => [
+        'label' => $this->t('Code Interpreter'),
+        'description' => $this->t('Allow Grok to execute Python in xAI’s isolated environment.'),
+      ],
+      'file_search' => [
+        'label' => $this->t('Collections Search'),
+        'description' => $this->t('Allow Grok to search the configured xAI collections.'),
+      ],
+      'collection_ids' => [
+        'label' => $this->t('Collection IDs'),
+        'description' => $this->t('Comma-separated xAI collection IDs available to this request.'),
+      ],
+      'file_search_max_results' => [
+        'label' => $this->t('Maximum collection results'),
+        'description' => $this->t('Maximum number of collection search results.'),
+      ],
+      'mcp_servers' => [
+        'label' => $this->t('Remote MCP servers'),
+        'description' => $this->t('Comma-separated labels of allowlisted MCP servers to expose to Grok.'),
+      ],
+    ];
   }
 
   /**
@@ -209,7 +327,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       if (!$this->hasRequestedHostedTools()) {
         return parent::chat($input, $model_id, $tags);
       }
-      throw new AiMissingFeatureException('Streaming xAI Responses requests are not yet supported. Disable streaming or use Chat Completions.');
+      throw new AiMissingFeatureException((string) $this->t('Streaming xAI Responses requests are not yet supported. Disable streaming or use Chat Completions.'));
     }
 
     $this->loadClient();
@@ -235,7 +353,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       parent::loadClient();
     }
     catch (AiSetupFailureException $exception) {
-      throw new AiSetupFailureException('Failed to initialize the xAI client: ' . $exception->getMessage(), $exception->getCode(), $exception);
+      throw new AiSetupFailureException((string) $this->t('Failed to initialize the xAI client: @message', [
+        '@message' => $exception->getMessage(),
+      ]), $exception->getCode(), $exception);
     }
   }
 
@@ -315,7 +435,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     $transport = (string) ($this->getConfig()->get('transport') ?: 'auto');
     if ($transport === 'chat_completions') {
       if ($this->hasRequestedHostedTools()) {
-        throw new AiMissingFeatureException('Hosted xAI tools require the Responses API, but this provider is configured for Chat Completions only.');
+        throw new AiMissingFeatureException((string) $this->t('Hosted xAI tools require the Responses API, but this provider is configured for Chat Completions only.'));
       }
       return FALSE;
     }
@@ -394,13 +514,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   private function buildResponsesInput(array|string|ChatInput $input): array {
     if (is_string($input)) {
       if (trim($input) === '') {
-        throw new AiBadRequestException('A non-empty chat prompt is required.');
+        throw new AiBadRequestException((string) $this->t('A non-empty chat prompt is required.'));
       }
       return [['role' => 'user', 'content' => $input]];
     }
     if (is_array($input)) {
       if ($input === []) {
-        throw new AiBadRequestException('At least one input message is required.');
+        throw new AiBadRequestException((string) $this->t('At least one input message is required.'));
       }
       return $input;
     }
@@ -411,7 +531,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     }
     foreach ($input->getMessages() as $message) {
       if (!in_array($message->getRole(), ['system', 'developer', 'user', 'assistant'], TRUE)) {
-        throw new AiBadRequestException(sprintf('The message role "%s" is not supported by xAI Responses.', $message->getRole()));
+        throw new AiBadRequestException((string) $this->t('The message role "@role" is not supported by xAI Responses.', [
+          '@role' => $message->getRole(),
+        ]));
       }
       $content = [];
       if ($message->getText() !== '') {
@@ -422,11 +544,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
           $content[] = ['type' => 'input_image', 'image_url' => $file->getAsBase64EncodedString()];
         }
         else {
-          throw new AiMissingFeatureException(sprintf('Responses input does not yet support the file type "%s".', $file->getMimeType()));
+          throw new AiMissingFeatureException((string) $this->t('Responses input does not yet support the file type "@type".', [
+            '@type' => $file->getMimeType(),
+          ]));
         }
       }
       if ($content === []) {
-        throw new AiBadRequestException('Each chat message must contain text or a supported image.');
+        throw new AiBadRequestException((string) $this->t('Each chat message must contain text or a supported image.'));
       }
       $messages[] = [
         'role' => $message->getRole(),
@@ -444,7 +568,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     $tools = [];
     foreach (['web_search', 'x_search', 'code_interpreter', 'file_search'] as $tool_name) {
       if (!empty($this->providerOptions[$tool_name]) && empty($permissions[$tool_name])) {
-        throw new AiMissingFeatureException(sprintf('The xAI hosted tool "%s" is not permitted in the Grok provider settings.', $tool_name));
+        throw new AiMissingFeatureException((string) $this->t('The xAI hosted tool "@tool" is not permitted in the Grok provider settings.', [
+          '@tool' => $tool_name,
+        ]));
       }
     }
     if (!empty($this->providerOptions['web_search']) && !empty($permissions['web_search'])) {
@@ -452,14 +578,16 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       $raw_allowed = $this->csvValues((string) ($this->providerOptions['web_allowed_domains'] ?? ''));
       $raw_excluded = $this->csvValues((string) ($this->providerOptions['web_excluded_domains'] ?? ''));
       if ($raw_allowed !== [] && $raw_excluded !== []) {
-        throw new AiBadRequestException('Web Search allowed and excluded domains cannot be combined.');
+        throw new AiBadRequestException((string) $this->t('Web Search allowed and excluded domains cannot be combined.'));
       }
       if (count($raw_allowed) > 5 || count($raw_excluded) > 5) {
-        throw new AiBadRequestException('Web Search accepts no more than five allowed or excluded domains.');
+        throw new AiBadRequestException((string) $this->t('Web Search accepts no more than five allowed or excluded domains.'));
       }
       foreach (array_merge($raw_allowed, $raw_excluded) as $domain) {
         if (!$this->isValidDomain($domain)) {
-          throw new AiBadRequestException(sprintf('"%s" is not a valid Web Search domain.', $domain));
+          throw new AiBadRequestException((string) $this->t('"@domain" is not a valid Web Search domain.', [
+            '@domain' => $domain,
+          ]));
         }
       }
       $allowed = $raw_allowed;
@@ -479,10 +607,10 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       $allowed = $this->normalizeXHandles((string) ($this->providerOptions['x_allowed_handles'] ?? ''));
       $excluded = $this->normalizeXHandles((string) ($this->providerOptions['x_excluded_handles'] ?? ''));
       if ($allowed !== [] && $excluded !== []) {
-        throw new AiBadRequestException('X Search allowed and excluded handles cannot be combined.');
+        throw new AiBadRequestException((string) $this->t('X Search allowed and excluded handles cannot be combined.'));
       }
       if (count($allowed) > 20 || count($excluded) > 20) {
-        throw new AiBadRequestException('X Search accepts no more than twenty allowed or excluded handles.');
+        throw new AiBadRequestException((string) $this->t('X Search accepts no more than twenty allowed or excluded handles.'));
       }
       if ($allowed !== []) {
         $tool['allowed_x_handles'] = array_slice($allowed, 0, 20);
@@ -490,17 +618,30 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       elseif ($excluded !== []) {
         $tool['excluded_x_handles'] = array_slice($excluded, 0, 20);
       }
-      foreach (['from_date' => 'x_from_date', 'to_date' => 'x_to_date'] as $target => $source) {
+      $date_fields = [
+        'from_date' => [
+          'source' => 'x_from_date',
+          'label' => $this->t('start date'),
+        ],
+        'to_date' => [
+          'source' => 'x_to_date',
+          'label' => $this->t('end date'),
+        ],
+      ];
+      foreach ($date_fields as $target => $date_field) {
+        $source = $date_field['source'];
         if (!empty($this->providerOptions[$source])) {
           $date = (string) $this->providerOptions[$source];
           if (!$this->isIsoDate($date)) {
-            throw new AiBadRequestException(sprintf('The X Search %s value must use YYYY-MM-DD format.', $target));
+            throw new AiBadRequestException((string) $this->t('The X Search @field value must use YYYY-MM-DD format.', [
+              '@field' => $date_field['label'],
+            ]));
           }
           $tool[$target] = $date;
         }
       }
       if (isset($tool['from_date'], $tool['to_date']) && $tool['from_date'] > $tool['to_date']) {
-        throw new AiBadRequestException('X Search start date cannot be later than its end date.');
+        throw new AiBadRequestException((string) $this->t('X Search start date cannot be later than its end date.'));
       }
       $tool['enable_image_understanding'] = !empty($this->providerOptions['x_image_understanding']);
       $tool['enable_video_understanding'] = !empty($this->providerOptions['x_video_understanding']);
@@ -512,11 +653,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     if (!empty($this->providerOptions['file_search']) && !empty($permissions['file_search'])) {
       $collection_ids = $this->csvValues((string) ($this->providerOptions['collection_ids'] ?? ''));
       if ($collection_ids === []) {
-        throw new AiMissingFeatureException('Collections Search requires at least one xAI collection ID.');
+        throw new AiMissingFeatureException((string) $this->t('Collections Search requires at least one xAI collection ID.'));
       }
       foreach ($collection_ids as $collection_id) {
         if (!preg_match('/^collection_[a-zA-Z0-9-]+$/', $collection_id)) {
-          throw new AiBadRequestException(sprintf('"%s" is not a valid xAI collection ID.', $collection_id));
+          throw new AiBadRequestException((string) $this->t('"@collection_id" is not a valid xAI collection ID.', [
+            '@collection_id' => $collection_id,
+          ]));
         }
       }
       $tools[] = [
@@ -541,11 +684,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       }
       $missing = array_diff($requested, $matched);
       if ($missing !== []) {
-        throw new AiMissingFeatureException('The following MCP servers are not allowlisted: ' . implode(', ', $missing));
+        throw new AiMissingFeatureException((string) $this->t('The following MCP servers are not allowlisted: @servers', [
+          '@servers' => implode(', ', $missing),
+        ]));
       }
     }
     elseif ($this->csvValues((string) ($this->providerOptions['mcp_servers'] ?? '')) !== []) {
-      throw new AiMissingFeatureException('Remote MCP tools are not permitted in the Grok provider settings.');
+      throw new AiMissingFeatureException((string) $this->t('Remote MCP tools are not permitted in the Grok provider settings.'));
     }
     return $tools;
   }
@@ -556,12 +701,17 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   private function normalizeResponsesOutput(array $response): ChatOutput {
     if (!empty($response['error'])) {
       $error = is_array($response['error']) ? ($response['error']['message'] ?? Json::encode($response['error'])) : (string) $response['error'];
-      throw new AiResponseErrorException('xAI Responses failed: ' . $error);
+      throw new AiResponseErrorException((string) $this->t('xAI Responses failed: @error', [
+        '@error' => $error,
+      ]));
     }
     $status = (string) ($response['status'] ?? '');
     if ($status !== '' && $status !== 'completed') {
       $reason = $response['incomplete_details']['reason'] ?? $status;
-      throw new AiResponseErrorException(sprintf('xAI Responses finished with status "%s" (%s).', $status, $reason));
+      throw new AiResponseErrorException((string) $this->t('xAI Responses finished with status "@status" (@reason).', [
+        '@status' => $status,
+        '@reason' => $reason,
+      ]));
     }
     $text = '';
     $annotations = [];
@@ -579,15 +729,17 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
           $annotations = array_merge($annotations, $content['annotations'] ?? []);
         }
         elseif (($content['type'] ?? '') === 'refusal') {
-          $refusals[] = (string) ($content['refusal'] ?? $content['text'] ?? 'The request was refused.');
+          $refusals[] = (string) ($content['refusal'] ?? $content['text'] ?? $this->t('The request was refused.'));
         }
       }
     }
     if ($text === '') {
       if ($refusals !== []) {
-        throw new AiResponseErrorException('xAI refused the request: ' . implode(' ', $refusals));
+        throw new AiResponseErrorException((string) $this->t('xAI refused the request: @reason', [
+          '@reason' => implode(' ', $refusals),
+        ]));
       }
-      throw new AiResponseErrorException('xAI Responses did not return output text.');
+      throw new AiResponseErrorException((string) $this->t('xAI Responses did not return output text.'));
     }
     foreach ($annotations as $annotation) {
       if (is_array($annotation) && !empty($annotation['url'])) {
@@ -632,7 +784,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     )));
     foreach ($handles as $handle) {
       if (!preg_match('/^[a-zA-Z0-9_]{1,15}$/', $handle)) {
-        throw new AiBadRequestException(sprintf('"%s" is not a valid X handle.', $handle));
+        throw new AiBadRequestException((string) $this->t('"@handle" is not a valid X handle.', [
+          '@handle' => $handle,
+        ]));
       }
     }
     return $handles;

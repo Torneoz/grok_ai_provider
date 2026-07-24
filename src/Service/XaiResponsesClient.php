@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\grok_ai_provider\Service;
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Exception\AiAccessDeniedException;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiRateLimitException;
@@ -18,10 +20,16 @@ use GuzzleHttp\Exception\RequestException;
  */
 final class XaiResponsesClient {
 
+  use StringTranslationTrait;
+
   /**
    * Constructs the client.
    */
-  public function __construct(private readonly ClientInterface $httpClient) {
+  public function __construct(
+    private readonly ClientInterface $httpClient,
+    TranslationInterface $string_translation,
+  ) {
+    $this->stringTranslation = $string_translation;
   }
 
   /**
@@ -29,7 +37,7 @@ final class XaiResponsesClient {
    */
   public function create(string $endpoint, string $api_key, array $payload, int $timeout = 300): array {
     if ($api_key === '') {
-      throw new AiAccessDeniedException('An xAI API key is required.');
+      throw new AiAccessDeniedException((string) $this->t('An xAI API key is required.'));
     }
     try {
       $response = $this->httpClient->request('POST', rtrim($endpoint, '/') . '/responses', [
@@ -47,15 +55,19 @@ final class XaiResponsesClient {
       $this->throwMappedRequestException($exception);
     }
     catch (\Throwable $exception) {
-      throw new AiResponseErrorException('The xAI Responses payload could not be decoded: ' . $exception->getMessage(), $exception->getCode(), $exception);
+      throw new AiResponseErrorException((string) $this->t('The xAI Responses payload could not be decoded: @message', [
+        '@message' => $exception->getMessage(),
+      ]), $exception->getCode(), $exception);
     }
 
     if (!is_array($decoded)) {
-      throw new AiResponseErrorException('xAI returned an invalid Responses payload.');
+      throw new AiResponseErrorException((string) $this->t('xAI returned an invalid Responses payload.'));
     }
     if (!empty($decoded['error'])) {
       $message = is_array($decoded['error']) ? ($decoded['error']['message'] ?? Json::encode($decoded['error'])) : (string) $decoded['error'];
-      throw new AiResponseErrorException('xAI returned an error: ' . $message);
+      throw new AiResponseErrorException((string) $this->t('xAI returned an error: @message', [
+        '@message' => $message,
+      ]));
     }
 
     return $decoded;
@@ -67,12 +79,17 @@ final class XaiResponsesClient {
   private function throwMappedRequestException(RequestException $exception): never {
     $response = $exception->getResponse();
     if ($response === NULL) {
-      throw new AiRequestErrorException('Could not connect to the xAI Responses API: ' . $exception->getMessage(), 0, $exception);
+      throw new AiRequestErrorException((string) $this->t('Could not connect to the xAI Responses API: @message', [
+        '@message' => $exception->getMessage(),
+      ]), 0, $exception);
     }
 
     $status = $response->getStatusCode();
     $message = $this->extractErrorMessage((string) $response->getBody());
-    $message = sprintf('xAI Responses API returned HTTP %d: %s', $status, $message);
+    $message = (string) $this->t('xAI Responses API returned HTTP @status: @message', [
+      '@status' => $status,
+      '@message' => $message,
+    ]);
     if ($status === 401 || $status === 403) {
       throw new AiAccessDeniedException($message, $status, $exception);
     }
@@ -105,7 +122,9 @@ final class XaiResponsesClient {
       // Fall through to the sanitized response body.
     }
     $body = trim(strip_tags($body));
-    return $body === '' ? 'No error details were returned.' : mb_substr($body, 0, 1000);
+    return $body === ''
+      ? (string) $this->t('No error details were returned.')
+      : mb_substr($body, 0, 1000);
   }
 
 }
