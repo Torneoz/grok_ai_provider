@@ -107,20 +107,38 @@ msgstr "デフォルトの Grok モデル"
 msgid "Hosted tool permissions"
 msgstr "ホスト型ツールの権限"
 
+msgid "These settings permit tools at site level. Individual requests must still select a permitted tool. Hosted tools can incur additional xAI charges."
+msgstr "これらの設定は、サイト全体でツールの使用を許可します。個々のリクエストでは、許可されたツールを引き続き選択する必要があります。ホスト型ツールの使用には、追加の xAI 料金が発生する場合があります。"
+
 msgid "Permit Web Search"
 msgstr "Web 検索を許可"
+
+msgid "Allows Grok to search and browse the public web for current information. Requests can optionally restrict searches to allowed or excluded domains and enable image search or image understanding. xAI charges separately for hosted search calls."
+msgstr "Grok が公開 Web を検索・閲覧し、最新情報を取得できるようにします。リクエストごとに検索対象を許可または除外したドメインに制限し、画像検索や画像理解を有効にできます。ホスト型検索の呼び出しには、xAI の料金が別途発生します。"
 
 msgid "Permit X Search"
 msgstr "X 検索を許可"
 
+msgid "Allows Grok to search public posts, users, and threads on X. Individual requests can restrict handles and dates or enable image and video understanding. xAI charges separately for hosted search calls."
+msgstr "Grok が X 上の公開投稿、ユーザー、スレッドを検索できるようにします。リクエストごとにハンドル名や日付を制限し、画像および動画の理解を有効にできます。ホスト型検索の呼び出しには、xAI の料金が別途発生します。"
+
 msgid "Permit Code Interpreter"
 msgstr "コードインタープリターを許可"
+
+msgid "Allows Grok to write and execute Python in an isolated environment managed by xAI. It is useful for calculations and data analysis. The environment has no access to this Drupal site unless data is included in the prompt, and tool calls may incur additional charges."
+msgstr "Grok が xAI の管理する分離環境で Python を作成・実行できるようにします。計算やデータ分析に役立ちます。プロンプトにデータを含めない限り、この環境から Drupal サイトへアクセスすることはできません。ツールの呼び出しには追加料金が発生する場合があります。"
 
 msgid "Permit Collections Search"
 msgstr "コレクション検索を許可"
 
+msgid "Allows Grok to search xAI collections containing previously uploaded documents. Individual requests must provide permitted collection IDs. Collection storage, retrieval, and search can incur additional xAI charges."
+msgstr "Grok が、以前にアップロードされた文書を含む xAI コレクションを検索できるようにします。個々のリクエストでは、許可されたコレクション ID を指定する必要があります。コレクションの保存、取得、検索には追加の xAI 料金が発生する場合があります。"
+
 msgid "Permit allowlisted remote MCP servers"
 msgstr "許可リスト登録済みのリモート MCP サーバーを許可"
+
+msgid "Allows xAI to connect Grok to explicitly allowlisted remote MCP servers. Each server must use HTTPS and expose only the tool names listed below. Enable this only for trusted servers because MCP tools may read or modify external systems."
+msgstr "xAI が Grok を明示的に許可リストへ登録したリモート MCP サーバーに接続できるようにします。各サーバーは HTTPS を使用し、以下に記載したツール名だけを公開する必要があります。MCP ツールは外部システムを読み取りまたは変更する可能性があるため、信頼できるサーバーに対してのみ有効にしてください。"
 
 msgid "Remote MCP server allowlist"
 msgstr "リモート MCP サーバーの許可リスト"
@@ -131,11 +149,29 @@ msgstr "概要"
 msgid "Next Steps"
 msgstr "次のステップ"
 
+msgid "After saving a working xAI API key and default Grok model, connect Grok to the Drupal AI features that should use it:"
+msgstr "有効な xAI API キーとデフォルトの Grok モデルを保存した後、Grok を使用する Drupal AI 機能へ接続します。"
+
+msgid "Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form."
+msgstr "<strong>接続をテストしてモデルを読み込む</strong>を使用し、このプロバイダーがデフォルトで使用する Grok モデルを選択して、このフォームを保存します。"
+
+msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgstr "<a href=\":url\">AI 操作のデフォルトモデル</a>を開き、Chat、Text To Image、Text To Video に <strong>Grok (xAI)</strong> を選択します。サイト全体のデフォルトを使用する機能に適した Grok チャットモデルと Grok Imagine モデルを選択してください。"
+
 msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
 msgstr "設定したモデルを<a href=\":chat_url\">チャット生成エクスプローラー</a>、<a href=\":image_url\">テキスト画像生成エクスプローラー</a>、<a href=\":video_url\">テキスト動画生成エクスプローラー</a>で試してください。"
 
 msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
 msgstr "CKEditor で Grok を使用するには、<strong>AI CKEditor integration</strong> モジュールを有効にして、<a href=\":url\">テキストフォーマットとエディター</a>を開きます。AI が必要な各 CKEditor 5 テキストフォーマットを編集し、AI ボタンを有効なツールバーに追加して、必要な AI アクションを有効にします。各アクションで Grok チャットモデルとともに <strong>Grok (xAI)</strong> を選択するか、サイト全体の Chat デフォルトが使用されることを確認してください。また、適切なロールに <em>use ai ckeditor</em> 権限を付与してください。"
+
+msgid "Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings."
+msgstr "有効にした各 Drupal AI モジュールまたは機能を確認してください。サイト全体の Chat デフォルトを使用するよう設定するか、その機能に独自のプロバイダーとモデル設定がある場合は Grok を明示的に選択します。"
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgstr "Grok は、Chat ベースのテキスト、ビジョン、関数ツール、構造化出力、テキスト画像生成、テキスト動画生成をサポートします。埋め込みや音声などの操作には、それらの操作タイプをサポートする別のプロバイダーが必要です。"
+
+msgid "To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them."
+msgstr "xAI のホスト型ツールを使用するには、<strong>ホスト型ツールの権限</strong>で許可し、その後、必要とする個々のモデルまたはリクエスト設定で許可済みツールを有効にします。"
 
 msgid "Number of images"
 msgstr "画像数"

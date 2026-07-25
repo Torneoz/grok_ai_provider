@@ -47,6 +47,42 @@ msgstr "La generación del vídeo ha fallado"
 msgid "Video duration"
 msgstr "Duración del vídeo"
 
+msgid "These settings permit tools at site level. Individual requests must still select a permitted tool. Hosted tools can incur additional xAI charges."
+msgstr "Estos ajustes permiten herramientas en todo el sitio. Cada solicitud debe seguir seleccionando una herramienta permitida. Las herramientas alojadas pueden generar cargos adicionales de xAI."
+
+msgid "Allows Grok to search and browse the public web for current information. Requests can optionally restrict searches to allowed or excluded domains and enable image search or image understanding. xAI charges separately for hosted search calls."
+msgstr "Permite que Grok busque información actual en la web pública. Las solicitudes pueden limitar la búsqueda a dominios permitidos o excluidos y activar la búsqueda o comprensión de imágenes. xAI cobra por separado las búsquedas alojadas."
+
+msgid "Allows Grok to search public posts, users, and threads on X. Individual requests can restrict handles and dates or enable image and video understanding. xAI charges separately for hosted search calls."
+msgstr "Permite que Grok busque publicaciones, usuarios e hilos públicos en X. Las solicitudes pueden limitar nombres y fechas o activar la comprensión de imágenes y vídeos. xAI cobra por separado las búsquedas alojadas."
+
+msgid "Allows Grok to write and execute Python in an isolated environment managed by xAI. It is useful for calculations and data analysis. The environment has no access to this Drupal site unless data is included in the prompt, and tool calls may incur additional charges."
+msgstr "Permite que Grok escriba y ejecute Python en un entorno aislado administrado por xAI. Resulta útil para cálculos y análisis de datos. El entorno no accede a este sitio Drupal salvo que los datos se incluyan en la indicación, y las llamadas pueden generar cargos adicionales."
+
+msgid "Allows Grok to search xAI collections containing previously uploaded documents. Individual requests must provide permitted collection IDs. Collection storage, retrieval, and search can incur additional xAI charges."
+msgstr "Permite que Grok busque colecciones de xAI con documentos cargados anteriormente. Las solicitudes deben proporcionar identificadores de colección permitidos. El almacenamiento, la recuperación y la búsqueda pueden generar cargos adicionales."
+
+msgid "Allows xAI to connect Grok to explicitly allowlisted remote MCP servers. Each server must use HTTPS and expose only the tool names listed below. Enable this only for trusted servers because MCP tools may read or modify external systems."
+msgstr "Permite que xAI conecte Grok con servidores MCP remotos incluidos expresamente en la lista permitida. Cada servidor debe usar HTTPS y exponer únicamente las herramientas indicadas. Actívelo solo para servidores de confianza."
+
+msgid "After saving a working xAI API key and default Grok model, connect Grok to the Drupal AI features that should use it:"
+msgstr "Después de guardar una clave API de xAI válida y el modelo Grok predeterminado, conecte Grok con las funciones de Drupal AI que deban utilizarlo:"
+
+msgid "Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form."
+msgstr "Use <strong>Probar conexión y cargar modelos</strong>, seleccione el modelo Grok predeterminado y guarde este formulario."
+
+msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgstr "Abra <a href=\":url\">Modelos predeterminados para operaciones de IA</a> y seleccione <strong>Grok (xAI)</strong> para Chat, Texto a imagen y Texto a vídeo. Elija los modelos adecuados para las funciones que usan valores globales."
+
+msgid "Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings."
+msgstr "Revise cada módulo o función de Drupal AI habilitado. Configure el valor predeterminado de Chat del sitio o seleccione Grok expresamente cuando existan ajustes propios."
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgstr "Grok admite texto de Chat, visión, herramientas de función, salida estructurada y generación de texto a imagen y vídeo. Las incrustaciones y el habla requieren otro proveedor."
+
+msgid "To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them."
+msgstr "Para usar herramientas alojadas por xAI, permítalas en <strong>Permisos de herramientas alojadas</strong> y actívelas en la configuración de cada modelo o solicitud."
+
 msgid "Provides Grok models from xAI to the Drupal AI modules."
 msgstr "Proporciona modelos Grok de xAI a los módulos de IA de Drupal."
 
