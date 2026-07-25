@@ -1,7 +1,8 @@
 # Grok AI Provider
 
-Provides xAI Grok chat and image-generation models to Drupal through the AI
-module, using xAI's Chat Completions, Responses, and Imagine APIs.
+Provides xAI Grok chat, image-generation, and text-to-video models to Drupal
+through the AI module, using xAI's Chat Completions, Responses, and Imagine
+APIs.
 
 ## Installation
 
@@ -16,6 +17,10 @@ Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
 To use image generation, select Grok and an available Grok Imagine model for
 the **Text To Image** operation on Drupal AI's default-model settings page.
+Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
+same page.
+When AI API Explorer is enabled, its Grok-specific **Text-To-Video Generation
+Explorer** can generate and preview short MP4 videos.
 
 ### Optional recipe
 
@@ -37,6 +42,8 @@ translations independently.
 - JSON and structured responses on supported models
 - Text-to-image generation with available Grok Imagine image models
 - Optional best-effort transparent-background prompting for generated images
+- Text-to-video generation with `grok-imagine-video`, including configurable
+  duration, aspect ratio, and resolution
 - Token usage and rate-limit metadata exposed by the API
 - Automatic dual transport: ordinary requests use Chat Completions and
   hosted-tool requests use the Responses API
@@ -60,13 +67,17 @@ function tools continue to use Chat Completions so the existing Drupal AI tool
 execution loop remains unchanged.
 
 Streaming Responses requests, stateful response continuation, collection/file
-management, image generation, and voice APIs are not yet included. Streaming
-ordinary chat continues to work through Chat Completions, including when the
-provider-wide transport preference is Responses. Hosted tools are never
-silently removed from a streamed request.
+management, and voice APIs are not yet included. Streaming ordinary chat
+continues to work through Chat Completions, including when the provider-wide
+transport preference is Responses. Hosted tools are never silently removed
+from a streamed request.
 
 Responses requests have a configurable timeout between 10 and 3600 seconds.
 API and remote MCP endpoints must use HTTPS.
+
+Video requests use xAI's asynchronous API and are billed by generated duration
+and resolution. The module polls until completion and immediately downloads the
+MP4 because xAI-hosted result URLs are temporary.
 
 ## Translations
 

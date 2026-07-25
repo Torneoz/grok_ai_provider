@@ -6,3 +6,7 @@ services:
   grok_ai_provider.images_client:
     class: Drupal\grok_ai_provider\Service\XaiImagesClient
     arguments: ['@http_client', '@string_translation']
+
+  grok_ai_provider.videos_client:
+    class: Drupal\grok_ai_provider\Service\XaiVideosClient
+    arguments: ['@http_client', '@string_translation']

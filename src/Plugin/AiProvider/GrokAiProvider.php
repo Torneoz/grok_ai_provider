@@ -20,10 +20,15 @@ use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\ImageFile;
+use Drupal\ai\OperationType\GenericType\VideoFile;
 use Drupal\ai\OperationType\TextToImage\TextToImageInput;
 use Drupal\ai\OperationType\TextToImage\TextToImageOutput;
+use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInput;
+use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInterface;
+use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoOutput;
 use Drupal\grok_ai_provider\Service\XaiImagesClient;
 use Drupal\grok_ai_provider\Service\XaiResponsesClient;
+use Drupal\grok_ai_provider\Service\XaiVideosClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -33,7 +38,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'grok',
   label: new TranslatableMarkup('Grok (xAI)'),
 )]
-final class GrokAiProvider extends OpenAiBasedProviderClientBase {
+final class GrokAiProvider extends OpenAiBasedProviderClientBase implements TextToVideoInterface {
 
   use StringTranslationTrait;
 
@@ -48,9 +53,19 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   public const DEFAULT_IMAGE_MODEL = 'grok-imagine-image-quality';
 
   /**
+   * The xAI model that supports generation from text alone.
+   */
+  public const DEFAULT_VIDEO_MODEL = 'grok-imagine-video';
+
+  /**
    * Maximum decoded size of one generated image.
    */
   private const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
+  /**
+   * Maximum downloaded size of one generated video.
+   */
+  private const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
 
   /**
    * An endpoint supplied at runtime, such as during settings validation.
@@ -73,12 +88,18 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   private XaiImagesClient $imagesClient;
 
   /**
+   * The xAI video generation transport.
+   */
+  private XaiVideosClient $videosClient;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->responsesClient = $container->get('grok_ai_provider.responses_client');
     $instance->imagesClient = $container->get('grok_ai_provider.images_client');
+    $instance->videosClient = $container->get('grok_ai_provider.videos_client');
     return $instance;
   }
 
@@ -86,11 +107,14 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
    * {@inheritdoc}
    */
   public function getConfiguredModels(?string $operation_type = NULL, array $capabilities = []): array {
-    if ($operation_type !== NULL && !in_array($operation_type, ['chat', 'text_to_image'], TRUE)) {
+    if ($operation_type !== NULL && !in_array($operation_type, ['chat', 'text_to_image', 'text_to_video'], TRUE)) {
       return [];
     }
 
     $this->loadClient();
+    if ($operation_type === 'text_to_video') {
+      return [self::DEFAULT_VIDEO_MODEL => self::DEFAULT_VIDEO_MODEL];
+    }
     if ($operation_type === 'text_to_image') {
       $cache_context = [$this->getEndpoint(), $this->apiKey, 'text_to_image'];
       $cache_key = 'grok_image_models_' . Crypt::hashBase64(Json::encode($cache_context));
@@ -136,7 +160,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
    * {@inheritdoc}
    */
   public function getSupportedOperationTypes(): array {
-    return ['chat', 'text_to_image'];
+    return ['chat', 'text_to_image', 'text_to_video'];
   }
 
   /**
@@ -189,6 +213,14 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       }
     }
     unset($setting);
+    if ($model_id === self::DEFAULT_VIDEO_MODEL) {
+      if (isset($generalConfig['aspect_ratio'])) {
+        $generalConfig['aspect_ratio']['description'] = $this->t('The width-to-height ratio of the generated video.');
+      }
+      if (isset($generalConfig['resolution'])) {
+        $generalConfig['resolution']['description'] = $this->t('The generated video resolution. Higher resolution costs more.');
+      }
+    }
 
     return $generalConfig;
   }
@@ -310,6 +342,10 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
         'label' => $this->t('Request transparent background'),
         'description' => $this->t('Asks Grok to generate a PNG with a genuine transparent alpha-channel background. This is best effort because xAI does not provide a native transparency control.'),
       ],
+      'duration' => [
+        'label' => $this->t('Video duration'),
+        'description' => $this->t('Length of the generated video in seconds. Longer videos cost more and take longer to generate.'),
+      ],
     ];
   }
 
@@ -327,6 +363,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
         'chat_with_tools' => $default_model,
         'chat_with_structured_response' => $default_model,
         'text_to_image' => self::DEFAULT_IMAGE_MODEL,
+        'text_to_video' => self::DEFAULT_VIDEO_MODEL,
       ],
     ];
   }
@@ -457,6 +494,63 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       $timeout,
     );
     return $this->normalizeImageOutput($response);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function textToVideo(string|TextToVideoInput $input, string $model_id, array $tags = []): TextToVideoOutput {
+    $this->loadClient();
+    $prompt = $input instanceof TextToVideoInput ? $input->getText() : $input;
+    if (trim($prompt) === '') {
+      throw new AiBadRequestException((string) $this->t('A non-empty video prompt is required.'));
+    }
+    if ($model_id !== self::DEFAULT_VIDEO_MODEL) {
+      throw new AiBadRequestException((string) $this->t('"@model" does not support xAI text-to-video generation.', [
+        '@model' => $model_id,
+      ]));
+    }
+
+    $payload = [
+      'model' => $model_id,
+      'prompt' => $prompt,
+    ];
+    $settings = array_intersect_key($this->configuration, array_flip([
+      'duration',
+      'aspect_ratio',
+      'resolution',
+    ]));
+    if (isset($settings['duration'])) {
+      $settings['duration'] = max(1, min(15, (int) $settings['duration']));
+    }
+    if (isset($settings['aspect_ratio']) && !in_array($settings['aspect_ratio'], [
+      '1:1',
+      '16:9',
+      '9:16',
+      '4:3',
+      '3:4',
+      '3:2',
+      '2:3',
+    ], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@ratio" is not a supported xAI video aspect ratio.', [
+        '@ratio' => $settings['aspect_ratio'],
+      ]));
+    }
+    if (isset($settings['resolution']) && !in_array($settings['resolution'], ['480p', '720p'], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@resolution" is not a supported xAI text-to-video resolution.', [
+        '@resolution' => $settings['resolution'],
+      ]));
+    }
+    $payload += $settings;
+
+    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
+    $response = $this->videosClient->generate(
+      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+      $this->apiKey ?: $this->loadApiKey(),
+      $payload,
+      $timeout,
+    );
+    return $this->normalizeVideoOutput($response);
   }
 
   /**
@@ -594,6 +688,33 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       'images' => $details,
       'usage' => (array) ($response['usage'] ?? []),
     ]);
+  }
+
+  /**
+   * Normalizes a downloaded MP4 into a Drupal AI video object.
+   */
+  private function normalizeVideoOutput(array $response): TextToVideoOutput {
+    $binary = $response['_video_binary'] ?? NULL;
+    if (!is_string($binary) || $binary === '' || strlen($binary) > self::MAX_VIDEO_BYTES) {
+      throw new AiResponseErrorException((string) $this->t('xAI returned invalid or oversized generated video data.'));
+    }
+    if (strlen($binary) < 12 || substr($binary, 4, 4) !== 'ftyp') {
+      throw new AiResponseErrorException((string) $this->t('xAI returned a generated video with an unsupported file type.'));
+    }
+
+    unset($response['_video_binary']);
+    $video = (array) ($response['video'] ?? []);
+    return new TextToVideoOutput(
+      [new VideoFile($binary, 'video/mp4', 'grok-video.mp4')],
+      $response,
+      [
+        'transport' => 'videos',
+        'model' => (string) ($response['model'] ?? self::DEFAULT_VIDEO_MODEL),
+        'duration' => $video['duration'] ?? NULL,
+        'respect_moderation' => $video['respect_moderation'] ?? NULL,
+        'usage' => (array) ($response['usage'] ?? []),
+      ],
+    );
   }
 
   /**

@@ -93,8 +93,17 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
           'class' => ['grok-ai-provider-branding__logo'],
         ],
       ],
-      'name' => [
-        '#markup' => '<div class="grok-ai-provider-branding__name">' . $this->t('Grok AI Provider') . '</div>',
+      'identity' => [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['grok-ai-provider-branding__identity'],
+        ],
+        'name' => [
+          '#markup' => '<div class="grok-ai-provider-branding__name">' . $this->t('Grok AI Provider') . '</div>',
+        ],
+        'status' => [
+          '#markup' => '<div class="grok-ai-provider-branding__status">' . $this->t('Unofficial') . '</div>',
+        ],
       ],
     ];
 
@@ -263,21 +272,22 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
 
     $next_steps_items = [
       $this->t('Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form.'),
-      $this->t('Open <a href=":url">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat and Text To Image. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults.', [
+      $this->t('Open <a href=":url">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults.', [
         ':url' => Url::fromRoute('ai.settings_form')->toString(),
       ]),
     ];
     if (\Drupal::moduleHandler()->moduleExists('ai_api_explorer')) {
-      $next_steps_items[] = $this->t('Try the configured models in the <a href=":chat_url">Chat Generation Explorer</a> and <a href=":image_url">Text-To-Image Generation Explorer</a>.', [
+      $next_steps_items[] = $this->t('Try the configured models in the <a href=":chat_url">Chat Generation Explorer</a>, <a href=":image_url">Text-To-Image Generation Explorer</a>, and <a href=":video_url">Text-To-Video Generation Explorer</a>.', [
         ':chat_url' => Url::fromRoute('ai_api_explorer.form.chat_generator')->toString(),
         ':image_url' => Url::fromRoute('ai_api_explorer.form.text_to_image_generator')->toString(),
+        ':video_url' => Url::fromRoute('ai_api_explorer.form.grok_text_to_video_generator')->toString(),
       ]);
     }
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),
     ]);
     $next_steps_items[] = $this->t('Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings.');
-    $next_steps_items[] = $this->t('Grok supports Chat-based text, vision, function tools, structured output, and text-to-image generation. Operations such as embeddings and speech require another provider that supports those operation types.');
+    $next_steps_items[] = $this->t('Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types.');
     $next_steps_items[] = $this->t('To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them.');
 
     $form['next_steps'] = [

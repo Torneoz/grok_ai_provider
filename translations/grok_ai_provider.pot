@@ -25,6 +25,109 @@ msgstr ""
 msgid "Grok AI Provider"
 msgstr ""
 
+#: src/Form/GrokAiProviderConfigForm.php:106
+msgid "Unofficial"
+msgstr ""
+
+msgid "Text to Video"
+msgstr ""
+
+msgid "Generate a short video from a text prompt."
+msgstr ""
+
+msgid "Text-To-Video Generation Explorer"
+msgstr ""
+
+msgid "Experiment with Grok text-to-video generation."
+msgstr ""
+
+msgid "Describe the video to generate."
+msgstr ""
+
+msgid "Video generation is asynchronous, billable by duration and resolution, and can take several minutes. Keep this page open until it finishes."
+msgstr ""
+
+msgid "Generate a Video"
+msgstr ""
+
+msgid "Video generation failed"
+msgstr ""
+
+msgid "The provider did not return a video."
+msgstr ""
+
+msgid "Video duration"
+msgstr ""
+
+msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgstr ""
+
+msgid "Length of the generated video in seconds. Longer videos cost more and take longer to generate."
+msgstr ""
+
+msgid "The width-to-height ratio of the generated video."
+msgstr ""
+
+msgid "The generated video resolution. Higher resolution costs more."
+msgstr ""
+
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgstr ""
+
+msgid "A non-empty video prompt is required."
+msgstr ""
+
+msgid "\"@model\" does not support xAI text-to-video generation."
+msgstr ""
+
+msgid "\"@ratio\" is not a supported xAI video aspect ratio."
+msgstr ""
+
+msgid "\"@resolution\" is not a supported xAI text-to-video resolution."
+msgstr ""
+
+msgid "xAI did not return a video request ID."
+msgstr ""
+
+msgid "xAI did not return the video because it did not pass content moderation."
+msgstr ""
+
+msgid "xAI returned an invalid generated video URL."
+msgstr ""
+
+msgid "xAI video generation ended with status “@status”."
+msgstr ""
+
+msgid "xAI video generation did not finish within @seconds seconds."
+msgstr ""
+
+msgid "The xAI video payload could not be decoded: @message"
+msgstr ""
+
+msgid "xAI returned an invalid video payload."
+msgstr ""
+
+msgid "The generated xAI video exceeds the maximum allowed size."
+msgstr ""
+
+msgid "Could not download the generated xAI video: @message"
+msgstr ""
+
+msgid "Could not connect to the xAI video API: @message"
+msgstr ""
+
+msgid "xAI video API returned HTTP @status."
+msgstr ""
+
+msgid "xAI returned invalid or oversized generated video data."
+msgstr ""
+
+msgid "xAI returned a generated video with an unsupported file type."
+msgstr ""
+
 #: src/Form/GrokAiProviderConfigForm.php:103
 msgid "xAI API key"
 msgstr ""
@@ -236,21 +339,6 @@ msgid ""
 "you want this provider to use by default, and save this form."
 msgstr ""
 
-#: src/Form/GrokAiProviderConfigForm.php:282
-msgid ""
-"Open <a href=\":url\">Default Models for AI Operations</a> and select "
-"<strong>Grok (xAI)</strong> for Chat and Text To Image. Choose the "
-"appropriate Grok chat and Grok Imagine models for features that rely on site-"
-"wide defaults."
-msgstr ""
-
-#: src/Form/GrokAiProviderConfigForm.php:271
-msgid ""
-"Try the configured models in the <a href=\":chat_url\">Chat Generation "
-"Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</"
-"a>."
-msgstr ""
-
 #: src/Form/GrokAiProviderConfigForm.php:276
 msgid ""
 "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> "
@@ -267,13 +355,6 @@ msgid ""
 "Review each Drupal AI module or feature you enable. Configure it to use the "
 "site-wide Chat default, or select Grok explicitly when that feature provides "
 "its own provider and model settings."
-msgstr ""
-
-#: src/Form/GrokAiProviderConfigForm.php:286
-msgid ""
-"Grok supports Chat-based text, vision, function tools, structured output, "
-"and text-to-image generation. Operations such as embeddings and speech "
-"require another provider that supports those operation types."
 msgstr ""
 
 #: src/Form/GrokAiProviderConfigForm.php:287

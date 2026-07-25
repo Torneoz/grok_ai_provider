@@ -96,6 +96,40 @@ final class GrokAiProviderTest extends TestCase {
   }
 
   /**
+   * Tests MP4 video normalization and metadata.
+   */
+  public function testNormalizesVideoOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeVideoOutput');
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'status' => 'done',
+      'model' => 'grok-imagine-video',
+      'video' => [
+        'duration' => 5,
+        'respect_moderation' => TRUE,
+      ],
+      'usage' => ['cost_in_usd_ticks' => 2500000000],
+      '_video_binary' => '0000ftypisom-video',
+    ]);
+
+    self::assertSame('video/mp4', $output->getNormalized()[0]->getMimeType());
+    self::assertSame('grok-video.mp4', $output->getNormalized()[0]->getFilename());
+    self::assertSame('videos', $output->getMetadata()['transport']);
+    self::assertSame(5, $output->getMetadata()['duration']);
+    self::assertArrayNotHasKey('_video_binary', $output->getRawOutput());
+  }
+
+  /**
+   * Tests that non-MP4 video output is rejected.
+   */
+  public function testRejectsInvalidVideoOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeVideoOutput');
+    $this->expectException(AiResponseErrorException::class);
+    $method->invoke($this->newProviderWithoutConstructor(), [
+      '_video_binary' => 'not an mp4 video',
+    ]);
+  }
+
+  /**
    * Tests that non-image base64 data is rejected.
    */
   public function testRejectsInvalidImageOutput(): void {
@@ -133,6 +167,13 @@ final class GrokAiProviderTest extends TestCase {
     self::assertArrayNotHasKey('web_search', $provider->getModelSettings('grok-3-mini', [
       'web_search' => ['type' => 'boolean'],
     ]));
+    $video_settings = $provider->getModelSettings('grok-imagine-video', [
+      'duration' => ['type' => 'integer'],
+      'aspect_ratio' => ['type' => 'string'],
+      'resolution' => ['type' => 'string'],
+    ]);
+    self::assertSame('Video duration', (string) $video_settings['duration']['label']);
+    self::assertStringContainsString('generated video', (string) $video_settings['aspect_ratio']['description']);
   }
 
   /**

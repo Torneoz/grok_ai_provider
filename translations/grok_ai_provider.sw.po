@@ -20,6 +20,33 @@ msgstr "Mtoa huduma wa Grok xAi"
 msgid "Grok AI Provider"
 msgstr "Mtoa huduma wa AI wa Grok"
 
+msgid "Unofficial"
+msgstr "Isiyo rasmi"
+
+msgid "Text to Video"
+msgstr "Maandishi kuwa video"
+
+msgid "Generate a short video from a text prompt."
+msgstr "Tengeneza video fupi kutoka maelezo ya maandishi."
+
+msgid "Text-To-Video Generation Explorer"
+msgstr "Kichunguzi cha Utengenezaji wa Video kutoka Maandishi"
+
+msgid "Experiment with Grok text-to-video generation."
+msgstr "Jaribu utengenezaji wa video kutoka maandishi kwa Grok."
+
+msgid "Describe the video to generate."
+msgstr "Eleza video ya kutengenezwa."
+
+msgid "Generate a Video"
+msgstr "Tengeneza Video"
+
+msgid "Video generation failed"
+msgstr "Utengenezaji wa video umeshindikana"
+
+msgid "Video duration"
+msgstr "Muda wa video"
+
 msgid "Provides Grok models from xAI to the Drupal AI modules."
 msgstr "Hutoa modeli za Grok kutoka xAI kwa moduli za AI za Drupal."
 
@@ -104,8 +131,8 @@ msgstr "Kuhusu"
 msgid "Next Steps"
 msgstr "Hatua Zinazofuata"
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</a>."
-msgstr "Jaribu modeli zilizosanidiwa katika <a href=\":chat_url\">Kichunguzi cha Utengenezaji wa Gumzo</a> na <a href=\":image_url\">Kichunguzi cha Utengenezaji wa Picha kutoka Maandishi</a>."
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr "Jaribu modeli zilizosanidiwa katika <a href=\":chat_url\">Kichunguzi cha Utengenezaji wa Gumzo</a>, <a href=\":image_url\">Kichunguzi cha Utengenezaji wa Picha kutoka Maandishi</a>, na <a href=\":video_url\">Kichunguzi cha Utengenezaji wa Video kutoka Maandishi</a>."
 
 msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
 msgstr "Ili kutumia Grok katika CKEditor, washa moduli ya <strong>Ujumuishaji wa AI CKEditor</strong>, kisha fungua <a href=\":url\">Miundo ya maandishi na vihariri</a>. Hariri kila muundo wa maandishi wa CKEditor 5 unaohitaji AI, ongeza kitufe cha AI kwenye upau wake wa zana unaotumika, washa vitendo vya AI vinavyohitajika, na uchague <strong>Grok (xAI)</strong> pamoja na modeli ya gumzo ya Grok kwa kila kitendo, au hakikisha kuwa kitendo kinatumia chaguo-msingi la Chat la tovuti nzima. Pia zipe dhima zinazofaa ruhusa ya <em>use ai ckeditor</em>."

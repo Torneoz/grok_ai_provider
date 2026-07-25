@@ -1,0 +1,31 @@
+<?php
+
+/**
+ * @file
+ * Hooks for the Grok AI Provider module.
+ */
+
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+
+/**
+ * Implements hook_ai_operation_types_alter().
+ */
+function grok_ai_provider_ai_operation_types_alter(array &$operation_types): void {
+  $operation_types['text_to_video'] = [
+    'id' => 'text_to_video',
+    'label' => new TranslatableMarkup('Text to Video'),
+    'actual_type' => 'text_to_video',
+    'filter' => [],
+    'description' => new TranslatableMarkup('Generate a short video from a text prompt.'),
+  ];
+}
+
+/**
+ * Implements hook_config_schema_info_alter().
+ */
+function grok_ai_provider_config_schema_info_alter(array &$definitions): void {
+  $definitions['ai.settings']['mapping']['default_providers']['mapping']['text_to_video'] = [
+    'label' => 'Default text to video provider',
+    'type' => 'grok_ai_provider.default_operation_provider',
+  ];
+}

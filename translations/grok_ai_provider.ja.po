@@ -20,6 +20,33 @@ msgstr "Grok xAi プロバイダー"
 msgid "Grok AI Provider"
 msgstr "Grok AI プロバイダー"
 
+msgid "Unofficial"
+msgstr "非公式"
+
+msgid "Text to Video"
+msgstr "テキストから動画"
+
+msgid "Generate a short video from a text prompt."
+msgstr "テキストプロンプトから短い動画を生成します。"
+
+msgid "Text-To-Video Generation Explorer"
+msgstr "テキスト動画生成エクスプローラー"
+
+msgid "Experiment with Grok text-to-video generation."
+msgstr "Grok のテキスト動画生成を試します。"
+
+msgid "Describe the video to generate."
+msgstr "生成する動画を説明してください。"
+
+msgid "Generate a Video"
+msgstr "動画を生成"
+
+msgid "Video generation failed"
+msgstr "動画の生成に失敗しました"
+
+msgid "Video duration"
+msgstr "動画の長さ"
+
 msgid "Provides Grok models from xAI to the Drupal AI modules."
 msgstr "Drupal AI モジュールに xAI の Grok モデルを提供します。"
 
@@ -104,8 +131,8 @@ msgstr "概要"
 msgid "Next Steps"
 msgstr "次のステップ"
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</a>."
-msgstr "設定したモデルを<a href=\":chat_url\">チャット生成エクスプローラー</a>と<a href=\":image_url\">テキスト画像生成エクスプローラー</a>で試してください。"
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr "設定したモデルを<a href=\":chat_url\">チャット生成エクスプローラー</a>、<a href=\":image_url\">テキスト画像生成エクスプローラー</a>、<a href=\":video_url\">テキスト動画生成エクスプローラー</a>で試してください。"
 
 msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
 msgstr "CKEditor で Grok を使用するには、<strong>AI CKEditor integration</strong> モジュールを有効にして、<a href=\":url\">テキストフォーマットとエディター</a>を開きます。AI が必要な各 CKEditor 5 テキストフォーマットを編集し、AI ボタンを有効なツールバーに追加して、必要な AI アクションを有効にします。各アクションで Grok チャットモデルとともに <strong>Grok (xAI)</strong> を選択するか、サイト全体の Chat デフォルトが使用されることを確認してください。また、適切なロールに <em>use ai ckeditor</em> 権限を付与してください。"

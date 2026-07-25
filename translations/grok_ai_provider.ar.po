@@ -20,6 +20,33 @@ msgstr "موفّر Grok xAi"
 msgid "Grok AI Provider"
 msgstr "موفّر Grok للذكاء الاصطناعي"
 
+msgid "Unofficial"
+msgstr "غير رسمي"
+
+msgid "Text to Video"
+msgstr "تحويل النص إلى فيديو"
+
+msgid "Generate a short video from a text prompt."
+msgstr "أنشئ فيديو قصيرًا من وصف نصي."
+
+msgid "Text-To-Video Generation Explorer"
+msgstr "مستكشف إنشاء الفيديو من النص"
+
+msgid "Experiment with Grok text-to-video generation."
+msgstr "جرّب إنشاء الفيديو من النص باستخدام Grok."
+
+msgid "Describe the video to generate."
+msgstr "صِف الفيديو المطلوب إنشاؤه."
+
+msgid "Generate a Video"
+msgstr "إنشاء فيديو"
+
+msgid "Video generation failed"
+msgstr "فشل إنشاء الفيديو"
+
+msgid "Video duration"
+msgstr "مدة الفيديو"
+
 msgid "Provides Grok models from xAI to the Drupal AI modules."
 msgstr "يوفّر نماذج Grok من xAI لوحدات الذكاء الاصطناعي في Drupal."
 
@@ -104,8 +131,8 @@ msgstr "حول"
 msgid "Next Steps"
 msgstr "الخطوات التالية"
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</a>."
-msgstr "جرّب النماذج التي تم إعدادها في <a href=\":chat_url\">مستكشف إنشاء المحادثات</a> و<a href=\":image_url\">مستكشف إنشاء الصور من النص</a>."
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr "جرّب النماذج التي تم إعدادها في <a href=\":chat_url\">مستكشف إنشاء المحادثات</a> و<a href=\":image_url\">مستكشف إنشاء الصور من النص</a> و<a href=\":video_url\">مستكشف إنشاء الفيديو من النص</a>."
 
 msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
 msgstr "لاستخدام Grok في CKEditor، فعّل وحدة <strong>تكامل AI CKEditor</strong>، ثم افتح <a href=\":url\">تنسيقات النصوص والمحررات</a>. حرّر كل تنسيق نص CKEditor 5 يحتاج إلى الذكاء الاصطناعي، وأضف زر AI إلى شريط الأدوات النشط، وفعّل إجراءات AI المطلوبة، واختر <strong>Grok (xAI)</strong> مع نموذج محادثة Grok لكل إجراء، أو تحقّق من أن الإجراء يستخدم إعداد Chat الافتراضي للموقع. امنح أيضًا الأدوار المناسبة صلاحية <em>use ai ckeditor</em>."

@@ -20,6 +20,33 @@ msgstr "Fournisseur Grok xAi"
 msgid "Grok AI Provider"
 msgstr "Fournisseur d’IA Grok"
 
+msgid "Unofficial"
+msgstr "Non officiel"
+
+msgid "Text to Video"
+msgstr "Texte en vidéo"
+
+msgid "Generate a short video from a text prompt."
+msgstr "Génère une courte vidéo à partir d’une consigne textuelle."
+
+msgid "Text-To-Video Generation Explorer"
+msgstr "Explorateur de génération de texte en vidéo"
+
+msgid "Experiment with Grok text-to-video generation."
+msgstr "Expérimentez la génération de texte en vidéo avec Grok."
+
+msgid "Describe the video to generate."
+msgstr "Décrivez la vidéo à générer."
+
+msgid "Generate a Video"
+msgstr "Générer une vidéo"
+
+msgid "Video generation failed"
+msgstr "La génération de la vidéo a échoué"
+
+msgid "Video duration"
+msgstr "Durée de la vidéo"
+
 msgid "Provides Grok models from xAI to the Drupal AI modules."
 msgstr "Fournit les modèles Grok de xAI aux modules d’IA de Drupal."
 
@@ -104,8 +131,8 @@ msgstr "À propos"
 msgid "Next Steps"
 msgstr "Étapes suivantes"
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</a>."
-msgstr "Essayez les modèles configurés dans l’<a href=\":chat_url\">explorateur de génération de conversations</a> et l’<a href=\":image_url\">explorateur de génération de texte en image</a>."
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr "Essayez les modèles configurés dans l’<a href=\":chat_url\">explorateur de génération de conversations</a>, l’<a href=\":image_url\">explorateur de génération de texte en image</a> et l’<a href=\":video_url\">explorateur de génération de texte en vidéo</a>."
 
 msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
 msgstr "Pour utiliser Grok dans CKEditor, activez le module <strong>Intégration AI CKEditor</strong>, puis ouvrez <a href=\":url\">Formats de texte et éditeurs</a>. Modifiez chaque format de texte CKEditor 5 nécessitant l’AI, ajoutez le bouton AI à sa barre d’outils active, activez les actions AI requises et sélectionnez <strong>Grok (xAI)</strong> avec un modèle de conversation Grok pour chaque action, ou vérifiez que l’action utilise la valeur Chat par défaut du site. Accordez également aux rôles appropriés le droit <em>use ai ckeditor</em>."

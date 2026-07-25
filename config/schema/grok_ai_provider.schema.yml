@@ -56,3 +56,7 @@ grok_ai_provider.settings:
             label: 'Allowed MCP tool names'
             sequence:
               type: string
+
+grok_ai_provider.default_operation_provider:
+  type: ai.default_operation_provider
+  label: 'Default text to video provider'
