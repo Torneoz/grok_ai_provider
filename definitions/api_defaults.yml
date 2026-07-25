@@ -230,3 +230,9 @@ text_to_image:
         options:
           - '1k'
           - '2k'
+    transparent_background:
+      label: 'Request transparent background'
+      description: 'Asks Grok to generate a PNG with a genuine transparent alpha-channel background. This is best effort because xAI does not provide a native transparency control.'
+      type: 'boolean'
+      default: false
+      required: false

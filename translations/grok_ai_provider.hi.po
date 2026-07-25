@@ -113,6 +113,9 @@ msgstr "पक्षानुपात"
 msgid "Resolution"
 msgstr "रिज़ॉल्यूशन"
 
+msgid "Request transparent background"
+msgstr "पारदर्शी पृष्ठभूमि का अनुरोध करें"
+
 msgid "Version: @version"
 msgstr "संस्करण: @version"
 

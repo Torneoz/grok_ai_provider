@@ -113,6 +113,9 @@ msgstr "Rapport d’aspect"
 msgid "Resolution"
 msgstr "Résolution"
 
+msgid "Request transparent background"
+msgstr "Demander un arrière-plan transparent"
+
 msgid "Version: @version"
 msgstr "Version : @version"
 

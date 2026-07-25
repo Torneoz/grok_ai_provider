@@ -113,6 +113,9 @@ msgstr "Соотношение сторон"
 msgid "Resolution"
 msgstr "Разрешение"
 
+msgid "Request transparent background"
+msgstr "Запросить прозрачный фон"
+
 msgid "Version: @version"
 msgstr "Версия: @version"
 

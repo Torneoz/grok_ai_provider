@@ -113,6 +113,9 @@ msgstr "アスペクト比"
 msgid "Resolution"
 msgstr "解像度"
 
+msgid "Request transparent background"
+msgstr "透明な背景をリクエスト"
+
 msgid "Version: @version"
 msgstr "バージョン: @version"
 

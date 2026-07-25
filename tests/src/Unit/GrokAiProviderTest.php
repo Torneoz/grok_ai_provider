@@ -107,6 +107,22 @@ final class GrokAiProviderTest extends TestCase {
   }
 
   /**
+   * Tests best-effort transparent-background prompt guidance.
+   */
+  public function testBuildsTransparentBackgroundPrompt(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $configuration = new \ReflectionProperty(GrokAiProvider::class, 'configuration');
+    $configuration->setValue($provider, ['transparent_background' => TRUE]);
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'buildImagePrompt');
+
+    $prompt = $method->invoke($provider, 'A crocodile mascot');
+
+    self::assertStringStartsWith('A crocodile mascot', $prompt);
+    self::assertStringContainsString('real alpha channel', $prompt);
+    self::assertStringContainsString('no checkerboard pattern', $prompt);
+  }
+
+  /**
    * Tests that reasoning settings are added only to compatible families.
    */
   public function testReasoningSettings(): void {

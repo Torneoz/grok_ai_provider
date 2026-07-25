@@ -306,6 +306,10 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
         'label' => $this->t('Resolution'),
         'description' => $this->t('The output resolution of each generated image. Higher resolution can increase cost and generation time.'),
       ],
+      'transparent_background' => [
+        'label' => $this->t('Request transparent background'),
+        'description' => $this->t('Asks Grok to generate a PNG with a genuine transparent alpha-channel background. This is best effort because xAI does not provide a native transparency control.'),
+      ],
     ];
   }
 
@@ -406,7 +410,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
 
     $payload = [
       'model' => $model_id,
-      'prompt' => $prompt,
+      'prompt' => $this->buildImagePrompt($prompt),
       // Return bytes in the API response instead of fetching an ephemeral URL.
       'response_format' => 'b64_json',
     ];
@@ -453,6 +457,16 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
       $timeout,
     );
     return $this->normalizeImageOutput($response);
+  }
+
+  /**
+   * Adds best-effort transparency guidance when requested.
+   */
+  private function buildImagePrompt(string $prompt): string {
+    if (empty($this->configuration['transparent_background'])) {
+      return $prompt;
+    }
+    return rtrim($prompt) . "\n\nOutput requirement: isolate the subject on a genuinely transparent background with a real alpha channel. Return PNG artwork with no backdrop, no solid background, and no checkerboard pattern.";
   }
 
   /**
@@ -576,6 +590,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
 
     return new TextToImageOutput($images, $response, [
       'transport' => 'images',
+      'transparent_background_requested' => !empty($this->configuration['transparent_background']),
       'images' => $details,
       'usage' => (array) ($response['usage'] ?? []),
     ]);

@@ -113,6 +113,9 @@ msgstr "宽高比"
 msgid "Resolution"
 msgstr "分辨率"
 
+msgid "Request transparent background"
+msgstr "请求透明背景"
+
 msgid "Version: @version"
 msgstr "版本：@version"
 

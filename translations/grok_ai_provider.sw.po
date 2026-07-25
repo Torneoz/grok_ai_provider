@@ -113,6 +113,9 @@ msgstr "Uwiano wa vipimo"
 msgid "Resolution"
 msgstr "Mwonekano"
 
+msgid "Request transparent background"
+msgstr "Omba mandharinyuma yenye uwazi"
+
 msgid "Version: @version"
 msgstr "Toleo: @version"
 

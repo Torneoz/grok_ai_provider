@@ -113,6 +113,9 @@ msgstr "Seitenverhältnis"
 msgid "Resolution"
 msgstr "Auflösung"
 
+msgid "Request transparent background"
+msgstr "Transparenten Hintergrund anfordern"
+
 msgid "Version: @version"
 msgstr "Version: @version"
 

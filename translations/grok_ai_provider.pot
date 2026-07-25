@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok_ai_provider 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-25 11:14+0930\n"
+"POT-Creation-Date: 2026-07-25 11:26+0930\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -608,157 +608,168 @@ msgid ""
 "increase cost and generation time."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:377
+#: src/Plugin/AiProvider/GrokAiProvider.php:310
+msgid "Request transparent background"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:311
+msgid ""
+"Asks Grok to generate a PNG with a genuine transparent alpha-channel "
+"background. This is best effort because xAI does not provide a native "
+"transparency control."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:381
 msgid ""
 "Streaming xAI Responses requests are not yet supported. Disable streaming or "
 "use Chat Completions."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:399
+#: src/Plugin/AiProvider/GrokAiProvider.php:403
 msgid "A non-empty image prompt is required."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:402
+#: src/Plugin/AiProvider/GrokAiProvider.php:406
 msgid "\"@model\" is not an xAI image generation model."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:437
+#: src/Plugin/AiProvider/GrokAiProvider.php:441
 msgid "\"@ratio\" is not a supported xAI image aspect ratio."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:442
+#: src/Plugin/AiProvider/GrokAiProvider.php:446
 msgid "\"@resolution\" is not a supported xAI image resolution."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:469
+#: src/Plugin/AiProvider/GrokAiProvider.php:483
 msgid "Failed to initialize the xAI client: @message"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:533
+#: src/Plugin/AiProvider/GrokAiProvider.php:547
 msgid "xAI did not return any generated images."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:541
+#: src/Plugin/AiProvider/GrokAiProvider.php:555
 msgid "xAI did not return image data for result @number."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:546
+#: src/Plugin/AiProvider/GrokAiProvider.php:560
 msgid "Generated image @number exceeds the maximum allowed size."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:552
+#: src/Plugin/AiProvider/GrokAiProvider.php:566
 msgid "Generated image @number contains invalid or oversized image data."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:558
-#: src/Plugin/AiProvider/GrokAiProvider.php:566
+#: src/Plugin/AiProvider/GrokAiProvider.php:572
+#: src/Plugin/AiProvider/GrokAiProvider.php:580
 msgid "Generated image @number has an unsupported file type."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:623
+#: src/Plugin/AiProvider/GrokAiProvider.php:638
 msgid ""
 "Hosted xAI tools require the Responses API, but this provider is configured "
 "for Chat Completions only."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:702
+#: src/Plugin/AiProvider/GrokAiProvider.php:717
 msgid "A non-empty chat prompt is required."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:708
+#: src/Plugin/AiProvider/GrokAiProvider.php:723
 msgid "At least one input message is required."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:719
+#: src/Plugin/AiProvider/GrokAiProvider.php:734
 msgid "The message role \"@role\" is not supported by xAI Responses."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:732
+#: src/Plugin/AiProvider/GrokAiProvider.php:747
 msgid "Responses input does not yet support the file type \"@type\"."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:738
+#: src/Plugin/AiProvider/GrokAiProvider.php:753
 msgid "Each chat message must contain text or a supported image."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:756
+#: src/Plugin/AiProvider/GrokAiProvider.php:771
 msgid ""
 "The xAI hosted tool \"@tool\" is not permitted in the Grok provider settings."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:766
+#: src/Plugin/AiProvider/GrokAiProvider.php:781
 msgid "Web Search allowed and excluded domains cannot be combined."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:769
+#: src/Plugin/AiProvider/GrokAiProvider.php:784
 msgid "Web Search accepts no more than five allowed or excluded domains."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:773
+#: src/Plugin/AiProvider/GrokAiProvider.php:788
 msgid "\"@domain\" is not a valid Web Search domain."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:795
+#: src/Plugin/AiProvider/GrokAiProvider.php:810
 msgid "X Search allowed and excluded handles cannot be combined."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:798
+#: src/Plugin/AiProvider/GrokAiProvider.php:813
 msgid "X Search accepts no more than twenty allowed or excluded handles."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:809
+#: src/Plugin/AiProvider/GrokAiProvider.php:824
 msgid "start date"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:813
+#: src/Plugin/AiProvider/GrokAiProvider.php:828
 msgid "end date"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:821
+#: src/Plugin/AiProvider/GrokAiProvider.php:836
 msgid "The X Search @field value must use YYYY-MM-DD format."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:829
+#: src/Plugin/AiProvider/GrokAiProvider.php:844
 msgid "X Search start date cannot be later than its end date."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:841
+#: src/Plugin/AiProvider/GrokAiProvider.php:856
 msgid "Collections Search requires at least one xAI collection ID."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:845
+#: src/Plugin/AiProvider/GrokAiProvider.php:860
 msgid "\"@collection_id\" is not a valid xAI collection ID."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:872
+#: src/Plugin/AiProvider/GrokAiProvider.php:887
 msgid "The following MCP servers are not allowlisted: @servers"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:878
+#: src/Plugin/AiProvider/GrokAiProvider.php:893
 msgid "Remote MCP tools are not permitted in the Grok provider settings."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:889
+#: src/Plugin/AiProvider/GrokAiProvider.php:904
 msgid "xAI Responses failed: @error"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:896
+#: src/Plugin/AiProvider/GrokAiProvider.php:911
 msgid "xAI Responses finished with status \"@status\" (@reason)."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:917
+#: src/Plugin/AiProvider/GrokAiProvider.php:932
 msgid "The request was refused."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:923
+#: src/Plugin/AiProvider/GrokAiProvider.php:938
 msgid "xAI refused the request: @reason"
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:927
+#: src/Plugin/AiProvider/GrokAiProvider.php:942
 msgid "xAI Responses did not return output text."
 msgstr ""
 
-#: src/Plugin/AiProvider/GrokAiProvider.php:972
+#: src/Plugin/AiProvider/GrokAiProvider.php:987
 msgid "\"@handle\" is not a valid X handle."
 msgstr ""
 

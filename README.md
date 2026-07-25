@@ -36,6 +36,7 @@ translations independently.
 - Drupal AI function tools
 - JSON and structured responses on supported models
 - Text-to-image generation with available Grok Imagine image models
+- Optional best-effort transparent-background prompting for generated images
 - Token usage and rate-limit metadata exposed by the API
 - Automatic dual transport: ordinary requests use Chat Completions and
   hosted-tool requests use the Responses API

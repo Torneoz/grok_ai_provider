@@ -113,6 +113,9 @@ msgstr "نسبة العرض إلى الارتفاع"
 msgid "Resolution"
 msgstr "الدقة"
 
+msgid "Request transparent background"
+msgstr "طلب خلفية شفافة"
+
 msgid "Version: @version"
 msgstr "الإصدار: @version"
 
