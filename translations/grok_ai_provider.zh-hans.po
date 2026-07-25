@@ -104,6 +104,12 @@ msgstr "关于"
 msgid "Next Steps"
 msgstr "后续步骤"
 
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a> and <a href=\":image_url\">Text-To-Image Generation Explorer</a>."
+msgstr "在<a href=\":chat_url\">聊天生成探索器</a>和<a href=\":image_url\">文本生成图像探索器</a>中试用已配置的模型。"
+
+msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
+msgstr "要在 CKEditor 中使用 Grok，请启用 <strong>AI CKEditor 集成</strong>模块，然后打开<a href=\":url\">文本格式和编辑器</a>。编辑每个需要 AI 的 CKEditor 5 文本格式，将 AI 按钮添加到启用的工具栏，启用所需的 AI 操作，并为每个操作选择 <strong>Grok (xAI)</strong> 和 Grok 聊天模型，或确认该操作使用全站 Chat 默认设置。还要向适当的角色授予 <em>use ai ckeditor</em> 权限。"
+
 msgid "Number of images"
 msgstr "图像数量"
 
