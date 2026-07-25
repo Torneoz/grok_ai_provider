@@ -1,0 +1,120 @@
+# Simplified Chinese basic translation for Grok AI Provider.
+# Copyright (C) 2026 Torneoz
+# This file is distributed under the same license as the grok_ai_provider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grok_ai_provider 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"Last-Translator: Torneoz\n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh-hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Grok xAi Provider"
+msgstr "Grok xAi 提供商"
+
+msgid "Grok AI Provider"
+msgstr "Grok AI 提供商"
+
+msgid "Provides Grok models from xAI to the Drupal AI modules."
+msgstr "为 Drupal AI 模块提供 xAI 的 Grok 模型。"
+
+msgid "AI Providers"
+msgstr "AI 提供商"
+
+msgid "Grok authentication"
+msgstr "Grok 身份验证"
+
+msgid "Configure access to the xAI API."
+msgstr "配置对 xAI API 的访问。"
+
+msgid "Configure Grok authentication, models, transports, and hosted tools."
+msgstr "配置 Grok 身份验证、模型、传输方式和托管工具。"
+
+msgid "Configure Grok Integrations"
+msgstr "配置 Grok 集成"
+
+msgid "xAI API key"
+msgstr "xAI API 密钥"
+
+msgid "Select a Key containing an API key created in the xAI Console."
+msgstr "选择一个包含在 xAI 控制台中创建的 API 密钥的密钥。"
+
+msgid "Advanced settings"
+msgstr "高级设置"
+
+msgid "API base URL"
+msgstr "API 基础 URL"
+
+msgid "Transport"
+msgstr "传输方式"
+
+msgid "Automatic (recommended)"
+msgstr "自动（推荐）"
+
+msgid "Chat Completions only"
+msgstr "仅 Chat Completions"
+
+msgid "Responses API for compatible requests"
+msgstr "对兼容请求使用 Responses API"
+
+msgid "Allow xAI to store Responses API requests"
+msgstr "允许 xAI 存储 Responses API 请求"
+
+msgid "Responses request timeout"
+msgstr "Responses 请求超时"
+
+msgid "Test connection"
+msgstr "测试连接"
+
+msgid "Test connection and load models"
+msgstr "测试连接并加载模型"
+
+msgid "Default Grok model"
+msgstr "默认 Grok 模型"
+
+msgid "Hosted tool permissions"
+msgstr "托管工具权限"
+
+msgid "Permit Web Search"
+msgstr "允许网页搜索"
+
+msgid "Permit X Search"
+msgstr "允许 X 搜索"
+
+msgid "Permit Code Interpreter"
+msgstr "允许代码解释器"
+
+msgid "Permit Collections Search"
+msgstr "允许集合搜索"
+
+msgid "Permit allowlisted remote MCP servers"
+msgstr "允许已列入许可名单的远程 MCP 服务器"
+
+msgid "Remote MCP server allowlist"
+msgstr "远程 MCP 服务器许可名单"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Version: @version"
+msgstr "版本：@version"
+
+msgid "seconds"
+msgstr "秒"
+
+msgid "The selected Key does not contain an API key."
+msgstr "所选密钥不包含 API 密钥。"
+
+msgid "Could not authenticate with xAI: @message"
+msgstr "无法通过 xAI 进行身份验证：@message"
+
+msgid "Connection failed: @message"
+msgstr "连接失败：@message"
+
+msgid "xAI did not return any accessible Grok models for this key."
+msgstr "xAI 未返回此密钥可访问的任何 Grok 模型。"

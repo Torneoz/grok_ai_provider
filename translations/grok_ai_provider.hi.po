@@ -1,0 +1,120 @@
+# Hindi basic translation for Grok AI Provider.
+# Copyright (C) 2026 Torneoz
+# This file is distributed under the same license as the grok_ai_provider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grok_ai_provider 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"Last-Translator: Torneoz\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Grok xAi Provider"
+msgstr "Grok xAi प्रदाता"
+
+msgid "Grok AI Provider"
+msgstr "Grok AI प्रदाता"
+
+msgid "Provides Grok models from xAI to the Drupal AI modules."
+msgstr "Drupal AI मॉड्यूल के लिए xAI के Grok मॉडल उपलब्ध कराता है।"
+
+msgid "AI Providers"
+msgstr "AI प्रदाता"
+
+msgid "Grok authentication"
+msgstr "Grok प्रमाणीकरण"
+
+msgid "Configure access to the xAI API."
+msgstr "xAI API तक पहुँच कॉन्फ़िगर करें।"
+
+msgid "Configure Grok authentication, models, transports, and hosted tools."
+msgstr "Grok प्रमाणीकरण, मॉडल, ट्रांसपोर्ट और होस्ट किए गए टूल कॉन्फ़िगर करें।"
+
+msgid "Configure Grok Integrations"
+msgstr "Grok एकीकरण कॉन्फ़िगर करें"
+
+msgid "xAI API key"
+msgstr "xAI API कुंजी"
+
+msgid "Select a Key containing an API key created in the xAI Console."
+msgstr "xAI कंसोल में बनाई गई API कुंजी वाली कुंजी चुनें।"
+
+msgid "Advanced settings"
+msgstr "उन्नत सेटिंग्स"
+
+msgid "API base URL"
+msgstr "API आधार URL"
+
+msgid "Transport"
+msgstr "ट्रांसपोर्ट"
+
+msgid "Automatic (recommended)"
+msgstr "स्वचालित (अनुशंसित)"
+
+msgid "Chat Completions only"
+msgstr "केवल Chat Completions"
+
+msgid "Responses API for compatible requests"
+msgstr "संगत अनुरोधों के लिए Responses API"
+
+msgid "Allow xAI to store Responses API requests"
+msgstr "xAI को Responses API अनुरोध संग्रहीत करने दें"
+
+msgid "Responses request timeout"
+msgstr "Responses अनुरोध समय-सीमा"
+
+msgid "Test connection"
+msgstr "कनेक्शन जाँचें"
+
+msgid "Test connection and load models"
+msgstr "कनेक्शन जाँचें और मॉडल लोड करें"
+
+msgid "Default Grok model"
+msgstr "डिफ़ॉल्ट Grok मॉडल"
+
+msgid "Hosted tool permissions"
+msgstr "होस्ट किए गए टूल की अनुमतियाँ"
+
+msgid "Permit Web Search"
+msgstr "वेब खोज की अनुमति दें"
+
+msgid "Permit X Search"
+msgstr "X खोज की अनुमति दें"
+
+msgid "Permit Code Interpreter"
+msgstr "कोड इंटरप्रेटर की अनुमति दें"
+
+msgid "Permit Collections Search"
+msgstr "संग्रह खोज की अनुमति दें"
+
+msgid "Permit allowlisted remote MCP servers"
+msgstr "अनुमत सूची वाले दूरस्थ MCP सर्वर की अनुमति दें"
+
+msgid "Remote MCP server allowlist"
+msgstr "दूरस्थ MCP सर्वर अनुमत सूची"
+
+msgid "About"
+msgstr "परिचय"
+
+msgid "Version: @version"
+msgstr "संस्करण: @version"
+
+msgid "seconds"
+msgstr "सेकंड"
+
+msgid "The selected Key does not contain an API key."
+msgstr "चुनी गई कुंजी में API कुंजी नहीं है।"
+
+msgid "Could not authenticate with xAI: @message"
+msgstr "xAI से प्रमाणीकरण नहीं हो सका: @message"
+
+msgid "Connection failed: @message"
+msgstr "कनेक्शन विफल: @message"
+
+msgid "xAI did not return any accessible Grok models for this key."
+msgstr "xAI ने इस कुंजी के लिए कोई सुलभ Grok मॉडल नहीं लौटाया।"

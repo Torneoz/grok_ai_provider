@@ -1,0 +1,120 @@
+# Swahili basic translation for Grok AI Provider.
+# Copyright (C) 2026 Torneoz
+# This file is distributed under the same license as the grok_ai_provider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grok_ai_provider 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"Last-Translator: Torneoz\n"
+"Language-Team: Swahili\n"
+"Language: sw\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Grok xAi Provider"
+msgstr "Mtoa huduma wa Grok xAi"
+
+msgid "Grok AI Provider"
+msgstr "Mtoa huduma wa AI wa Grok"
+
+msgid "Provides Grok models from xAI to the Drupal AI modules."
+msgstr "Hutoa modeli za Grok kutoka xAI kwa moduli za AI za Drupal."
+
+msgid "AI Providers"
+msgstr "Watoa huduma wa AI"
+
+msgid "Grok authentication"
+msgstr "Uthibitishaji wa Grok"
+
+msgid "Configure access to the xAI API."
+msgstr "Sanidi ufikiaji wa API ya xAI."
+
+msgid "Configure Grok authentication, models, transports, and hosted tools."
+msgstr "Sanidi uthibitishaji, modeli, njia za usafirishaji na zana zinazopangishwa za Grok."
+
+msgid "Configure Grok Integrations"
+msgstr "Sanidi miunganisho ya Grok"
+
+msgid "xAI API key"
+msgstr "Ufunguo wa API ya xAI"
+
+msgid "Select a Key containing an API key created in the xAI Console."
+msgstr "Chagua ufunguo ulio na ufunguo wa API ulioundwa kwenye dashibodi ya xAI."
+
+msgid "Advanced settings"
+msgstr "Mipangilio ya kina"
+
+msgid "API base URL"
+msgstr "URL msingi ya API"
+
+msgid "Transport"
+msgstr "Usafirishaji"
+
+msgid "Automatic (recommended)"
+msgstr "Otomatiki (inapendekezwa)"
+
+msgid "Chat Completions only"
+msgstr "Chat Completions pekee"
+
+msgid "Responses API for compatible requests"
+msgstr "API ya Responses kwa maombi yanayooana"
+
+msgid "Allow xAI to store Responses API requests"
+msgstr "Ruhusu xAI kuhifadhi maombi ya API ya Responses"
+
+msgid "Responses request timeout"
+msgstr "Muda wa mwisho wa ombi la Responses"
+
+msgid "Test connection"
+msgstr "Jaribu muunganisho"
+
+msgid "Test connection and load models"
+msgstr "Jaribu muunganisho na upakie modeli"
+
+msgid "Default Grok model"
+msgstr "Modeli chaguo-msingi ya Grok"
+
+msgid "Hosted tool permissions"
+msgstr "Ruhusa za zana zinazopangishwa"
+
+msgid "Permit Web Search"
+msgstr "Ruhusu Utafutaji wa Wavuti"
+
+msgid "Permit X Search"
+msgstr "Ruhusu Utafutaji wa X"
+
+msgid "Permit Code Interpreter"
+msgstr "Ruhusu Mkalimani wa Msimbo"
+
+msgid "Permit Collections Search"
+msgstr "Ruhusu Utafutaji wa Mikusanyiko"
+
+msgid "Permit allowlisted remote MCP servers"
+msgstr "Ruhusu seva za mbali za MCP zilizoidhinishwa"
+
+msgid "Remote MCP server allowlist"
+msgstr "Orodha ya seva za mbali za MCP zilizoidhinishwa"
+
+msgid "About"
+msgstr "Kuhusu"
+
+msgid "Version: @version"
+msgstr "Toleo: @version"
+
+msgid "seconds"
+msgstr "sekunde"
+
+msgid "The selected Key does not contain an API key."
+msgstr "Ufunguo uliochaguliwa hauna ufunguo wa API."
+
+msgid "Could not authenticate with xAI: @message"
+msgstr "Imeshindikana kuthibitisha na xAI: @message"
+
+msgid "Connection failed: @message"
+msgstr "Muunganisho umeshindikana: @message"
+
+msgid "xAI did not return any accessible Grok models for this key."
+msgstr "xAI haikurejesha modeli zozote za Grok zinazoweza kufikiwa kwa ufunguo huu."

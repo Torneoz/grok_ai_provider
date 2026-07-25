@@ -1,0 +1,120 @@
+# Spanish basic translation for Grok AI Provider.
+# Copyright (C) 2026 Torneoz
+# This file is distributed under the same license as the grok_ai_provider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grok_ai_provider 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"Last-Translator: Torneoz\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Grok xAi Provider"
+msgstr "Proveedor Grok xAi"
+
+msgid "Grok AI Provider"
+msgstr "Proveedor de IA Grok"
+
+msgid "Provides Grok models from xAI to the Drupal AI modules."
+msgstr "Proporciona modelos Grok de xAI a los módulos de IA de Drupal."
+
+msgid "AI Providers"
+msgstr "Proveedores de IA"
+
+msgid "Grok authentication"
+msgstr "Autenticación de Grok"
+
+msgid "Configure access to the xAI API."
+msgstr "Configurar el acceso a la API de xAI."
+
+msgid "Configure Grok authentication, models, transports, and hosted tools."
+msgstr "Configurar la autenticación, los modelos, los transportes y las herramientas alojadas de Grok."
+
+msgid "Configure Grok Integrations"
+msgstr "Configurar integraciones de Grok"
+
+msgid "xAI API key"
+msgstr "Clave de API de xAI"
+
+msgid "Select a Key containing an API key created in the xAI Console."
+msgstr "Seleccione una clave que contenga una clave de API creada en la consola de xAI."
+
+msgid "Advanced settings"
+msgstr "Configuración avanzada"
+
+msgid "API base URL"
+msgstr "URL base de la API"
+
+msgid "Transport"
+msgstr "Transporte"
+
+msgid "Automatic (recommended)"
+msgstr "Automático (recomendado)"
+
+msgid "Chat Completions only"
+msgstr "Solo Chat Completions"
+
+msgid "Responses API for compatible requests"
+msgstr "API Responses para solicitudes compatibles"
+
+msgid "Allow xAI to store Responses API requests"
+msgstr "Permitir que xAI almacene solicitudes de la API Responses"
+
+msgid "Responses request timeout"
+msgstr "Tiempo de espera de solicitudes Responses"
+
+msgid "Test connection"
+msgstr "Probar conexión"
+
+msgid "Test connection and load models"
+msgstr "Probar conexión y cargar modelos"
+
+msgid "Default Grok model"
+msgstr "Modelo Grok predeterminado"
+
+msgid "Hosted tool permissions"
+msgstr "Permisos de herramientas alojadas"
+
+msgid "Permit Web Search"
+msgstr "Permitir búsqueda web"
+
+msgid "Permit X Search"
+msgstr "Permitir búsqueda en X"
+
+msgid "Permit Code Interpreter"
+msgstr "Permitir intérprete de código"
+
+msgid "Permit Collections Search"
+msgstr "Permitir búsqueda en colecciones"
+
+msgid "Permit allowlisted remote MCP servers"
+msgstr "Permitir servidores MCP remotos autorizados"
+
+msgid "Remote MCP server allowlist"
+msgstr "Lista de servidores MCP remotos autorizados"
+
+msgid "About"
+msgstr "Acerca de"
+
+msgid "Version: @version"
+msgstr "Versión: @version"
+
+msgid "seconds"
+msgstr "segundos"
+
+msgid "The selected Key does not contain an API key."
+msgstr "La clave seleccionada no contiene una clave de API."
+
+msgid "Could not authenticate with xAI: @message"
+msgstr "No se pudo autenticar con xAI: @message"
+
+msgid "Connection failed: @message"
+msgstr "Error de conexión: @message"
+
+msgid "xAI did not return any accessible Grok models for this key."
+msgstr "xAI no devolvió ningún modelo Grok accesible para esta clave."

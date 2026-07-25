@@ -1,0 +1,120 @@
+# Japanese basic translation for Grok AI Provider.
+# Copyright (C) 2026 Torneoz
+# This file is distributed under the same license as the grok_ai_provider package.
+msgid ""
+msgstr ""
+"Project-Id-Version: grok_ai_provider 1.x\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"Last-Translator: Torneoz\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Grok xAi Provider"
+msgstr "Grok xAi プロバイダー"
+
+msgid "Grok AI Provider"
+msgstr "Grok AI プロバイダー"
+
+msgid "Provides Grok models from xAI to the Drupal AI modules."
+msgstr "Drupal AI モジュールに xAI の Grok モデルを提供します。"
+
+msgid "AI Providers"
+msgstr "AI プロバイダー"
+
+msgid "Grok authentication"
+msgstr "Grok 認証"
+
+msgid "Configure access to the xAI API."
+msgstr "xAI API へのアクセスを設定します。"
+
+msgid "Configure Grok authentication, models, transports, and hosted tools."
+msgstr "Grok の認証、モデル、トランスポート、ホスト型ツールを設定します。"
+
+msgid "Configure Grok Integrations"
+msgstr "Grok 連携を設定"
+
+msgid "xAI API key"
+msgstr "xAI API キー"
+
+msgid "Select a Key containing an API key created in the xAI Console."
+msgstr "xAI コンソールで作成した API キーを含むキーを選択してください。"
+
+msgid "Advanced settings"
+msgstr "詳細設定"
+
+msgid "API base URL"
+msgstr "API ベース URL"
+
+msgid "Transport"
+msgstr "トランスポート"
+
+msgid "Automatic (recommended)"
+msgstr "自動（推奨）"
+
+msgid "Chat Completions only"
+msgstr "Chat Completions のみ"
+
+msgid "Responses API for compatible requests"
+msgstr "互換性のあるリクエストで Responses API を使用"
+
+msgid "Allow xAI to store Responses API requests"
+msgstr "xAI に Responses API リクエストの保存を許可"
+
+msgid "Responses request timeout"
+msgstr "Responses リクエストのタイムアウト"
+
+msgid "Test connection"
+msgstr "接続をテスト"
+
+msgid "Test connection and load models"
+msgstr "接続をテストしてモデルを読み込む"
+
+msgid "Default Grok model"
+msgstr "デフォルトの Grok モデル"
+
+msgid "Hosted tool permissions"
+msgstr "ホスト型ツールの権限"
+
+msgid "Permit Web Search"
+msgstr "Web 検索を許可"
+
+msgid "Permit X Search"
+msgstr "X 検索を許可"
+
+msgid "Permit Code Interpreter"
+msgstr "コードインタープリターを許可"
+
+msgid "Permit Collections Search"
+msgstr "コレクション検索を許可"
+
+msgid "Permit allowlisted remote MCP servers"
+msgstr "許可リスト登録済みのリモート MCP サーバーを許可"
+
+msgid "Remote MCP server allowlist"
+msgstr "リモート MCP サーバーの許可リスト"
+
+msgid "About"
+msgstr "概要"
+
+msgid "Version: @version"
+msgstr "バージョン: @version"
+
+msgid "seconds"
+msgstr "秒"
+
+msgid "The selected Key does not contain an API key."
+msgstr "選択したキーに API キーが含まれていません。"
+
+msgid "Could not authenticate with xAI: @message"
+msgstr "xAI で認証できませんでした: @message"
+
+msgid "Connection failed: @message"
+msgstr "接続に失敗しました: @message"
+
+msgid "xAI did not return any accessible Grok models for this key."
+msgstr "xAI はこのキーでアクセス可能な Grok モデルを返しませんでした。"
