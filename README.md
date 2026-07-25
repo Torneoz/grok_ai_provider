@@ -68,5 +68,5 @@ Configuration Translation modules to install and manage translations.
 
 ## Torneoz
 
-This module is part of the [Torneoz project](https://torneoz.org), a global
+This module is part of the [Torneoz project](https://torneoz.org), a global sports
 management AI system for Drupal. v12
