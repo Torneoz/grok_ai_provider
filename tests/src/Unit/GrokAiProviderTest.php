@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\Tests\grok_ai_provider\Unit;
 
 use Drupal\ai\Enum\AiModelCapability;
+use Drupal\ai\Exception\AiBadRequestException;
+use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -52,6 +54,59 @@ final class GrokAiProviderTest extends TestCase {
   }
 
   /**
+   * Tests image-model discovery filtering.
+   */
+  public function testFiltersImageModels(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'filterImageModels');
+    $models = $method->invoke($this->newProviderWithoutConstructor(), [
+      ['id' => 'grok-imagine-image-quality'],
+      ['id' => 'grok-imagine-image'],
+      ['id' => 'grok-imagine-video'],
+      ['id' => 'grok-4.5-latest'],
+    ]);
+
+    self::assertSame([
+      'grok-imagine-image' => 'grok-imagine-image',
+      'grok-imagine-image-quality' => 'grok-imagine-image-quality',
+    ], $models);
+  }
+
+  /**
+   * Tests base64 image normalization and MIME detection.
+   */
+  public function testNormalizesImageOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageOutput');
+    // A valid 1x1 transparent PNG.
+    $png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'data' => [
+        [
+          'b64_json' => $png,
+          'revised_prompt' => 'A transparent pixel.',
+        ],
+      ],
+      'usage' => ['cost_in_usd_ticks' => 200000000],
+    ]);
+
+    self::assertCount(1, $output->getNormalized());
+    self::assertSame('image/png', $output->getNormalized()[0]->getMimeType());
+    self::assertSame('grok-image-1.png', $output->getNormalized()[0]->getFilename());
+    self::assertSame('images', $output->getMetadata()['transport']);
+    self::assertSame(200000000, $output->getMetadata()['usage']['cost_in_usd_ticks']);
+  }
+
+  /**
+   * Tests that non-image base64 data is rejected.
+   */
+  public function testRejectsInvalidImageOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageOutput');
+    $this->expectException(AiResponseErrorException::class);
+    $method->invoke($this->newProviderWithoutConstructor(), [
+      'data' => [['b64_json' => base64_encode('not an image')]],
+    ]);
+  }
+
+  /**
    * Tests that reasoning settings are added only to compatible families.
    */
   public function testReasoningSettings(): void {
@@ -76,11 +131,13 @@ final class GrokAiProviderTest extends TestCase {
         ['type' => 'web_search_call', 'id' => 'search_1'],
         [
           'type' => 'message',
-          'content' => [[
-            'type' => 'output_text',
-            'text' => 'A researched answer.',
-            'annotations' => [['type' => 'url_citation', 'url' => 'https://example.com']],
-          ]],
+          'content' => [
+            [
+              'type' => 'output_text',
+              'text' => 'A researched answer.',
+              'annotations' => [['type' => 'url_citation', 'url' => 'https://example.com']],
+            ],
+          ],
         ],
       ],
       'usage' => [
@@ -105,7 +162,7 @@ final class GrokAiProviderTest extends TestCase {
    */
   public function testRejectsIncompleteResponse(): void {
     $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeResponsesOutput');
-    $this->expectException(\Drupal\ai\Exception\AiResponseErrorException::class);
+    $this->expectException(AiResponseErrorException::class);
     $this->expectExceptionMessage('incomplete');
     $method->invoke($this->newProviderWithoutConstructor(), [
       'id' => 'resp_incomplete',
@@ -122,7 +179,7 @@ final class GrokAiProviderTest extends TestCase {
     $provider = $this->newProviderWithoutConstructor();
     $date_method = new \ReflectionMethod(GrokAiProvider::class, 'isIsoDate');
     $domain_method = new \ReflectionMethod(GrokAiProvider::class, 'isValidDomain');
-    $handles_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeXHandles');
+    $handles_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeXhandles');
 
     self::assertTrue($date_method->invoke($provider, '2026-07-24'));
     self::assertFalse($date_method->invoke($provider, '2026-02-30'));
@@ -130,7 +187,7 @@ final class GrokAiProviderTest extends TestCase {
     self::assertFalse($domain_method->invoke($provider, 'https://example.com/path'));
     self::assertSame(['xai', 'open_ai'], $handles_method->invoke($provider, '@xai, open_ai'));
 
-    $this->expectException(\Drupal\ai\Exception\AiBadRequestException::class);
+    $this->expectException(AiBadRequestException::class);
     $handles_method->invoke($provider, 'invalid-handle');
   }
 

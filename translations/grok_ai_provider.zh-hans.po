@@ -104,6 +104,15 @@ msgstr "关于"
 msgid "Next Steps"
 msgstr "后续步骤"
 
+msgid "Number of images"
+msgstr "图像数量"
+
+msgid "Aspect ratio"
+msgstr "宽高比"
+
+msgid "Resolution"
+msgstr "分辨率"
+
 msgid "Version: @version"
 msgstr "版本：@version"
 

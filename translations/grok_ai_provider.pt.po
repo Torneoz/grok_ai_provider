@@ -104,6 +104,15 @@ msgstr "Sobre"
 msgid "Next Steps"
 msgstr "Próximos passos"
 
+msgid "Number of images"
+msgstr "Número de imagens"
+
+msgid "Aspect ratio"
+msgstr "Proporção"
+
+msgid "Resolution"
+msgstr "Resolução"
+
 msgid "Version: @version"
 msgstr "Versão: @version"
 

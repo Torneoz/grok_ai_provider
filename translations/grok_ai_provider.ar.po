@@ -104,6 +104,15 @@ msgstr "حول"
 msgid "Next Steps"
 msgstr "الخطوات التالية"
 
+msgid "Number of images"
+msgstr "عدد الصور"
+
+msgid "Aspect ratio"
+msgstr "نسبة العرض إلى الارتفاع"
+
+msgid "Resolution"
+msgstr "الدقة"
+
 msgid "Version: @version"
 msgstr "الإصدار: @version"
 

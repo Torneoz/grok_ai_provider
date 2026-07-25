@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -278,11 +279,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         '#list_type' => 'ol',
         '#items' => [
           $this->t('Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form.'),
-          $this->t('Open <a href=":url">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat. Choose the Grok model that should be used when a Drupal AI feature relies on the site-wide Chat default.', [
-            ':url' => \Drupal\Core\Url::fromRoute('ai.settings_form')->toString(),
+          $this->t('Open <a href=":url">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat and Text To Image. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults.', [
+            ':url' => Url::fromRoute('ai.settings_form')->toString(),
           ]),
           $this->t('Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings.'),
-          $this->t('Grok supports Chat-based text, vision, function tools, and structured output. Operations such as embeddings, image generation, and speech require another provider that supports those operation types.'),
+          $this->t('Grok supports Chat-based text, vision, function tools, structured output, and text-to-image generation. Operations such as embeddings and speech require another provider that supports those operation types.'),
           $this->t('To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them.'),
         ],
       ],

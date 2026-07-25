@@ -104,6 +104,15 @@ msgstr "Kuhusu"
 msgid "Next Steps"
 msgstr "Hatua Zinazofuata"
 
+msgid "Number of images"
+msgstr "Idadi ya picha"
+
+msgid "Aspect ratio"
+msgstr "Uwiano wa vipimo"
+
+msgid "Resolution"
+msgstr "Mwonekano"
+
 msgid "Version: @version"
 msgstr "Toleo: @version"
 

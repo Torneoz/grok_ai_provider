@@ -104,6 +104,15 @@ msgstr "परिचय"
 msgid "Next Steps"
 msgstr "अगले चरण"
 
+msgid "Number of images"
+msgstr "छवियों की संख्या"
+
+msgid "Aspect ratio"
+msgstr "पक्षानुपात"
+
+msgid "Resolution"
+msgstr "रिज़ॉल्यूशन"
+
 msgid "Version: @version"
 msgstr "संस्करण: @version"
 

@@ -104,6 +104,15 @@ msgstr "О модуле"
 msgid "Next Steps"
 msgstr "Следующие шаги"
 
+msgid "Number of images"
+msgstr "Количество изображений"
+
+msgid "Aspect ratio"
+msgstr "Соотношение сторон"
+
+msgid "Resolution"
+msgstr "Разрешение"
+
 msgid "Version: @version"
 msgstr "Версия: @version"
 

@@ -20,6 +20,9 @@ use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\ImageFile;
+use Drupal\ai\OperationType\TextToImage\TextToImageInput;
+use Drupal\ai\OperationType\TextToImage\TextToImageOutput;
+use Drupal\grok_ai_provider\Service\XaiImagesClient;
 use Drupal\grok_ai_provider\Service\XaiResponsesClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -40,6 +43,16 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   public const DEFAULT_ENDPOINT = 'https://api.x.ai/v1';
 
   /**
+   * The default xAI image generation model.
+   */
+  public const DEFAULT_IMAGE_MODEL = 'grok-imagine-image-quality';
+
+  /**
+   * Maximum decoded size of one generated image.
+   */
+  private const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
+
+  /**
    * An endpoint supplied at runtime, such as during settings validation.
    */
   private string $configuredEndpoint = '';
@@ -55,11 +68,17 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   private XaiResponsesClient $responsesClient;
 
   /**
+   * The xAI image generation transport.
+   */
+  private XaiImagesClient $imagesClient;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->responsesClient = $container->get('grok_ai_provider.responses_client');
+    $instance->imagesClient = $container->get('grok_ai_provider.images_client');
     return $instance;
   }
 
@@ -67,11 +86,26 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
    * {@inheritdoc}
    */
   public function getConfiguredModels(?string $operation_type = NULL, array $capabilities = []): array {
-    if ($operation_type !== NULL && $operation_type !== 'chat') {
+    if ($operation_type !== NULL && !in_array($operation_type, ['chat', 'text_to_image'], TRUE)) {
       return [];
     }
 
     $this->loadClient();
+    if ($operation_type === 'text_to_image') {
+      $cache_context = [$this->getEndpoint(), $this->apiKey, 'text_to_image'];
+      $cache_key = 'grok_image_models_' . Crypt::hashBase64(Json::encode($cache_context));
+      if ($cached = $this->cacheBackend->get($cache_key)) {
+        return $cached->data;
+      }
+      $response = $this->imagesClient->listModels(
+        $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+        $this->apiKey ?: $this->loadApiKey(),
+      );
+      $models = $this->filterImageModels((array) ($response['models'] ?? []));
+      $this->cacheBackend->set($cache_key, $models, time() + ($models === [] ? 300 : 3600));
+      return $models;
+    }
+
     $cache_context = [$this->getEndpoint(), $this->apiKey, $capabilities];
     $cache_key = 'grok_models_' . Crypt::hashBase64(Json::encode($cache_context));
     if ($cached = $this->cacheBackend->get($cache_key)) {
@@ -102,7 +136,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
    * {@inheritdoc}
    */
   public function getSupportedOperationTypes(): array {
-    return ['chat'];
+    return ['chat', 'text_to_image'];
   }
 
   /**
@@ -260,6 +294,18 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
         'label' => $this->t('Remote MCP servers'),
         'description' => $this->t('Comma-separated labels of allowlisted MCP servers to expose to Grok.'),
       ],
+      'n' => [
+        'label' => $this->t('Number of images'),
+        'description' => $this->t('The number of image variations to generate.'),
+      ],
+      'aspect_ratio' => [
+        'label' => $this->t('Aspect ratio'),
+        'description' => $this->t('The width-to-height ratio of each generated image.'),
+      ],
+      'resolution' => [
+        'label' => $this->t('Resolution'),
+        'description' => $this->t('The output resolution of each generated image. Higher resolution can increase cost and generation time.'),
+      ],
     ];
   }
 
@@ -276,6 +322,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
         'chat_with_complex_json' => $default_model,
         'chat_with_tools' => $default_model,
         'chat_with_structured_response' => $default_model,
+        'text_to_image' => self::DEFAULT_IMAGE_MODEL,
       ],
     ];
   }
@@ -343,6 +390,72 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function textToImage(string|TextToImageInput $input, string $model_id, array $tags = []): TextToImageOutput {
+    $this->loadClient();
+    $prompt = $input instanceof TextToImageInput ? $input->getText() : $input;
+    if (trim($prompt) === '') {
+      throw new AiBadRequestException((string) $this->t('A non-empty image prompt is required.'));
+    }
+    if (!preg_match('/^grok-imagine-image(?:-|$)/i', $model_id)) {
+      throw new AiBadRequestException((string) $this->t('"@model" is not an xAI image generation model.', [
+        '@model' => $model_id,
+      ]));
+    }
+
+    $payload = [
+      'model' => $model_id,
+      'prompt' => $prompt,
+      // Return bytes in the API response instead of fetching an ephemeral URL.
+      'response_format' => 'b64_json',
+    ];
+    $allowed_configuration = array_intersect_key($this->configuration, array_flip([
+      'n',
+      'aspect_ratio',
+      'resolution',
+    ]));
+    if (isset($allowed_configuration['n'])) {
+      $allowed_configuration['n'] = max(1, min(4, (int) $allowed_configuration['n']));
+    }
+    if (isset($allowed_configuration['aspect_ratio']) && !in_array($allowed_configuration['aspect_ratio'], [
+      'auto',
+      '1:1',
+      '16:9',
+      '9:16',
+      '4:3',
+      '3:4',
+      '3:2',
+      '2:3',
+      '2:1',
+      '1:2',
+      '19.5:9',
+      '9:19.5',
+      '20:9',
+      '9:20',
+    ], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@ratio" is not a supported xAI image aspect ratio.', [
+        '@ratio' => $allowed_configuration['aspect_ratio'],
+      ]));
+    }
+    if (isset($allowed_configuration['resolution']) && !in_array($allowed_configuration['resolution'], ['1k', '2k'], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@resolution" is not a supported xAI image resolution.', [
+        '@resolution' => $allowed_configuration['resolution'],
+      ]));
+    }
+    $payload += $allowed_configuration;
+
+    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
+    $response = $this->imagesClient->generate(
+      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+      $this->apiKey ?: $this->loadApiKey(),
+      $payload,
+      $timeout,
+    );
+    return $this->normalizeImageOutput($response);
+  }
+
+  /**
    * Initializes the OpenAI-compatible client with the xAI endpoint.
    */
   protected function loadClient(): void {
@@ -394,6 +507,78 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     }
 
     return $models;
+  }
+
+  /**
+   * Filters image-model discovery results.
+   */
+  private function filterImageModels(array $model_data): array {
+    $models = [];
+    foreach ($model_data as $model) {
+      $model_id = trim((string) ($model['id'] ?? ''));
+      if (preg_match('/^grok-imagine-image(?:-|$)/i', $model_id)) {
+        $models[$model_id] = $model_id;
+      }
+    }
+    asort($models);
+    return $models;
+  }
+
+  /**
+   * Normalizes base64 image results into Drupal AI image objects.
+   */
+  private function normalizeImageOutput(array $response): TextToImageOutput {
+    $items = $response['data'] ?? NULL;
+    if (!is_array($items) || $items === []) {
+      throw new AiResponseErrorException((string) $this->t('xAI did not return any generated images.'));
+    }
+
+    $images = [];
+    $details = [];
+    foreach ($items as $index => $item) {
+      $encoded = is_array($item) ? (string) ($item['b64_json'] ?? '') : '';
+      if ($encoded === '') {
+        throw new AiResponseErrorException((string) $this->t('xAI did not return image data for result @number.', [
+          '@number' => $index + 1,
+        ]));
+      }
+      if (strlen($encoded) > (int) ceil(self::MAX_IMAGE_BYTES * 4 / 3) + 4) {
+        throw new AiResponseErrorException((string) $this->t('Generated image @number exceeds the maximum allowed size.', [
+          '@number' => $index + 1,
+        ]));
+      }
+      $binary = base64_decode($encoded, TRUE);
+      if ($binary === FALSE || $binary === '' || strlen($binary) > self::MAX_IMAGE_BYTES) {
+        throw new AiResponseErrorException((string) $this->t('Generated image @number contains invalid or oversized image data.', [
+          '@number' => $index + 1,
+        ]));
+      }
+      $mime_type = $this->detectMimeType($binary, static::ALLOWED_IMAGE_MIME_TYPES);
+      if ($mime_type === NULL) {
+        throw new AiResponseErrorException((string) $this->t('Generated image @number has an unsupported file type.', [
+          '@number' => $index + 1,
+        ]));
+      }
+      $extension = match ($mime_type) {
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        default => throw new AiResponseErrorException((string) $this->t('Generated image @number has an unsupported file type.', [
+          '@number' => $index + 1,
+        ])),
+      };
+      $images[] = new ImageFile($binary, $mime_type, 'grok-image-' . ($index + 1) . '.' . $extension);
+      $details[] = [
+        'mime_type' => $mime_type,
+        'revised_prompt' => is_array($item) ? (string) ($item['revised_prompt'] ?? '') : '',
+      ];
+    }
+
+    return new TextToImageOutput($images, $response, [
+      'transport' => 'images',
+      'images' => $details,
+      'usage' => (array) ($response['usage'] ?? []),
+    ]);
   }
 
   /**
@@ -604,8 +789,8 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
     }
     if (!empty($this->providerOptions['x_search']) && !empty($permissions['x_search'])) {
       $tool = ['type' => 'x_search'];
-      $allowed = $this->normalizeXHandles((string) ($this->providerOptions['x_allowed_handles'] ?? ''));
-      $excluded = $this->normalizeXHandles((string) ($this->providerOptions['x_excluded_handles'] ?? ''));
+      $allowed = $this->normalizeXhandles((string) ($this->providerOptions['x_allowed_handles'] ?? ''));
+      $excluded = $this->normalizeXhandles((string) ($this->providerOptions['x_excluded_handles'] ?? ''));
       if ($allowed !== [] && $excluded !== []) {
         throw new AiBadRequestException((string) $this->t('X Search allowed and excluded handles cannot be combined.'));
       }
@@ -777,7 +962,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase {
   /**
    * Normalizes comma-separated X handles without leading @ characters.
    */
-  private function normalizeXHandles(string $value): array {
+  private function normalizeXhandles(string $value): array {
     $handles = array_values(array_filter(array_map(
       static fn(string $handle): string => ltrim($handle, '@'),
       $this->csvValues($value),

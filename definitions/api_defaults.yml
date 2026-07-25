@@ -177,3 +177,56 @@ chat:
       type: 'string'
       default: ''
       required: false
+text_to_image:
+  input:
+    description: 'A text description of the image to generate.'
+    type: 'string'
+    default: ''
+    required: true
+  authentication:
+    description: 'xAI API key.'
+    type: 'string'
+    default: ''
+    required: true
+  configuration:
+    n:
+      label: 'Number of images'
+      description: 'The number of image variations to generate.'
+      type: 'integer'
+      default: 1
+      required: false
+      constraints:
+        min: 1
+        max: 4
+    aspect_ratio:
+      label: 'Aspect ratio'
+      description: 'The width-to-height ratio of each generated image.'
+      type: 'string'
+      default: 'auto'
+      required: false
+      constraints:
+        options:
+          - 'auto'
+          - '1:1'
+          - '16:9'
+          - '9:16'
+          - '4:3'
+          - '3:4'
+          - '3:2'
+          - '2:3'
+          - '2:1'
+          - '1:2'
+          - '19.5:9'
+          - '9:19.5'
+          - '20:9'
+          - '9:20'
+    resolution:
+      label: 'Resolution'
+      description: 'The output resolution of each generated image. Higher resolution can increase cost and generation time.'
+      type: 'string'
+      default: '1k'
+      required: false
+      constraints:
+        options:
+          - '1k'
+          - '2k'

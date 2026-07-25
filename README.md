@@ -1,7 +1,7 @@
 # Grok AI Provider
 
-Provides xAI Grok chat models to Drupal through the AI module. The first
-version uses xAI's OpenAI-compatible Chat Completions API.
+Provides xAI Grok chat and image-generation models to Drupal through the AI
+module, using xAI's Chat Completions, Responses, and Imagine APIs.
 
 ## Installation
 
@@ -14,6 +14,8 @@ Select the Key and save the form. The provider validates access using model
 discovery; it does not make a billable chat request during configuration.
 Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
+To use image generation, select Grok and an available Grok Imagine model for
+the **Text To Image** operation on Drupal AI's default-model settings page.
 
 ### Optional recipe
 
@@ -33,6 +35,7 @@ translations independently.
 - Image input on supported Grok models
 - Drupal AI function tools
 - JSON and structured responses on supported models
+- Text-to-image generation with available Grok Imagine image models
 - Token usage and rate-limit metadata exposed by the API
 - Automatic dual transport: ordinary requests use Chat Completions and
   hosted-tool requests use the Responses API
