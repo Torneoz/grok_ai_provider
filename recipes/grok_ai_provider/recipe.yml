@@ -1,0 +1,8 @@
+name: 'Grok AI Provider'
+description: 'Installs the Grok AI provider and its required integrations.'
+type: 'AI'
+
+install:
+  - key
+  - ai
+  - grok_ai_provider

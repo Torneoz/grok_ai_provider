@@ -101,6 +101,9 @@ msgstr "Lista de servidores MCP remotos autorizados"
 msgid "About"
 msgstr "Acerca de"
 
+msgid "Next Steps"
+msgstr "Próximos pasos"
+
 msgid "Version: @version"
 msgstr "Versión: @version"
 

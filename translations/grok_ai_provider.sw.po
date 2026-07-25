@@ -101,6 +101,9 @@ msgstr "Orodha ya seva za mbali za MCP zilizoidhinishwa"
 msgid "About"
 msgstr "Kuhusu"
 
+msgid "Next Steps"
+msgstr "Hatua Zinazofuata"
+
 msgid "Version: @version"
 msgstr "Toleo: @version"
 

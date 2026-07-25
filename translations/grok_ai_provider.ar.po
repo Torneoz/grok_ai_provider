@@ -101,6 +101,9 @@ msgstr "قائمة خوادم MCP البعيدة المسموح بها"
 msgid "About"
 msgstr "حول"
 
+msgid "Next Steps"
+msgstr "الخطوات التالية"
+
 msgid "Version: @version"
 msgstr "الإصدار: @version"
 

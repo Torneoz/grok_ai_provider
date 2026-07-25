@@ -260,6 +260,34 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
+    $form['next_steps'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Next Steps'),
+      '#open' => FALSE,
+      '#weight' => 900,
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
+      'introduction' => [
+        '#markup' => '<p>' . $this->t('After saving a working xAI API key and default Grok model, connect Grok to the Drupal AI features that should use it:') . '</p>',
+      ],
+      'instructions' => [
+        '#theme' => 'item_list',
+        '#list_type' => 'ol',
+        '#items' => [
+          $this->t('Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form.'),
+          $this->t('Open <a href=":url">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat. Choose the Grok model that should be used when a Drupal AI feature relies on the site-wide Chat default.', [
+            ':url' => \Drupal\Core\Url::fromRoute('ai.settings_form')->toString(),
+          ]),
+          $this->t('Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings.'),
+          $this->t('Grok supports Chat-based text, vision, function tools, and structured output. Operations such as embeddings, image generation, and speech require another provider that supports those operation types.'),
+          $this->t('To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them.'),
+        ],
+      ],
+    ];
+
     $module_info = $module_list->getExtensionInfo('grok_ai_provider');
     $version = (string) ($module_info['version'] ?? '1.0.0-alpha1');
     $form['about'] = [

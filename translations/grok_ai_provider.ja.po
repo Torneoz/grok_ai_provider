@@ -101,6 +101,9 @@ msgstr "リモート MCP サーバーの許可リスト"
 msgid "About"
 msgstr "概要"
 
+msgid "Next Steps"
+msgstr "次のステップ"
+
 msgid "Version: @version"
 msgstr "バージョン: @version"
 

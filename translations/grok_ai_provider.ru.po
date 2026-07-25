@@ -101,6 +101,9 @@ msgstr "Список разрешённых удалённых серверов 
 msgid "About"
 msgstr "О модуле"
 
+msgid "Next Steps"
+msgstr "Следующие шаги"
+
 msgid "Version: @version"
 msgstr "Версия: @version"
 

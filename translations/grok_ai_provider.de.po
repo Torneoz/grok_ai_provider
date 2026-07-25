@@ -101,6 +101,9 @@ msgstr "Zulassungsliste entfernter MCP-Server"
 msgid "About"
 msgstr "Über"
 
+msgid "Next Steps"
+msgstr "Nächste Schritte"
+
 msgid "Version: @version"
 msgstr "Version: @version"
 

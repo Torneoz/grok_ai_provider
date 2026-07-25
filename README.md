@@ -15,6 +15,18 @@ discovery; it does not make a billable chat request during configuration.
 Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
 
+### Optional recipe
+
+The included recipe installs the Grok AI Provider, AI, and Key modules:
+
+```bash
+drush recipe web/modules/contrib/grok_ai_provider/recipes/grok_ai_provider
+```
+
+It does not install Language or Interface Translation and does not add
+languages. Sites that already use Drupal localization can import the packaged
+translations independently.
+
 ## Supported features
 
 - Text chat and streaming
@@ -59,12 +71,12 @@ metadata, and user-facing API errors use Drupal's String Translation API.
 Routing, menu-link, module information, and configuration-schema labels use
 Drupal's standard translatable YAML locations.
 
-Published releases can be translated through
-[Drupal's translation system](https://localize.drupal.org/). Do not commit
-generated `.po` or `.pot` files for Drupal.org releases; Drupal.org extracts
-the source strings and publishes the project translation packages
-automatically. Sites can enable the core Language, Interface Translation, and
-Configuration Translation modules to install and manage translations.
+Published releases can also be translated through
+[Drupal's translation system](https://localize.drupal.org/). The packaged
+basic `.po` translations provide a fallback until community localization is
+available. Sites can optionally enable the core Language, Interface
+Translation, and Configuration Translation modules to install and manage
+translations.
 
 ## Torneoz
 

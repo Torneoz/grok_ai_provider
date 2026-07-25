@@ -101,6 +101,9 @@ msgstr "远程 MCP 服务器许可名单"
 msgid "About"
 msgstr "关于"
 
+msgid "Next Steps"
+msgstr "后续步骤"
+
 msgid "Version: @version"
 msgstr "版本：@version"
 

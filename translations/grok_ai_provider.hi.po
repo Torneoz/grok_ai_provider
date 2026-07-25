@@ -101,6 +101,9 @@ msgstr "दूरस्थ MCP सर्वर अनुमत सूची"
 msgid "About"
 msgstr "परिचय"
 
+msgid "Next Steps"
+msgstr "अगले चरण"
+
 msgid "Version: @version"
 msgstr "संस्करण: @version"
 
