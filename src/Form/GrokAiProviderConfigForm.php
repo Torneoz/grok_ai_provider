@@ -212,6 +212,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#title' => $this->t('Hosted tool permissions'),
       '#description' => $this->t('These settings permit tools at site level. Individual requests must still select a permitted tool. Hosted tools can incur additional xAI charges.'),
       '#tree' => TRUE,
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
     ];
     foreach ([
       'web_search' => [
