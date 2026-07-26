@@ -967,3 +967,24 @@ msgstr ""
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-video generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
 msgstr ""
+
+msgid "Use the bundled example image"
+msgstr ""
+
+msgid "Upload my own image"
+msgstr ""
+
+msgid "Video generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgstr ""
+
+msgid "Bundled example source image"
+msgstr ""
+
+msgid "Upload source image"
+msgstr ""
+
+msgid "Upload the still image that Grok should animate."
+msgstr ""
+
+msgid "The bundled example image could not be read."
+msgstr ""

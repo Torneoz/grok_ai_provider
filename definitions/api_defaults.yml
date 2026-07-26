@@ -298,7 +298,7 @@ image_to_video:
       label: 'Animation prompt'
       description: 'Describe how the source image should move or change in the generated video.'
       type: 'string_long'
-      default: ''
+      default: 'Make the flag wave. Halfway through, have a huge crack of lightning appear'
       required: true
     duration:
       label: 'Video duration'
