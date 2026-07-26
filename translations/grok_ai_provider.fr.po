@@ -202,3 +202,5 @@ msgstr "Échec de la connexion : @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI n’a renvoyé aucun modèle Grok accessible pour cette clé."
+msgid "An image editing prompt is required."
+msgstr "Une instruction de modification d’image est requise."

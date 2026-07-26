@@ -191,3 +191,5 @@ msgstr "Muunganisho umeshindikana: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI haikurejesha modeli zozote za Grok zinazoweza kufikiwa kwa ufunguo huu."
+msgid "An image editing prompt is required."
+msgstr "Maagizo ya kuhariri picha yanahitajika."

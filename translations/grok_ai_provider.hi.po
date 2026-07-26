@@ -191,3 +191,5 @@ msgstr "कनेक्शन विफल: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI ने इस कुंजी के लिए कोई सुलभ Grok मॉडल नहीं लौटाया।"
+msgid "An image editing prompt is required."
+msgstr "छवि संपादन प्रॉम्प्ट आवश्यक है।"

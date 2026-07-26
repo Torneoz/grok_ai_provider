@@ -998,6 +998,9 @@ msgstr ""
 msgid "A non-empty image editing prompt is required."
 msgstr ""
 
+msgid "An image editing prompt is required."
+msgstr ""
+
 msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
 msgstr ""
 

@@ -202,3 +202,5 @@ msgstr "接続に失敗しました: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI はこのキーでアクセス可能な Grok モデルを返しませんでした。"
+msgid "An image editing prompt is required."
+msgstr "画像編集のプロンプトが必要です。"

@@ -191,3 +191,5 @@ msgstr "Ошибка соединения: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI не вернула доступных моделей Grok для этого ключа."
+msgid "An image editing prompt is required."
+msgstr "Требуется запрос для редактирования изображения."

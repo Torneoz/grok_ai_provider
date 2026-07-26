@@ -191,3 +191,5 @@ msgstr "فشل الاتصال: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "لم تُرجع xAI أي نماذج Grok يمكن الوصول إليها لهذا المفتاح."
+msgid "An image editing prompt is required."
+msgstr "مطلوب موجه لتحرير الصورة."

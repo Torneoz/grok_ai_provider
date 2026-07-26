@@ -191,3 +191,5 @@ msgstr "Falha na ligação: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "A xAI não devolveu modelos Grok acessíveis para esta chave."
+msgid "An image editing prompt is required."
+msgstr "É necessário um prompt de edição de imagem."

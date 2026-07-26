@@ -36,7 +36,12 @@ function grok_ai_provider_config_schema_info_alter(array &$definitions): void {
  */
 function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStateInterface $form_state): void {
   $build_info = $form_state->getBuildInfo();
-  if (($build_info['args'][0] ?? NULL) !== 'text_to_image_generator' || !isset($form['left']['prompt'])) {
+  $plugin_id = $build_info['args'][0] ?? NULL;
+  if ($plugin_id === 'image_to_image_generator') {
+    $form['#validate'][] = 'grok_ai_provider_validate_image_to_image_explorer';
+    return;
+  }
+  if ($plugin_id !== 'text_to_image_generator' || !isset($form['left']['prompt'])) {
     return;
   }
 
@@ -44,4 +49,26 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
   if ($form_state->getValue('prompt') === NULL && ($default === NULL || $default === '' || $default === [])) {
     $form['left']['prompt']['#default_value'] = new TranslatableMarkup('Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background');
   }
+}
+
+/**
+ * Preserves the dynamically added Image-to-Image Explorer prompt.
+ */
+function grok_ai_provider_validate_image_to_image_explorer(array &$form, FormStateInterface $form_state): void {
+  $trigger = $form_state->getTriggeringElement();
+  if (($trigger['#type'] ?? NULL) !== 'submit') {
+    return;
+  }
+
+  $user_input = $form_state->getUserInput();
+  $prompt = $form_state->getValue('prompt')
+    ?? $user_input['prompt']
+    ?? $user_input['image_to_image_ajax_prefix']['prompt']
+    ?? NULL;
+  if (is_string($prompt) && trim($prompt) !== '') {
+    $form_state->setValue('prompt', $prompt);
+    return;
+  }
+
+  $form_state->setErrorByName('prompt', new TranslatableMarkup('An image editing prompt is required.'));
 }

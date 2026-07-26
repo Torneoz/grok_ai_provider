@@ -191,3 +191,5 @@ msgstr "连接失败：@message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI 未返回此密钥可访问的任何 Grok 模型。"
+msgid "An image editing prompt is required."
+msgstr "需要提供图像编辑提示词。"

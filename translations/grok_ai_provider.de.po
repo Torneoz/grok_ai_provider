@@ -202,3 +202,5 @@ msgstr "Verbindung fehlgeschlagen: @message"
 
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI hat für diesen Schlüssel keine zugänglichen Grok-Modelle zurückgegeben."
+msgid "An image editing prompt is required."
+msgstr "Eine Eingabeaufforderung für die Bildbearbeitung ist erforderlich."
