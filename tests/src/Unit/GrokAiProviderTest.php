@@ -7,6 +7,9 @@ namespace Drupal\Tests\grok_ai_provider\Unit;
 use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
+use Drupal\ai\OperationType\GenericType\ImageFile;
+use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
+use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
 use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -119,6 +122,53 @@ final class GrokAiProviderTest extends TestCase {
   }
 
   /**
+   * Tests image-to-video payload construction.
+   */
+  public function testBuildsImageToVideoPayload(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $configuration = new \ReflectionProperty(GrokAiProvider::class, 'configuration');
+    $configuration->setValue($provider, [
+      'prompt' => 'Make the water flow.',
+      'duration' => 12,
+      'aspect_ratio' => '16:9',
+      'resolution' => '1080p',
+    ]);
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'buildImageToVideoPayload');
+    // A valid 1x1 transparent PNG.
+    $binary = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', TRUE);
+    self::assertIsString($binary);
+    $payload = $method->invoke(
+      $provider,
+      new ImageToVideoInput(new ImageFile($binary, 'image/png', 'source.png')),
+      GrokAiProvider::DEFAULT_IMAGE_TO_VIDEO_MODEL,
+    );
+
+    self::assertSame('grok-imagine-video-1.5', $payload['model']);
+    self::assertSame('Make the water flow.', $payload['prompt']);
+    self::assertStringStartsWith('data:image/png;base64,', $payload['image']['url']);
+    self::assertSame(12, $payload['duration']);
+    self::assertSame('1080p', $payload['resolution']);
+  }
+
+  /**
+   * Tests native Drupal AI image-to-video output normalization.
+   */
+  public function testNormalizesImageToVideoOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageToVideoOutput');
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'status' => 'done',
+      'model' => GrokAiProvider::DEFAULT_IMAGE_TO_VIDEO_MODEL,
+      'video' => ['duration' => 12],
+      '_video_binary' => '0000ftypisom-video',
+    ]);
+
+    self::assertInstanceOf(ImageToVideoOutput::class, $output);
+    self::assertSame('video/mp4', $output->getNormalized()[0]->getMimeType());
+    self::assertSame(GrokAiProvider::DEFAULT_IMAGE_TO_VIDEO_MODEL, $output->getMetadata()['model']);
+    self::assertArrayNotHasKey('_video_binary', $output->getRawOutput());
+  }
+
+  /**
    * Tests that non-MP4 video output is rejected.
    */
   public function testRejectsInvalidVideoOutput(): void {
@@ -174,6 +224,12 @@ final class GrokAiProviderTest extends TestCase {
     ]);
     self::assertSame('Video duration', (string) $video_settings['duration']['label']);
     self::assertStringContainsString('generated video', (string) $video_settings['aspect_ratio']['description']);
+    $image_video_settings = $provider->getModelSettings('grok-imagine-video-1.5', [
+      'prompt' => ['type' => 'string_long'],
+      'resolution' => ['type' => 'string'],
+    ]);
+    self::assertSame('Animation prompt', (string) $image_video_settings['prompt']['label']);
+    self::assertStringContainsString('generated video', (string) $image_video_settings['resolution']['description']);
   }
 
   /**

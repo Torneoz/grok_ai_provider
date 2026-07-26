@@ -19,8 +19,10 @@ To use image generation, select Grok and an available Grok Imagine model for
 the **Text To Image** operation on Drupal AI's default-model settings page.
 Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
 same page.
+Select Grok and `grok-imagine-video-1.5` for the **Image To Video** operation.
 When AI API Explorer is enabled, its Grok-specific **Text-To-Video Generation
-Explorer** can generate and preview short MP4 videos.
+Explorer** and **Image-To-Video Generation Explorer** can generate and preview
+short MP4 videos.
 
 ### Optional recipe
 
@@ -44,6 +46,8 @@ translations independently.
 - Optional best-effort transparent-background prompting for generated images
 - Text-to-video generation with `grok-imagine-video`, including configurable
   duration, aspect ratio, and resolution
+- Image-to-video generation with `grok-imagine-video-1.5`, including a source
+  image, animation prompt, and up to 1080p output
 - Token usage and rate-limit metadata exposed by the API
 - Automatic dual transport: ordinary requests use Chat Completions and
   hosted-tool requests use the Responses API

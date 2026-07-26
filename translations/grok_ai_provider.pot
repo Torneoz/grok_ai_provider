@@ -919,3 +919,51 @@ msgstr ""
 #: src/Service/XaiResponsesClient.php:89
 msgid "xAI Responses API returned HTTP @status: @message"
 msgstr ""
+
+msgid "Image-To-Video Generation Explorer"
+msgstr ""
+
+msgid "Animate a still image with Grok Imagine Video 1.5."
+msgstr ""
+
+msgid "Source image"
+msgstr ""
+
+msgid "Upload the still image that Grok should animate. Generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgstr ""
+
+msgid "A source image is required."
+msgstr ""
+
+msgid "Image-to-video generation failed"
+msgstr ""
+
+msgid "Animation prompt"
+msgstr ""
+
+msgid "Describe how the source image should move or change in the generated video."
+msgstr ""
+
+msgid "\"@model\" does not support xAI image-to-video generation."
+msgstr ""
+
+msgid "\"@resolution\" is not a supported xAI image-to-video resolution."
+msgstr ""
+
+msgid "A non-empty image-to-video prompt is required."
+msgstr ""
+
+msgid "The source image is empty or exceeds the maximum allowed size."
+msgstr ""
+
+msgid "The source image has an unsupported file type."
+msgstr ""
+
+msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgstr ""
+
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, <a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-video generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgstr ""

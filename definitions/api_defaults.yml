@@ -282,3 +282,56 @@ text_to_video:
         options:
           - '480p'
           - '720p'
+image_to_video:
+  input:
+    description: 'A still image to animate.'
+    type: 'file'
+    default: ''
+    required: true
+  authentication:
+    description: 'xAI API key.'
+    type: 'string'
+    default: ''
+    required: true
+  configuration:
+    prompt:
+      label: 'Animation prompt'
+      description: 'Describe how the source image should move or change in the generated video.'
+      type: 'string_long'
+      default: ''
+      required: true
+    duration:
+      label: 'Video duration'
+      description: 'Length of the generated video in seconds. Longer videos cost more and take longer to generate.'
+      type: 'integer'
+      default: 5
+      required: false
+      constraints:
+        min: 1
+        max: 15
+    aspect_ratio:
+      label: 'Aspect ratio'
+      description: 'The width-to-height ratio of the generated video.'
+      type: 'string'
+      default: '16:9'
+      required: false
+      constraints:
+        options:
+          - '1:1'
+          - '16:9'
+          - '9:16'
+          - '4:3'
+          - '3:4'
+          - '3:2'
+          - '2:3'
+    resolution:
+      label: 'Resolution'
+      description: 'The generated video resolution. Higher resolution costs more.'
+      type: 'string'
+      default: '480p'
+      required: false
+      constraints:
+        options:
+          - '480p'
+          - '720p'
+          - '1080p'

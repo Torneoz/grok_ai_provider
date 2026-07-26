@@ -21,6 +21,9 @@ use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\GenericType\VideoFile;
+use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
+use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInterface;
+use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
 use Drupal\ai\OperationType\TextToImage\TextToImageInput;
 use Drupal\ai\OperationType\TextToImage\TextToImageOutput;
 use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInput;
@@ -38,7 +41,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'grok',
   label: new TranslatableMarkup('Grok (xAI)'),
 )]
-final class GrokAiProvider extends OpenAiBasedProviderClientBase implements TextToVideoInterface {
+final class GrokAiProvider extends OpenAiBasedProviderClientBase implements ImageToVideoInterface, TextToVideoInterface {
 
   use StringTranslationTrait;
 
@@ -56,6 +59,11 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
    * The xAI model that supports generation from text alone.
    */
   public const DEFAULT_VIDEO_MODEL = 'grok-imagine-video';
+
+  /**
+   * The xAI model that animates a supplied still image.
+   */
+  public const DEFAULT_IMAGE_TO_VIDEO_MODEL = 'grok-imagine-video-1.5';
 
   /**
    * Maximum decoded size of one generated image.
@@ -107,11 +115,20 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
    * {@inheritdoc}
    */
   public function getConfiguredModels(?string $operation_type = NULL, array $capabilities = []): array {
-    if ($operation_type !== NULL && !in_array($operation_type, ['chat', 'text_to_image', 'text_to_video'], TRUE)) {
+    $supported_operation_types = [
+      'chat',
+      'image_to_video',
+      'text_to_image',
+      'text_to_video',
+    ];
+    if ($operation_type !== NULL && !in_array($operation_type, $supported_operation_types, TRUE)) {
       return [];
     }
 
     $this->loadClient();
+    if ($operation_type === 'image_to_video') {
+      return [self::DEFAULT_IMAGE_TO_VIDEO_MODEL => self::DEFAULT_IMAGE_TO_VIDEO_MODEL];
+    }
     if ($operation_type === 'text_to_video') {
       return [self::DEFAULT_VIDEO_MODEL => self::DEFAULT_VIDEO_MODEL];
     }
@@ -160,7 +177,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
    * {@inheritdoc}
    */
   public function getSupportedOperationTypes(): array {
-    return ['chat', 'text_to_image', 'text_to_video'];
+    return ['chat', 'image_to_video', 'text_to_image', 'text_to_video'];
   }
 
   /**
@@ -213,7 +230,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
       }
     }
     unset($setting);
-    if ($model_id === self::DEFAULT_VIDEO_MODEL) {
+    if (in_array($model_id, [self::DEFAULT_VIDEO_MODEL, self::DEFAULT_IMAGE_TO_VIDEO_MODEL], TRUE)) {
       if (isset($generalConfig['aspect_ratio'])) {
         $generalConfig['aspect_ratio']['description'] = $this->t('The width-to-height ratio of the generated video.');
       }
@@ -346,6 +363,10 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
         'label' => $this->t('Video duration'),
         'description' => $this->t('Length of the generated video in seconds. Longer videos cost more and take longer to generate.'),
       ],
+      'prompt' => [
+        'label' => $this->t('Animation prompt'),
+        'description' => $this->t('Describe how the source image should move or change in the generated video.'),
+      ],
     ];
   }
 
@@ -362,6 +383,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
         'chat_with_complex_json' => $default_model,
         'chat_with_tools' => $default_model,
         'chat_with_structured_response' => $default_model,
+        'image_to_video' => self::DEFAULT_IMAGE_TO_VIDEO_MODEL,
         'text_to_image' => self::DEFAULT_IMAGE_MODEL,
         'text_to_video' => self::DEFAULT_VIDEO_MODEL,
       ],
@@ -554,6 +576,79 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function imageToVideo(string|array|ImageToVideoInput $input, string $model_id, array $tags = []): ImageToVideoOutput {
+    $this->loadClient();
+    if (!$this->isImageToVideoModel($model_id)) {
+      throw new AiBadRequestException((string) $this->t('"@model" does not support xAI image-to-video generation.', [
+        '@model' => $model_id,
+      ]));
+    }
+
+    $payload = $this->buildImageToVideoPayload($input, $model_id);
+
+    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
+    $response = $this->videosClient->generate(
+      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+      $this->apiKey ?: $this->loadApiKey(),
+      $payload,
+      $timeout,
+    );
+    return $this->normalizeImageToVideoOutput($response);
+  }
+
+  /**
+   * Builds a validated xAI image-to-video request payload.
+   */
+  private function buildImageToVideoPayload(string|array|ImageToVideoInput $input, string $model_id): array {
+    $prompt = trim((string) ($this->configuration['prompt'] ?? ''));
+    if ($prompt === '') {
+      throw new AiBadRequestException((string) $this->t('A non-empty image-to-video prompt is required.'));
+    }
+
+    $image = $this->normalizeImageToVideoInput($input);
+    $payload = [
+      'model' => $model_id,
+      'prompt' => $prompt,
+      'image' => [
+        'url' => sprintf(
+          'data:%s;base64,%s',
+          $image->getMimeType(),
+          base64_encode($image->getBinary()),
+        ),
+      ],
+    ];
+    $settings = array_intersect_key($this->configuration, array_flip([
+      'duration',
+      'aspect_ratio',
+      'resolution',
+    ]));
+    if (isset($settings['duration'])) {
+      $settings['duration'] = max(1, min(15, (int) $settings['duration']));
+    }
+    if (isset($settings['aspect_ratio']) && !in_array($settings['aspect_ratio'], [
+      '1:1',
+      '16:9',
+      '9:16',
+      '4:3',
+      '3:4',
+      '3:2',
+      '2:3',
+    ], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@ratio" is not a supported xAI video aspect ratio.', [
+        '@ratio' => $settings['aspect_ratio'],
+      ]));
+    }
+    if (isset($settings['resolution']) && !in_array($settings['resolution'], ['480p', '720p', '1080p'], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@resolution" is not a supported xAI image-to-video resolution.', [
+        '@resolution' => $settings['resolution'],
+      ]));
+    }
+    return $payload + $settings;
+  }
+
+  /**
    * Adds best-effort transparency guidance when requested.
    */
   private function buildImagePrompt(string $prompt): string {
@@ -694,6 +789,20 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
    * Normalizes a downloaded MP4 into a Drupal AI video object.
    */
   private function normalizeVideoOutput(array $response): TextToVideoOutput {
+    return new TextToVideoOutput(...$this->normalizeDownloadedVideo($response));
+  }
+
+  /**
+   * Normalizes an image-to-video response.
+   */
+  private function normalizeImageToVideoOutput(array $response): ImageToVideoOutput {
+    return new ImageToVideoOutput(...$this->normalizeDownloadedVideo($response));
+  }
+
+  /**
+   * Validates and normalizes a downloaded MP4 response.
+   */
+  private function normalizeDownloadedVideo(array $response): array {
     $binary = $response['_video_binary'] ?? NULL;
     if (!is_string($binary) || $binary === '' || strlen($binary) > self::MAX_VIDEO_BYTES) {
       throw new AiResponseErrorException((string) $this->t('xAI returned invalid or oversized generated video data.'));
@@ -704,7 +813,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
 
     unset($response['_video_binary']);
     $video = (array) ($response['video'] ?? []);
-    return new TextToVideoOutput(
+    return [
       [new VideoFile($binary, 'video/mp4', 'grok-video.mp4')],
       $response,
       [
@@ -714,7 +823,46 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Text
         'respect_moderation' => $video['respect_moderation'] ?? NULL,
         'usage' => (array) ($response['usage'] ?? []),
       ],
-    );
+    ];
+  }
+
+  /**
+   * Normalizes and validates Drupal AI image-to-video input.
+   */
+  private function normalizeImageToVideoInput(string|array|ImageToVideoInput $input): ImageFile {
+    if ($input instanceof ImageToVideoInput) {
+      $image = $input->getImageFile();
+    }
+    elseif (is_array($input)) {
+      $file_data = isset($input['file']) && is_array($input['file']) ? $input['file'] : $input;
+      $image = ImageFile::fromArray($file_data);
+    }
+    else {
+      $mime_type = $this->detectMimeType($input, static::ALLOWED_IMAGE_MIME_TYPES);
+      $image = new ImageFile($input, $mime_type ?? '', 'input-image');
+    }
+
+    $binary = $image->getBinary();
+    if ($binary === '' || strlen($binary) > self::MAX_IMAGE_BYTES) {
+      throw new AiBadRequestException((string) $this->t('The source image is empty or exceeds the maximum allowed size.'));
+    }
+    $mime_type = $this->detectMimeType($binary, static::ALLOWED_IMAGE_MIME_TYPES);
+    if ($mime_type === NULL) {
+      throw new AiBadRequestException((string) $this->t('The source image has an unsupported file type.'));
+    }
+    $image->setMimeType($mime_type);
+    return $image;
+  }
+
+  /**
+   * Determines whether a model supports image-to-video generation.
+   */
+  private function isImageToVideoModel(string $model_id): bool {
+    return in_array($model_id, [
+      self::DEFAULT_IMAGE_TO_VIDEO_MODEL,
+      'grok-imagine-video-1.5-preview',
+      'grok-imagine-video-1.5-2026-05-30',
+    ], TRUE);
   }
 
   /**
