@@ -288,12 +288,16 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         ':classification_url' => Url::fromRoute('ai_api_explorer.form.image_classification_generator')->toString(),
         ':moderation_url' => Url::fromRoute('ai_api_explorer.form.moderation_generator')->toString(),
       ]);
+      $next_steps_items[] = $this->t('Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=":tts_url">Text-To-Speech Explorer</a> and <a href=":stt_url">Speech-To-Text Explorer</a>.', [
+        ':tts_url' => Url::fromRoute('ai_api_explorer.form.text_to_speech_generator')->toString(),
+        ':stt_url' => Url::fromRoute('ai_api_explorer.form.speech_to_text_generator')->toString(),
+      ]);
     }
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),
     ]);
     $next_steps_items[] = $this->t('Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings.');
-    $next_steps_items[] = $this->t('Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types.');
+    $next_steps_items[] = $this->t('Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types.');
     $next_steps_items[] = $this->t('To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them.');
 
     $form['next_steps'] = [

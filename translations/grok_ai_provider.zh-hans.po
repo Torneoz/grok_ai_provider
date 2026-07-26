@@ -220,3 +220,9 @@ msgstr "未提供候选标签时，Grok 可以返回的最大标签数量。"
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "将 Grok 配置为图像分类和内容审核的默认提供商，然后在<a href=\":classification_url\">图像分类探索器</a>和<a href=\":moderation_url\">内容审核探索器</a>中进行测试。内容审核是基于模型的评估，并非 xAI 专用的安全端点。"
+
+msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
+msgstr "为文本转语音选择一个 xAI 语音，并为语音转文本选择 xAI Speech to Text，然后在<a href=\":tts_url\">文本转语音探索器</a>和<a href=\":stt_url\">语音转文本探索器</a>中测试。"
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
+msgstr "Grok 支持聊天文本、视觉、函数工具、结构化输出、文本生成图像、图像编辑、图像生成视频、文本生成视频、文本转语音和语音转文本。嵌入等操作需要其他支持这些类型的提供商。"

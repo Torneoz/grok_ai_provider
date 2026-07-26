@@ -231,3 +231,9 @@ msgstr "候補ラベルが指定されていない場合にGrokが返すラベ�
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "画像分類とモデレーションの既定としてGrokを設定し、<a href=\":classification_url\">画像分類エクスプローラー</a>と<a href=\":moderation_url\">モデレーションエクスプローラー</a>でテストしてください。モデレーションはモデルによる評価であり、xAI専用の安全性エンドポイントではありません。"
+
+msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
+msgstr "テキスト読み上げにはxAIの音声を、音声認識にはxAI Speech to Textを選択し、<a href=\":tts_url\">テキスト読み上げエクスプローラー</a>と<a href=\":stt_url\">音声認識エクスプローラー</a>でテストしてください。"
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
+msgstr "Grokはチャット形式のテキスト、画像認識、関数ツール、構造化出力、テキストから画像、画像編集、画像から動画、テキストから動画、テキスト読み上げ、音声認識に対応しています。埋め込みなどの操作には対応する別のプロバイダーが必要です。"
