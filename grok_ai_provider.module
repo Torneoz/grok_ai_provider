@@ -38,6 +38,24 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
   $build_info = $form_state->getBuildInfo();
   $plugin_id = $build_info['args'][0] ?? NULL;
   if ($plugin_id === 'image_to_image_generator') {
+    if (isset($form['left']['image'])) {
+      $form['left']['image']['#title'] = new TranslatableMarkup('Upload the source image you want Grok to edit.');
+      $form['left']['image']['#description'] = new TranslatableMarkup('Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage.');
+    }
+    $provider = $form_state->getValue('image_to_image_ai_provider')
+      ?? $form['left']['image_to_image_ai_provider']['#value']
+      ?? $form['left']['image_to_image_ai_provider']['#default_value']
+      ?? NULL;
+    $configuration = &$form['left']['image_to_image_ajax_prefix'];
+    if ($provider === 'grok' && isset($configuration) && !isset($configuration['prompt'])) {
+      $configuration['prompt'] = [
+        '#type' => 'textarea',
+        '#title' => new TranslatableMarkup('Prompt'),
+        '#description' => new TranslatableMarkup('Describe how Grok should change the source image.'),
+        '#required' => TRUE,
+        '#weight' => -20,
+      ];
+    }
     $form['#validate'][] = 'grok_ai_provider_validate_image_to_image_explorer';
     return;
   }

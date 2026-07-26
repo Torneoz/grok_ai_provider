@@ -193,3 +193,15 @@ msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI не вернула доступных моделей Grok для этого ключа."
 msgid "An image editing prompt is required."
 msgstr "Требуется запрос для редактирования изображения."
+
+msgid "Upload the source image you want Grok to edit."
+msgstr "Загрузите исходное изображение, которое Grok должен отредактировать."
+
+msgid "Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage."
+msgstr "Опишите требуемые изменения в запросе ниже. Редактирование изображения может занять время, а каждый запрос может учитываться в использовании API xAI."
+
+msgid "Prompt"
+msgstr "Запрос"
+
+msgid "Describe how Grok should change the source image."
+msgstr "Опишите, как Grok должен изменить исходное изображение."

@@ -1001,6 +1001,18 @@ msgstr ""
 msgid "An image editing prompt is required."
 msgstr ""
 
+msgid "Upload the source image you want Grok to edit."
+msgstr ""
+
+msgid "Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage."
+msgstr ""
+
+msgid "Prompt"
+msgstr ""
+
+msgid "Describe how Grok should change the source image."
+msgstr ""
+
 msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
 msgstr ""
 

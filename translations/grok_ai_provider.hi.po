@@ -193,3 +193,15 @@ msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI ने इस कुंजी के लिए कोई सुलभ Grok मॉडल नहीं लौटाया।"
 msgid "An image editing prompt is required."
 msgstr "छवि संपादन प्रॉम्प्ट आवश्यक है।"
+
+msgid "Upload the source image you want Grok to edit."
+msgstr "वह स्रोत छवि अपलोड करें जिसे आप Grok से संपादित कराना चाहते हैं।"
+
+msgid "Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage."
+msgstr "नीचे दिए गए प्रॉम्प्ट में इच्छित बदलावों का वर्णन करें। छवि संपादन पूरा होने में समय लग सकता है और प्रत्येक अनुरोध आपके xAI API उपयोग में गिना जा सकता है।"
+
+msgid "Prompt"
+msgstr "प्रॉम्प्ट"
+
+msgid "Describe how Grok should change the source image."
+msgstr "बताएं कि Grok को स्रोत छवि में कैसे बदलाव करना चाहिए।"
