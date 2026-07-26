@@ -205,3 +205,18 @@ msgstr "प्रॉम्प्ट"
 
 msgid "Describe how Grok should change the source image."
 msgstr "बताएं कि Grok को स्रोत छवि में कैसे बदलाव करना चाहिए।"
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "संभावित रूप से हानिकारक सामग्री के लिए जांचा जाने वाला टेक्स्ट।"
+
+msgid "An image and optional candidate labels to classify."
+msgstr "वर्गीकरण के लिए एक छवि और वैकल्पिक उम्मीदवार लेबल।"
+
+msgid "Maximum labels"
+msgstr "अधिकतम लेबल"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "उम्मीदवार लेबल न दिए जाने पर Grok द्वारा लौटाए जा सकने वाले लेबल की अधिकतम संख्या।"
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "छवि वर्गीकरण और मॉडरेशन के लिए Grok को डिफ़ॉल्ट के रूप में कॉन्फ़िगर करें, फिर <a href=\":classification_url\">छवि वर्गीकरण एक्सप्लोरर</a> और <a href=\":moderation_url\">मॉडरेशन एक्सप्लोरर</a> में इसका परीक्षण करें। मॉडरेशन मॉडल-आधारित आकलन है, कोई समर्पित xAI सुरक्षा एंडपॉइंट नहीं।"

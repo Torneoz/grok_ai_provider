@@ -1,8 +1,8 @@
 # Grok AI Provider
 
 Provides xAI Grok chat, image generation, image editing, and video generation
-to Drupal through the AI module, using xAI's Chat Completions, Responses, and
-Imagine APIs.
+to Drupal through the AI module, together with model-based moderation and image
+classification using xAI's Chat Completions, Responses, and Imagine APIs.
 
 ## Installation
 
@@ -20,6 +20,9 @@ the **Text To Image** operation on Drupal AI's default-model settings page.
 Select Grok and an available Grok Imagine image model for the **Image To
 Image** operation to enable prompt-based image editing. The source image and a
 non-empty editing prompt are required; masks are not currently supported.
+Select a vision-capable Grok model for **Image Classification** and a
+structured-output-capable Grok model for **Moderation**. These adapters use
+Grok chat inference; xAI does not provide a dedicated moderation endpoint.
 Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
 same page.
 Select Grok and `grok-imagine-video-1.5` for the **Image To Video** operation.
@@ -46,6 +49,9 @@ translations independently.
 
 - Text chat and streaming
 - Image input on supported Grok models
+- Image classification with optional candidate labels and confidence scores
+- Model-based text moderation with safety categories, an explanation, and a
+  confidence score
 - Drupal AI function tools
 - JSON and structured responses on supported models
 - Text-to-image generation with available Grok Imagine image models
@@ -63,6 +69,10 @@ translations independently.
   and allowlisted remote MCP servers
 - Responses citations, response IDs, hosted-tool output, and reasoning usage
   preserved in `ChatOutput` metadata and raw output
+
+Moderation is a probabilistic Grok assessment rather than a dedicated safety
+or compliance service. Applications with legal, regulatory, or high-risk
+moderation requirements should apply additional purpose-built controls.
 
 The API base URL defaults to `https://api.x.ai/v1` and can be changed in the
 advanced settings for testing or compatible gateways.

@@ -7,11 +7,16 @@ namespace Drupal\Tests\grok_ai_provider\Unit;
 use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
+use Drupal\ai\OperationType\Chat\ChatMessage;
+use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\ImageFile;
+use Drupal\ai\OperationType\ImageClassification\ImageClassificationInput;
+use Drupal\ai\OperationType\ImageClassification\ImageClassificationOutput;
 use Drupal\ai\OperationType\ImageToImage\ImageToImageInput;
 use Drupal\ai\OperationType\ImageToImage\ImageToImageOutput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
+use Drupal\ai\OperationType\Moderation\ModerationOutput;
 use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -150,6 +155,72 @@ final class GrokAiProviderTest extends TestCase {
     self::assertTrue($provider->requiresImageToImagePrompt(GrokAiProvider::DEFAULT_IMAGE_MODEL));
     self::assertFalse($provider->hasImageToImageMask(GrokAiProvider::DEFAULT_IMAGE_MODEL));
     self::assertFalse($provider->requiresImageToImageMask(GrokAiProvider::DEFAULT_IMAGE_MODEL));
+  }
+
+  /**
+   * Tests image-classification input and structured output normalization.
+   */
+  public function testNormalizesImageClassification(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $input_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageClassificationInput');
+    $binary = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', TRUE);
+    self::assertIsString($binary);
+    [$image, $labels] = $input_method->invoke($provider, new ImageClassificationInput(
+      new ImageFile($binary, 'image/png', 'source.png'),
+      [' flag ', 'lightning', 'flag'],
+    ));
+    self::assertSame('image/png', $image->getMimeType());
+    self::assertSame(['flag', 'lightning'], $labels);
+
+    $output_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageClassificationOutput');
+    $output = $output_method->invoke(
+      $provider,
+      new ChatOutput(
+        new ChatMessage('assistant', '{"classifications":[{"label":"flag","confidence":0.97},{"label":"lightning","confidence":0.4}]}'),
+        ['id' => 'chatcmpl_classify'],
+        ['transport' => 'chat_completions'],
+      ),
+      'grok-4.5-latest',
+      $labels,
+    );
+
+    self::assertInstanceOf(ImageClassificationOutput::class, $output);
+    self::assertSame('flag', $output->getNormalized()[0]->getLabel());
+    self::assertSame(0.97, $output->getNormalized()[0]->getConfidenceScore());
+    self::assertSame('image_classification', $output->getMetadata()['operation']);
+    self::assertTrue($output->getMetadata()['model_based']);
+  }
+
+  /**
+   * Tests structured model-based moderation normalization.
+   */
+  public function testNormalizesModeration(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeModerationOutput');
+    $output = $method->invoke(
+      $this->newProviderWithoutConstructor(),
+      new ChatOutput(
+        new ChatMessage('assistant', '{"flagged":true,"categories":["violence"],"explanation":"A violent threat.","confidence":0.91}'),
+        ['id' => 'chatcmpl_moderate'],
+        ['transport' => 'chat_completions'],
+      ),
+      'grok-4.5-latest',
+    );
+
+    self::assertInstanceOf(ModerationOutput::class, $output);
+    self::assertTrue((bool) $output->getNormalized()->isFlagged());
+    self::assertSame(['violence'], $output->getNormalized()->getInformation()['categories']);
+    self::assertFalse($output->getNormalized()->getInformation()['dedicated_moderation_endpoint']);
+    self::assertSame('moderation', $output->getMetadata()['operation']);
+  }
+
+  /**
+   * Tests that both derived Drupal AI operations are advertised.
+   */
+  public function testAdvertisesClassificationAndModeration(): void {
+    $operations = $this->newProviderWithoutConstructor()->getSupportedOperationTypes();
+
+    self::assertContains('image_classification', $operations);
+    self::assertContains('moderation', $operations);
   }
 
   /**

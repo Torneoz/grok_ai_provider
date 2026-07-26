@@ -205,3 +205,18 @@ msgstr "提示词"
 
 msgid "Describe how Grok should change the source image."
 msgstr "请描述 Grok 应如何修改源图像。"
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "用于评估是否包含潜在有害内容的文本。"
+
+msgid "An image and optional candidate labels to classify."
+msgstr "要分类的图像以及可选的候选标签。"
+
+msgid "Maximum labels"
+msgstr "最大标签数"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "未提供候选标签时，Grok 可以返回的最大标签数量。"
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "将 Grok 配置为图像分类和内容审核的默认提供商，然后在<a href=\":classification_url\">图像分类探索器</a>和<a href=\":moderation_url\">内容审核探索器</a>中进行测试。内容审核是基于模型的评估，并非 xAI 专用的安全端点。"

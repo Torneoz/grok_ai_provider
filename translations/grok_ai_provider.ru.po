@@ -205,3 +205,18 @@ msgstr "Запрос"
 
 msgid "Describe how Grok should change the source image."
 msgstr "Опишите, как Grok должен изменить исходное изображение."
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "Текстовое содержимое для проверки на потенциально вредные материалы."
+
+msgid "An image and optional candidate labels to classify."
+msgstr "Изображение и необязательные метки-кандидаты для классификации."
+
+msgid "Maximum labels"
+msgstr "Максимум меток"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "Максимальное число меток, которые Grok может вернуть, если метки-кандидаты не указаны."
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "Настройте Grok по умолчанию для классификации изображений и модерации, затем протестируйте его в <a href=\":classification_url\">обозревателе классификации изображений</a> и <a href=\":moderation_url\">обозревателе модерации</a>. Модерация является оценкой модели, а не специализированной конечной точкой безопасности xAI."

@@ -216,3 +216,18 @@ msgstr "プロンプト"
 
 msgid "Describe how Grok should change the source image."
 msgstr "Grokが元画像をどのように変更するかを記述してください。"
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "有害な可能性のある内容を評価するテキストです。"
+
+msgid "An image and optional candidate labels to classify."
+msgstr "分類する画像と、任意の候補ラベルです。"
+
+msgid "Maximum labels"
+msgstr "最大ラベル数"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "候補ラベルが指定されていない場合にGrokが返すラベルの最大数です。"
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "画像分類とモデレーションの既定としてGrokを設定し、<a href=\":classification_url\">画像分類エクスプローラー</a>と<a href=\":moderation_url\">モデレーションエクスプローラー</a>でテストしてください。モデレーションはモデルによる評価であり、xAI専用の安全性エンドポイントではありません。"

@@ -177,6 +177,39 @@ chat:
       type: 'string'
       default: ''
       required: false
+moderation:
+  input:
+    description: 'Text content to assess for potentially harmful material.'
+    type: 'string_long'
+    default: ''
+    required: true
+  authentication:
+    description: 'xAI API key.'
+    type: 'string'
+    default: ''
+    required: true
+  configuration: { }
+image_classification:
+  input:
+    description: 'An image and optional candidate labels to classify.'
+    type: 'file'
+    default: ''
+    required: true
+  authentication:
+    description: 'xAI API key.'
+    type: 'string'
+    default: ''
+    required: true
+  configuration:
+    max_labels:
+      label: 'Maximum labels'
+      description: 'Maximum number of labels Grok may return when candidate labels are not supplied.'
+      type: 'integer'
+      default: 10
+      required: true
+      constraints:
+        min: 1
+        max: 50
 text_to_image:
   input:
     description: 'A text description of the image to generate.'

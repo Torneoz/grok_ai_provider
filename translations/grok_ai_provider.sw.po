@@ -205,3 +205,18 @@ msgstr "Maagizo"
 
 msgid "Describe how Grok should change the source image."
 msgstr "Eleza jinsi Grok inavyopaswa kubadilisha picha chanzo."
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "Maudhui ya maandishi ya kutathmini kama yana nyenzo zinazoweza kudhuru."
+
+msgid "An image and optional candidate labels to classify."
+msgstr "Picha na lebo teule za hiari za kuainisha."
+
+msgid "Maximum labels"
+msgstr "Idadi ya juu ya lebo"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "Idadi ya juu ya lebo ambazo Grok inaweza kurudisha wakati lebo teule hazijatolewa."
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "Sanidi Grok kuwa chaguo-msingi kwa Uainishaji wa Picha na Udhibiti, kisha ijaribu katika <a href=\":classification_url\">Kichunguzi cha Uainishaji wa Picha</a> na <a href=\":moderation_url\">Kichunguzi cha Udhibiti</a>. Udhibiti ni tathmini inayotegemea modeli, si kituo maalumu cha usalama cha xAI."

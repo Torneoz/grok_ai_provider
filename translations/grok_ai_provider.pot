@@ -1013,6 +1013,63 @@ msgstr ""
 msgid "Describe how Grok should change the source image."
 msgstr ""
 
+msgid "Text content to assess for potentially harmful material."
+msgstr ""
+
+msgid "An image and optional candidate labels to classify."
+msgstr ""
+
+msgid "Maximum labels"
+msgstr ""
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr ""
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr ""
+
+msgid "A non-empty moderation input is required."
+msgstr ""
+
+msgid "\"@model\" does not support Grok structured moderation."
+msgstr ""
+
+msgid "\"@model\" does not support Grok structured image classification."
+msgstr ""
+
+msgid "Grok returned an invalid structured moderation result."
+msgstr ""
+
+msgid "Grok returned an invalid structured image classification result."
+msgstr ""
+
+msgid "Grok returned an invalid image classification item."
+msgstr ""
+
+msgid "Grok returned an image classification label that was not requested."
+msgstr ""
+
+msgid "Grok did not return any usable image classifications."
+msgstr ""
+
+msgid "Grok returned an unexpected streamed @operation result."
+msgstr ""
+
+msgid "Grok returned malformed JSON for @operation."
+msgstr ""
+
+msgid "The classification image is empty or exceeds the maximum allowed size."
+msgstr ""
+
+msgid "The classification image has an unsupported file type."
+msgstr ""
+
+msgid "Image classification accepts at most 50 candidate labels."
+msgstr ""
+
+msgid "Image classification labels must be 100 characters or fewer."
+msgstr ""
+
 msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
 msgstr ""
 

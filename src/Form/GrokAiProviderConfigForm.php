@@ -284,6 +284,10 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         ':image_video_url' => Url::fromRoute('ai_api_explorer.form.grok_image_to_video_generator')->toString(),
         ':video_url' => Url::fromRoute('ai_api_explorer.form.grok_text_to_video_generator')->toString(),
       ]);
+      $next_steps_items[] = $this->t('Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=":classification_url">Image Classification Explorer</a> and <a href=":moderation_url">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint.', [
+        ':classification_url' => Url::fromRoute('ai_api_explorer.form.image_classification_generator')->toString(),
+        ':moderation_url' => Url::fromRoute('ai_api_explorer.form.moderation_generator')->toString(),
+      ]);
     }
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),

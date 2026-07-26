@@ -216,3 +216,18 @@ msgstr "Instruction"
 
 msgid "Describe how Grok should change the source image."
 msgstr "Décrivez comment Grok doit modifier l’image source."
+
+msgid "Text content to assess for potentially harmful material."
+msgstr "Contenu textuel à évaluer afin de détecter des éléments potentiellement nuisibles."
+
+msgid "An image and optional candidate labels to classify."
+msgstr "Une image et des libellés candidats facultatifs à classifier."
+
+msgid "Maximum labels"
+msgstr "Nombre maximal de libellés"
+
+msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgstr "Nombre maximal de libellés que Grok peut renvoyer lorsqu’aucun libellé candidat n’est fourni."
+
+msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr "Configurez Grok par défaut pour la classification d’images et la modération, puis testez-le dans l’<a href=\":classification_url\">explorateur de classification d’images</a> et l’<a href=\":moderation_url\">explorateur de modération</a>. La modération est une évaluation fondée sur un modèle, et non un point de terminaison de sécurité xAI dédié."
