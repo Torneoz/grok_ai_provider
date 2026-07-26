@@ -231,9 +231,3 @@ msgstr "Nombre maximal de libellés que Grok peut renvoyer lorsqu’aucun libell
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "Configurez Grok par défaut pour la classification d’images et la modération, puis testez-le dans l’<a href=\":classification_url\">explorateur de classification d’images</a> et l’<a href=\":moderation_url\">explorateur de modération</a>. La modération est une évaluation fondée sur un modèle, et non un point de terminaison de sécurité xAI dédié."
-
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
-msgstr "Sélectionnez une voix xAI pour la synthèse vocale et xAI Speech to Text pour la transcription, puis testez-les dans l’<a href=\":tts_url\">explorateur de synthèse vocale</a> et l’<a href=\":stt_url\">explorateur de transcription</a>."
-
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
-msgstr "Grok prend en charge le texte conversationnel, la vision, les outils de fonction, les sorties structurées, texte-vers-image, image-vers-image, image-vers-vidéo, texte-vers-vidéo, texte-vers-parole et parole-vers-texte. Les opérations telles que les plongements nécessitent un autre fournisseur compatible."

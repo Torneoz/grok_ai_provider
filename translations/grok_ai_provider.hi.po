@@ -220,9 +220,3 @@ msgstr "उम्मीदवार लेबल न दिए जाने प�
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "छवि वर्गीकरण और मॉडरेशन के लिए Grok को डिफ़ॉल्ट के रूप में कॉन्फ़िगर करें, फिर <a href=\":classification_url\">छवि वर्गीकरण एक्सप्लोरर</a> और <a href=\":moderation_url\">मॉडरेशन एक्सप्लोरर</a> में इसका परीक्षण करें। मॉडरेशन मॉडल-आधारित आकलन है, कोई समर्पित xAI सुरक्षा एंडपॉइंट नहीं।"
-
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
-msgstr "टेक्स्ट टू स्पीच के लिए xAI आवाज़ और स्पीच टू टेक्स्ट के लिए xAI Speech to Text चुनें, फिर <a href=\":tts_url\">टेक्स्ट-टू-स्पीच एक्सप्लोरर</a> और <a href=\":stt_url\">स्पीच-टू-टेक्स्ट एक्सप्लोरर</a> में उनका परीक्षण करें।"
-
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
-msgstr "Grok चैट-आधारित टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट, टेक्स्ट-टू-इमेज, इमेज-टू-इमेज, इमेज-टू-वीडियो, टेक्स्ट-टू-वीडियो, टेक्स्ट-टू-स्पीच और स्पीच-टू-टेक्स्ट का समर्थन करता है। एम्बेडिंग जैसे कार्यों के लिए अन्य समर्थित प्रदाता की आवश्यकता है।"

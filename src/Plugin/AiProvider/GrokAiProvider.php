@@ -19,7 +19,6 @@ use Drupal\ai\Exception\AiSetupFailureException;
 use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
-use Drupal\ai\OperationType\GenericType\AudioFile;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\GenericType\VideoFile;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationInput;
@@ -36,16 +35,11 @@ use Drupal\ai\OperationType\Moderation\ModerationInput;
 use Drupal\ai\OperationType\Moderation\ModerationInterface;
 use Drupal\ai\OperationType\Moderation\ModerationOutput;
 use Drupal\ai\OperationType\Moderation\ModerationResponse;
-use Drupal\ai\OperationType\SpeechToText\SpeechToTextInput;
-use Drupal\ai\OperationType\SpeechToText\SpeechToTextOutput;
 use Drupal\ai\OperationType\TextToImage\TextToImageInput;
 use Drupal\ai\OperationType\TextToImage\TextToImageOutput;
-use Drupal\ai\OperationType\TextToSpeech\TextToSpeechInput;
-use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
 use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInput;
 use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInterface;
 use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoOutput;
-use Drupal\grok_ai_provider\Service\XaiAudioClient;
 use Drupal\grok_ai_provider\Service\XaiImagesClient;
 use Drupal\grok_ai_provider\Service\XaiResponsesClient;
 use Drupal\grok_ai_provider\Service\XaiVideosClient;
@@ -83,16 +77,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   public const DEFAULT_IMAGE_TO_VIDEO_MODEL = 'grok-imagine-video-1.5';
 
   /**
-   * Synthetic model ID for xAI's model-less REST transcription endpoint.
-   */
-  public const DEFAULT_SPEECH_TO_TEXT_MODEL = 'xai-stt';
-
-  /**
-   * Default xAI text-to-speech voice.
-   */
-  public const DEFAULT_TEXT_TO_SPEECH_VOICE = 'eve';
-
-  /**
    * Maximum decoded size of one generated image.
    */
   private const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
@@ -101,11 +85,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * Maximum downloaded size of one generated video.
    */
   private const MAX_VIDEO_BYTES = 200 * 1024 * 1024;
-
-  /**
-   * Maximum accepted source audio size.
-   */
-  private const MAX_AUDIO_BYTES = 100 * 1024 * 1024;
 
   /**
    * An endpoint supplied at runtime, such as during settings validation.
@@ -133,11 +112,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   private XaiVideosClient $videosClient;
 
   /**
-   * The xAI REST voice transport.
-   */
-  private XaiAudioClient $audioClient;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -145,7 +119,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     $instance->responsesClient = $container->get('grok_ai_provider.responses_client');
     $instance->imagesClient = $container->get('grok_ai_provider.images_client');
     $instance->videosClient = $container->get('grok_ai_provider.videos_client');
-    $instance->audioClient = $container->get('grok_ai_provider.audio_client');
     return $instance;
   }
 
@@ -159,9 +132,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       'image_to_image',
       'image_to_video',
       'moderation',
-      'speech_to_text',
       'text_to_image',
-      'text_to_speech',
       'text_to_video',
     ];
     if ($operation_type !== NULL && !in_array($operation_type, $supported_operation_types, TRUE)) {
@@ -174,23 +145,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     }
     if ($operation_type === 'text_to_video') {
       return [self::DEFAULT_VIDEO_MODEL => self::DEFAULT_VIDEO_MODEL];
-    }
-    if ($operation_type === 'speech_to_text') {
-      return [self::DEFAULT_SPEECH_TO_TEXT_MODEL => 'xAI Speech to Text'];
-    }
-    if ($operation_type === 'text_to_speech') {
-      $cache_context = [$this->getEndpoint(), $this->apiKey, 'text_to_speech'];
-      $cache_key = 'grok_tts_voices_' . Crypt::hashBase64(Json::encode($cache_context));
-      if ($cached = $this->cacheBackend->get($cache_key)) {
-        return $cached->data;
-      }
-      $response = $this->audioClient->listVoices(
-        $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
-        $this->apiKey ?: $this->loadApiKey(),
-      );
-      $voices = $this->filterVoices((array) ($response['voices'] ?? []));
-      $this->cacheBackend->set($cache_key, $voices, time() + ($voices === [] ? 300 : 3600));
-      return $voices;
     }
     if (in_array($operation_type, ['image_to_image', 'text_to_image'], TRUE)) {
       $cache_context = [$this->getEndpoint(), $this->apiKey, $operation_type];
@@ -252,9 +206,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       'image_to_image',
       'image_to_video',
       'moderation',
-      'speech_to_text',
       'text_to_image',
-      'text_to_speech',
       'text_to_video',
     ];
   }
@@ -466,9 +418,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
         'image_to_image' => self::DEFAULT_IMAGE_MODEL,
         'image_to_video' => self::DEFAULT_IMAGE_TO_VIDEO_MODEL,
         'moderation' => $default_model,
-        'speech_to_text' => self::DEFAULT_SPEECH_TO_TEXT_MODEL,
         'text_to_image' => self::DEFAULT_IMAGE_MODEL,
-        'text_to_speech' => self::DEFAULT_TEXT_TO_SPEECH_VOICE,
         'text_to_video' => self::DEFAULT_VIDEO_MODEL,
       ],
     ];
@@ -581,91 +531,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
 
     $chat_output = $this->runClassificationChat($chat_input, $model_id, $tags);
     return $this->normalizeModerationOutput($chat_output, $model_id);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function textToSpeech(string|TextToSpeechInput $input, string $model_id, array $tags = []): TextToSpeechOutput {
-    $text = trim($input instanceof TextToSpeechInput ? $input->getText() : $input);
-    if ($text === '') {
-      throw new AiBadRequestException((string) $this->t('A non-empty text-to-speech input is required.'));
-    }
-    if (mb_strlen($text) > 15000) {
-      throw new AiBadRequestException((string) $this->t('Text-to-speech input must be 15,000 characters or fewer.'));
-    }
-    if (!preg_match('/^[a-z0-9][a-z0-9_-]{1,127}$/i', $model_id)) {
-      throw new AiBadRequestException((string) $this->t('"@voice" is not a valid xAI voice ID.', [
-        '@voice' => $model_id,
-      ]));
-    }
-
-    $language = trim((string) ($this->configuration['language'] ?? 'auto'));
-    if (!$this->isValidTtsLanguage($language)) {
-      throw new AiBadRequestException((string) $this->t('"@language" is not a supported xAI text-to-speech language.', [
-        '@language' => $language,
-      ]));
-    }
-    $speed = (float) ($this->configuration['speed'] ?? 1.0);
-    if ($speed < 0.7 || $speed > 1.5) {
-      throw new AiBadRequestException((string) $this->t('Text-to-speech speed must be between 0.7 and 1.5.'));
-    }
-    $payload = [
-      'text' => $text,
-      'voice_id' => strtolower($model_id),
-      'language' => $language,
-      'speed' => $speed,
-      'text_normalization' => (bool) ($this->configuration['text_normalization'] ?? FALSE),
-      'output_format' => [
-        'codec' => 'mp3',
-      ],
-    ];
-    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
-    $response = $this->audioClient->synthesize(
-      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
-      $this->apiKey ?: $this->loadApiKey(),
-      $payload,
-      $timeout,
-    );
-    return $this->normalizeTextToSpeechOutput($response, strtolower($model_id), $language);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function speechToText(string|SpeechToTextInput $input, string $model_id, array $tags = []): SpeechToTextOutput {
-    if ($model_id !== self::DEFAULT_SPEECH_TO_TEXT_MODEL) {
-      throw new AiBadRequestException((string) $this->t('"@model" is not the xAI REST speech-to-text model.', [
-        '@model' => $model_id,
-      ]));
-    }
-    $audio = $this->normalizeSpeechToTextInput($input);
-    $language = trim((string) ($this->configuration['language'] ?? ''));
-    if ($language !== '' && !$this->isValidSttLanguage($language)) {
-      throw new AiBadRequestException((string) $this->t('"@language" is not a supported xAI speech-to-text language.', [
-        '@language' => $language,
-      ]));
-    }
-    $fields = [
-      'language' => $language,
-      'format' => $language !== '' && !empty($this->configuration['format']),
-      'diarize' => (bool) ($this->configuration['diarize'] ?? FALSE),
-      'filler_words' => (bool) ($this->configuration['filler_words'] ?? FALSE),
-      'keyterm' => $this->normalizeKeyterms((string) ($this->configuration['keyterms'] ?? '')),
-    ];
-    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
-    $response = $this->audioClient->transcribe(
-      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
-      $this->apiKey ?: $this->loadApiKey(),
-      $fields,
-      [
-        'binary' => $audio->getBinary(),
-        'filename' => $audio->getFilename(),
-        'mime_type' => $audio->getMimeType(),
-      ],
-      $timeout,
-    );
-    return $this->normalizeSpeechToTextOutput($response, $model_id);
   }
 
   /**
@@ -1109,23 +974,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   }
 
   /**
-   * Filters voice discovery results into Drupal AI model options.
-   */
-  private function filterVoices(array $voice_data): array {
-    $voices = [];
-    foreach ($voice_data as $voice) {
-      $voice_id = strtolower(trim((string) ($voice['voice_id'] ?? '')));
-      if (!preg_match('/^[a-z0-9][a-z0-9_-]{1,127}$/', $voice_id)) {
-        continue;
-      }
-      $name = trim((string) ($voice['name'] ?? ''));
-      $voices[$voice_id] = $name === '' ? $voice_id : sprintf('%s (%s)', $name, $voice_id);
-    }
-    asort($voices);
-    return $voices;
-  }
-
-  /**
    * Normalizes base64 image results into Drupal AI image objects.
    */
   private function normalizeImageOutput(array $response): TextToImageOutput {
@@ -1137,54 +985,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    */
   private function normalizeImageToImageOutput(array $response): ImageToImageOutput {
     return new ImageToImageOutput(...$this->normalizeImageResponse($response, 'image_edits'));
-  }
-
-  /**
-   * Normalizes raw xAI MP3 output into a Drupal AI audio object.
-   */
-  private function normalizeTextToSpeechOutput(array $response, string $voice_id, string $language): TextToSpeechOutput {
-    $binary = $response['binary'] ?? NULL;
-    if (!is_string($binary) || $binary === '') {
-      throw new AiResponseErrorException((string) $this->t('xAI returned invalid text-to-speech audio.'));
-    }
-    $mime_type = $this->detectMimeType($binary, ['audio/mpeg' => 'mp3']);
-    if ($mime_type !== 'audio/mpeg') {
-      throw new AiResponseErrorException((string) $this->t('xAI returned text-to-speech audio in an unsupported format.'));
-    }
-    return new TextToSpeechOutput(
-      [new AudioFile($binary, 'audio/mpeg', 'grok-speech.mp3')],
-      [
-        'content_type' => (string) ($response['content_type'] ?? ''),
-        'audio_bytes' => strlen($binary),
-      ],
-      [
-        'transport' => 'tts',
-        'voice_id' => $voice_id,
-        'language' => $language,
-        'format' => 'mp3',
-      ],
-    );
-  }
-
-  /**
-   * Normalizes an xAI transcription response.
-   */
-  private function normalizeSpeechToTextOutput(array $response, string $model_id): SpeechToTextOutput {
-    $text = trim((string) ($response['text'] ?? ''));
-    if ($text === '') {
-      throw new AiResponseErrorException((string) $this->t('xAI did not return any transcribed text.'));
-    }
-    return new SpeechToTextOutput(
-      $text,
-      $response,
-      [
-        'transport' => 'stt',
-        'model' => $model_id,
-        'duration' => isset($response['duration']) ? (float) $response['duration'] : NULL,
-        'words' => is_array($response['words'] ?? NULL) ? $response['words'] : [],
-        'channels' => is_array($response['channels'] ?? NULL) ? $response['channels'] : [],
-      ],
-    );
   }
 
   /**
@@ -1516,129 +1316,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       }
     }
     return [$image, $labels];
-  }
-
-  /**
-   * Normalizes and validates Drupal AI speech-to-text input.
-   */
-  private function normalizeSpeechToTextInput(string|SpeechToTextInput $input): AudioFile {
-    if ($input instanceof SpeechToTextInput) {
-      $audio = $input->getFile();
-    }
-    else {
-      $mime_type = $this->detectMimeType($input, $this->allowedSpeechInputMimeTypes());
-      $audio = new AudioFile($input, $mime_type ?? '', 'input-audio');
-    }
-    $binary = $audio->getBinary();
-    if ($binary === '' || strlen($binary) > self::MAX_AUDIO_BYTES) {
-      throw new AiBadRequestException((string) $this->t('The source audio is empty or exceeds the 100 MB module limit.'));
-    }
-    $mime_type = $this->detectMimeType($binary, $this->allowedSpeechInputMimeTypes());
-    if ($mime_type === NULL) {
-      throw new AiBadRequestException((string) $this->t('The source audio has an unsupported file type.'));
-    }
-    $audio->setMimeType($mime_type);
-    if (trim($audio->getFilename()) === '') {
-      $audio->setFilename('input-audio.' . $this->allowedSpeechInputMimeTypes()[$mime_type]);
-    }
-    return $audio;
-  }
-
-  /**
-   * Audio input MIME types accepted by the xAI REST transcription API.
-   */
-  private function allowedSpeechInputMimeTypes(): array {
-    return [
-      'audio/mpeg' => 'mp3',
-      'audio/wav' => 'wav',
-      'audio/x-wav' => 'wav',
-      'audio/webm' => 'webm',
-      'video/webm' => 'webm',
-      'audio/ogg' => 'ogg',
-      'audio/mp4' => 'm4a',
-      'video/mp4' => 'm4a',
-      'audio/flac' => 'flac',
-      'audio/x-flac' => 'flac',
-    ];
-  }
-
-  /**
-   * Validates a language accepted by xAI Text to Speech.
-   */
-  private function isValidTtsLanguage(string $language): bool {
-    return in_array(strtolower($language), [
-      'auto',
-      'en',
-      'ar-eg',
-      'ar-sa',
-      'ar-ae',
-      'bn',
-      'zh',
-      'fr',
-      'de',
-      'hi',
-      'id',
-      'it',
-      'ja',
-      'ko',
-      'pt-br',
-      'pt-pt',
-      'ru',
-      'es-mx',
-      'es-es',
-      'tr',
-      'vi',
-    ], TRUE);
-  }
-
-  /**
-   * Validates a language accepted by xAI Speech to Text.
-   */
-  private function isValidSttLanguage(string $language): bool {
-    return in_array(strtolower($language), [
-      'ar',
-      'cs',
-      'da',
-      'de',
-      'en',
-      'es',
-      'fa',
-      'fil',
-      'fr',
-      'hi',
-      'id',
-      'it',
-      'ja',
-      'ko',
-      'mk',
-      'ms',
-      'nl',
-      'pl',
-      'pt',
-      'ro',
-      'ru',
-      'sv',
-      'th',
-      'tr',
-      'vi',
-    ], TRUE);
-  }
-
-  /**
-   * Normalizes comma- or newline-separated transcription key terms.
-   */
-  private function normalizeKeyterms(string $keyterms): array {
-    $values = preg_split('/[,\r\n]+/', $keyterms) ?: [];
-    $values = array_values(array_unique(array_filter(array_map('trim', $values))));
-    if (count($values) > 100) {
-      throw new AiBadRequestException((string) $this->t('Speech-to-text accepts at most 100 key terms.'));
-    }
-    foreach ($values as $value) {
-      if (mb_strlen($value) > 50) {
-        throw new AiBadRequestException((string) $this->t('Speech-to-text key terms must be 50 characters or fewer.'));
-      }
-    }
-    return $values;
   }
 
   /**

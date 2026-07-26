@@ -1,13 +1,5 @@
 # Changelog
 
-## 1.0.0-alpha3
-
-- Added Drupal AI Text-to-Speech using xAI REST voice discovery and MP3
-  synthesis.
-- Added Drupal AI Speech-to-Text using xAI's multipart REST transcription API.
-- Added language, speech speed, text normalization, transcript formatting,
-  diarization, filler-word, and key-term controls.
-
 ## 1.0.0-alpha2
 
 - Added native Drupal AI Text-to-Image and Image-to-Image operations using

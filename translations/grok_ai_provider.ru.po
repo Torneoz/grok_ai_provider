@@ -220,9 +220,3 @@ msgstr "Максимальное число меток, которые Grok мо
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "Настройте Grok по умолчанию для классификации изображений и модерации, затем протестируйте его в <a href=\":classification_url\">обозревателе классификации изображений</a> и <a href=\":moderation_url\">обозревателе модерации</a>. Модерация является оценкой модели, а не специализированной конечной точкой безопасности xAI."
-
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
-msgstr "Выберите голос xAI для преобразования текста в речь и xAI Speech to Text для распознавания речи, затем протестируйте их в <a href=\":tts_url\">обозревателе текста в речь</a> и <a href=\":stt_url\">обозревателе речи в текст</a>."
-
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
-msgstr "Grok поддерживает чатовый текст, зрение, функциональные инструменты, структурированный вывод, текст в изображение, изображение в изображение, изображение в видео, текст в видео, текст в речь и речь в текст. Для таких операций, как встраивания, требуется другой поддерживающий поставщик."

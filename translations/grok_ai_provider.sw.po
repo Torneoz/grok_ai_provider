@@ -220,9 +220,3 @@ msgstr "Idadi ya juu ya lebo ambazo Grok inaweza kurudisha wakati lebo teule haz
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "Sanidi Grok kuwa chaguo-msingi kwa Uainishaji wa Picha na Udhibiti, kisha ijaribu katika <a href=\":classification_url\">Kichunguzi cha Uainishaji wa Picha</a> na <a href=\":moderation_url\">Kichunguzi cha Udhibiti</a>. Udhibiti ni tathmini inayotegemea modeli, si kituo maalumu cha usalama cha xAI."
-
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
-msgstr "Chagua sauti ya xAI kwa Maandishi kwenda Sauti na xAI Speech to Text kwa Sauti kwenda Maandishi, kisha zijaribu katika <a href=\":tts_url\">Kichunguzi cha Maandishi kwenda Sauti</a> na <a href=\":stt_url\">Kichunguzi cha Sauti kwenda Maandishi</a>."
-
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
-msgstr "Grok inasaidia maandishi ya mazungumzo, uoni, zana za vitendaji, matokeo yaliyopangwa, maandishi kwenda picha, picha kwenda picha, picha kwenda video, maandishi kwenda video, maandishi kwenda sauti na sauti kwenda maandishi. Operesheni kama embeddings zinahitaji mtoa huduma mwingine anayezisaidia."

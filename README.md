@@ -1,9 +1,8 @@
 # Grok AI Provider
 
-Provides xAI Grok chat, image generation, image editing, video generation,
-text-to-speech, and speech-to-text to Drupal through the AI module, together
-with model-based moderation and image classification using xAI's Chat
-Completions, Responses, Imagine, and Voice APIs.
+Provides xAI Grok chat, image generation, image editing, and video generation
+to Drupal through the AI module, together with model-based moderation and image
+classification using xAI's Chat Completions, Responses, and Imagine APIs.
 
 ## Installation
 
@@ -24,9 +23,6 @@ non-empty editing prompt are required; masks are not currently supported.
 Select a vision-capable Grok model for **Image Classification** and a
 structured-output-capable Grok model for **Moderation**. These adapters use
 Grok chat inference; xAI does not provide a dedicated moderation endpoint.
-For **Text To Speech**, select an available xAI voice such as `eve`. Select
-`xai-stt` for **Speech To Text**. Drupal AI's standard Text-to-Speech and
-Speech-to-Text Explorers become available when those defaults are configured.
 Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
 same page.
 Select Grok and `grok-imagine-video-1.5` for the **Image To Video** operation.
@@ -56,10 +52,6 @@ translations independently.
 - Image classification with optional candidate labels and confidence scores
 - Model-based text moderation with safety categories, an explanation, and a
   confidence score
-- Text-to-speech with live xAI voice discovery, language selection, speech
-  speed, text normalization, and MP3 output
-- REST speech-to-text for supported audio files, with optional formatting,
-  speaker diarization, filler words, and key-term prompting
 - Drupal AI function tools
 - JSON and structured responses on supported models
 - Text-to-image generation with available Grok Imagine image models
@@ -96,8 +88,8 @@ Responses are not stored by xAI unless an administrator opts in. Drupal
 function tools continue to use Chat Completions so the existing Drupal AI tool
 execution loop remains unchanged.
 
-Streaming Responses requests, stateful response continuation, and
-collection/file management are not yet included. Streaming ordinary chat
+Streaming Responses requests, stateful response continuation, collection/file
+management, and voice APIs are not yet included. Streaming ordinary chat
 continues to work through Chat Completions, including when the provider-wide
 transport preference is Responses. Hosted tools are never silently removed
 from a streamed request.
@@ -108,12 +100,6 @@ API and remote MCP endpoints must use HTTPS.
 Video requests use xAI's asynchronous API and are billed by generated duration
 and resolution. The module polls until completion and immediately downloads the
 MP4 because xAI-hosted result URLs are temporary.
-
-Audio requests use xAI's REST Voice API. Text-to-speech input is limited to
-15,000 characters and returns MP3 for compatibility with Drupal AI's current
-Explorer. Speech-to-text accepts up to 100 MB in this module, below xAI's
-service limit, to keep Drupal request memory bounded. Realtime WebSocket
-speech-to-speech and custom voice management are not included.
 
 ## Translations
 
