@@ -9,6 +9,7 @@ use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
+use Drupal\ai\OperationType\GenericType\AudioFile;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationInput;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationOutput;
@@ -17,6 +18,9 @@ use Drupal\ai\OperationType\ImageToImage\ImageToImageOutput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
 use Drupal\ai\OperationType\Moderation\ModerationOutput;
+use Drupal\ai\OperationType\SpeechToText\SpeechToTextInput;
+use Drupal\ai\OperationType\SpeechToText\SpeechToTextOutput;
+use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
 use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -221,6 +225,80 @@ final class GrokAiProviderTest extends TestCase {
 
     self::assertContains('image_classification', $operations);
     self::assertContains('moderation', $operations);
+  }
+
+  /**
+   * Tests voice discovery filtering and labels.
+   */
+  public function testFiltersVoices(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'filterVoices');
+    $voices = $method->invoke($this->newProviderWithoutConstructor(), [
+      ['voice_id' => 'EVE', 'name' => 'Eve'],
+      ['voice_id' => 'ara', 'name' => 'Ara'],
+      ['voice_id' => '../invalid', 'name' => 'Invalid'],
+      ['voice_id' => '', 'name' => 'Missing'],
+    ]);
+
+    self::assertSame([
+      'ara' => 'Ara (ara)',
+      'eve' => 'Eve (eve)',
+    ], $voices);
+  }
+
+  /**
+   * Tests native Drupal AI text-to-speech output normalization.
+   */
+  public function testNormalizesTextToSpeech(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeTextToSpeechOutput');
+    $mp3 = "\xFF\xFB\x90\x64" . str_repeat("\0", 413);
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'binary' => $mp3,
+      'content_type' => 'audio/mpeg',
+    ], 'eve', 'en');
+
+    self::assertInstanceOf(TextToSpeechOutput::class, $output);
+    self::assertSame('audio/mpeg', $output->getNormalized()[0]->getMimeType());
+    self::assertSame('grok-speech.mp3', $output->getNormalized()[0]->getFilename());
+    self::assertSame('tts', $output->getMetadata()['transport']);
+    self::assertSame('eve', $output->getMetadata()['voice_id']);
+  }
+
+  /**
+   * Tests native Drupal AI speech-to-text input and output normalization.
+   */
+  public function testNormalizesSpeechToText(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $input_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeSpeechToTextInput');
+    $mp3 = "\xFF\xFB\x90\x64" . str_repeat("\0", 413);
+    $audio = $input_method->invoke($provider, new SpeechToTextInput(
+      new AudioFile($mp3, 'audio/mpeg', 'speech.mp3'),
+    ));
+    self::assertSame('audio/mpeg', $audio->getMimeType());
+
+    $output_method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeSpeechToTextOutput');
+    $output = $output_method->invoke($provider, [
+      'text' => 'Hello from Drupal.',
+      'duration' => 1.2,
+      'words' => [['text' => 'Hello', 'start' => 0, 'end' => 0.4]],
+    ], GrokAiProvider::DEFAULT_SPEECH_TO_TEXT_MODEL);
+
+    self::assertInstanceOf(SpeechToTextOutput::class, $output);
+    self::assertSame('Hello from Drupal.', $output->getNormalized());
+    self::assertSame(1.2, $output->getMetadata()['duration']);
+    self::assertSame('stt', $output->getMetadata()['transport']);
+  }
+
+  /**
+   * Tests audio operation advertisement and key-term normalization.
+   */
+  public function testAdvertisesAudioOperations(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $operations = $provider->getSupportedOperationTypes();
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeKeyterms');
+
+    self::assertContains('text_to_speech', $operations);
+    self::assertContains('speech_to_text', $operations);
+    self::assertSame(['Drupal', 'Grok'], $method->invoke($provider, "Drupal, Grok\nDrupal"));
   }
 
   /**

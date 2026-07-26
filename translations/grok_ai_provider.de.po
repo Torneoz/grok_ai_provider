@@ -231,3 +231,9 @@ msgstr "Maximale Anzahl von Bezeichnungen, die Grok zurückgeben darf, wenn kein
 
 msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr "Konfigurieren Sie Grok als Standard für Bildklassifizierung und Moderation und testen Sie es anschließend im <a href=\":classification_url\">Explorer für Bildklassifizierung</a> und im <a href=\":moderation_url\">Moderations-Explorer</a>. Die Moderation ist eine modellbasierte Bewertung und kein eigener xAI-Sicherheitsendpunkt."
+
+msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
+msgstr "Wählen Sie eine xAI-Stimme für Text zu Sprache und xAI Speech to Text für Sprache zu Text aus und testen Sie beides im <a href=\":tts_url\">Text-zu-Sprache-Explorer</a> und <a href=\":stt_url\">Sprache-zu-Text-Explorer</a>."
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
+msgstr "Grok unterstützt chatbasierten Text, Bilderkennung, Funktionswerkzeuge, strukturierte Ausgaben, Text-zu-Bild, Bild-zu-Bild, Bild-zu-Video, Text-zu-Video, Text-zu-Sprache und Sprache-zu-Text. Für Operationen wie Einbettungen ist ein anderer unterstützender Anbieter erforderlich."
