@@ -1,0 +1,27 @@
+# Changelog
+
+## 1.0.0-alpha2
+
+- Added native Drupal AI Text-to-Image and Image-to-Image operations using
+  Grok Imagine image models.
+- Added Text-to-Video and Image-to-Video operations, including AI API Explorer
+  integrations and asynchronous MP4 retrieval.
+- Added Drupal AI Image Classification with optional candidate labels and
+  confidence scores.
+- Added model-based Drupal AI Moderation with categories, explanations, and
+  confidence scores.
+- Added opt-in xAI hosted tools through the Responses API: Web Search, X
+  Search, Code Interpreter, Collections Search, and allowlisted remote MCP
+  servers.
+- Added provider setup guidance, AI Explorer links, CKEditor instructions,
+  example Explorer inputs, and an optional Drupal recipe.
+- Added packaged basic translations for ten languages.
+- Improved API-key-dependent form visibility, model discovery, validation,
+  observability metadata, error handling, and documentation.
+
+Moderation in this release is a probabilistic Grok assessment. It is not a
+dedicated xAI safety or compliance endpoint.
+
+## 1.0.0-alpha1
+
+- Initial Drupal AI provider integration for xAI Grok chat models.
