@@ -988,3 +988,6 @@ msgstr ""
 
 msgid "The bundled example image could not be read."
 msgstr ""
+
+msgid "Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background"
+msgstr ""
