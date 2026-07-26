@@ -8,6 +8,8 @@ use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\ai\OperationType\GenericType\ImageFile;
+use Drupal\ai\OperationType\ImageToImage\ImageToImageInput;
+use Drupal\ai\OperationType\ImageToImage\ImageToImageOutput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
 use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
@@ -96,6 +98,58 @@ final class GrokAiProviderTest extends TestCase {
     self::assertSame('grok-image-1.png', $output->getNormalized()[0]->getFilename());
     self::assertSame('images', $output->getMetadata()['transport']);
     self::assertSame(200000000, $output->getMetadata()['usage']['cost_in_usd_ticks']);
+  }
+
+  /**
+   * Tests image-edit payload construction.
+   */
+  public function testBuildsImageToImagePayload(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $configuration = new \ReflectionProperty(GrokAiProvider::class, 'configuration');
+    $configuration->setValue($provider, [
+      'aspect_ratio' => '16:9',
+      'resolution' => '2k',
+    ]);
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'buildImageToImagePayload');
+    $binary = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', TRUE);
+    self::assertIsString($binary);
+    $input = new ImageToImageInput(new ImageFile($binary, 'image/png', 'source.png'));
+    $input->setPrompt('Add stadium lights');
+    $payload = $method->invoke($provider, $input, GrokAiProvider::DEFAULT_IMAGE_MODEL);
+
+    self::assertSame('grok-imagine-image-quality', $payload['model']);
+    self::assertSame('Add stadium lights', $payload['prompt']);
+    self::assertStringStartsWith('data:image/png;base64,', $payload['image']['url']);
+    self::assertSame('image_url', $payload['image']['type']);
+    self::assertSame('b64_json', $payload['response_format']);
+    self::assertSame('2k', $payload['resolution']);
+  }
+
+  /**
+   * Tests native Drupal AI image-edit output normalization.
+   */
+  public function testNormalizesImageToImageOutput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeImageToImageOutput');
+    $png = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+    $output = $method->invoke($this->newProviderWithoutConstructor(), [
+      'data' => [['b64_json' => $png]],
+    ]);
+
+    self::assertInstanceOf(ImageToImageOutput::class, $output);
+    self::assertSame('image/png', $output->getNormalized()[0]->getMimeType());
+    self::assertSame('image_edits', $output->getMetadata()['transport']);
+  }
+
+  /**
+   * Tests Drupal AI's image-edit prompt and mask feature flags.
+   */
+  public function testImageToImageFeatureFlags(): void {
+    $provider = $this->newProviderWithoutConstructor();
+
+    self::assertTrue($provider->hasImageToImagePrompt(GrokAiProvider::DEFAULT_IMAGE_MODEL));
+    self::assertTrue($provider->requiresImageToImagePrompt(GrokAiProvider::DEFAULT_IMAGE_MODEL));
+    self::assertFalse($provider->hasImageToImageMask(GrokAiProvider::DEFAULT_IMAGE_MODEL));
+    self::assertFalse($provider->requiresImageToImageMask(GrokAiProvider::DEFAULT_IMAGE_MODEL));
   }
 
   /**

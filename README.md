@@ -17,6 +17,8 @@ Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
 To use image generation, select Grok and an available Grok Imagine model for
 the **Text To Image** operation on Drupal AI's default-model settings page.
+Select Grok and an available Grok Imagine image model for the **Image To
+Image** operation to enable prompt-based image editing.
 Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
 same page.
 Select Grok and `grok-imagine-video-1.5` for the **Image To Video** operation.
@@ -43,6 +45,7 @@ translations independently.
 - Drupal AI function tools
 - JSON and structured responses on supported models
 - Text-to-image generation with available Grok Imagine image models
+- Image-to-image editing with Grok Imagine image models
 - Optional best-effort transparent-background prompting for generated images
 - Text-to-video generation with `grok-imagine-video`, including configurable
   duration, aspect ratio, and resolution

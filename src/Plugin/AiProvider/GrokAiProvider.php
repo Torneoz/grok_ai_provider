@@ -21,6 +21,9 @@ use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\GenericType\VideoFile;
+use Drupal\ai\OperationType\ImageToImage\ImageToImageInput;
+use Drupal\ai\OperationType\ImageToImage\ImageToImageInterface;
+use Drupal\ai\OperationType\ImageToImage\ImageToImageOutput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInput;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoInterface;
 use Drupal\ai\OperationType\ImageToVideo\ImageToVideoOutput;
@@ -41,7 +44,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
   id: 'grok',
   label: new TranslatableMarkup('Grok (xAI)'),
 )]
-final class GrokAiProvider extends OpenAiBasedProviderClientBase implements ImageToVideoInterface, TextToVideoInterface {
+final class GrokAiProvider extends OpenAiBasedProviderClientBase implements ImageToImageInterface, ImageToVideoInterface, TextToVideoInterface {
 
   use StringTranslationTrait;
 
@@ -117,6 +120,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   public function getConfiguredModels(?string $operation_type = NULL, array $capabilities = []): array {
     $supported_operation_types = [
       'chat',
+      'image_to_image',
       'image_to_video',
       'text_to_image',
       'text_to_video',
@@ -132,8 +136,8 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     if ($operation_type === 'text_to_video') {
       return [self::DEFAULT_VIDEO_MODEL => self::DEFAULT_VIDEO_MODEL];
     }
-    if ($operation_type === 'text_to_image') {
-      $cache_context = [$this->getEndpoint(), $this->apiKey, 'text_to_image'];
+    if (in_array($operation_type, ['image_to_image', 'text_to_image'], TRUE)) {
+      $cache_context = [$this->getEndpoint(), $this->apiKey, $operation_type];
       $cache_key = 'grok_image_models_' . Crypt::hashBase64(Json::encode($cache_context));
       if ($cached = $this->cacheBackend->get($cache_key)) {
         return $cached->data;
@@ -177,7 +181,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * {@inheritdoc}
    */
   public function getSupportedOperationTypes(): array {
-    return ['chat', 'image_to_video', 'text_to_image', 'text_to_video'];
+    return ['chat', 'image_to_image', 'image_to_video', 'text_to_image', 'text_to_video'];
   }
 
   /**
@@ -383,6 +387,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
         'chat_with_complex_json' => $default_model,
         'chat_with_tools' => $default_model,
         'chat_with_structured_response' => $default_model,
+        'image_to_image' => self::DEFAULT_IMAGE_MODEL,
         'image_to_video' => self::DEFAULT_IMAGE_TO_VIDEO_MODEL,
         'text_to_image' => self::DEFAULT_IMAGE_MODEL,
         'text_to_video' => self::DEFAULT_VIDEO_MODEL,
@@ -516,6 +521,115 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       $timeout,
     );
     return $this->normalizeImageOutput($response);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function imageToImage(string|array|ImageToImageInput $input, string $model_id, array $tags = []): ImageToImageOutput {
+    $this->loadClient();
+    if (!preg_match('/^grok-imagine-image(?:-|$)/i', $model_id)) {
+      throw new AiBadRequestException((string) $this->t('"@model" is not an xAI image editing model.', [
+        '@model' => $model_id,
+      ]));
+    }
+
+    $payload = $this->buildImageToImagePayload($input, $model_id);
+    $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
+    $response = $this->imagesClient->edit(
+      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+      $this->apiKey ?: $this->loadApiKey(),
+      $payload,
+      $timeout,
+    );
+    return $this->normalizeImageToImageOutput($response);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresImageToImageMask(string $model_id): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasImageToImageMask(string $model_id): bool {
+    return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresImageToImagePrompt(string $model_id): bool {
+    return TRUE;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function hasImageToImagePrompt(string $model_id): bool {
+    return TRUE;
+  }
+
+  /**
+   * Builds a validated xAI image-edit request payload.
+   */
+  private function buildImageToImagePayload(string|array|ImageToImageInput $input, string $model_id): array {
+    $prompt = $input instanceof ImageToImageInput
+      ? trim((string) $input->getPrompt())
+      : trim((string) ($this->configuration['prompt'] ?? ''));
+    if ($prompt === '') {
+      throw new AiBadRequestException((string) $this->t('A non-empty image editing prompt is required.'));
+    }
+
+    $image = $this->normalizeImageToImageInput($input);
+    $payload = [
+      'model' => $model_id,
+      'prompt' => $prompt,
+      'image' => [
+        'type' => 'image_url',
+        'url' => sprintf(
+          'data:%s;base64,%s',
+          $image->getMimeType(),
+          base64_encode($image->getBinary()),
+        ),
+      ],
+      'response_format' => 'b64_json',
+    ];
+    $settings = array_intersect_key($this->configuration, array_flip([
+      'aspect_ratio',
+      'resolution',
+    ]));
+    if (isset($settings['aspect_ratio']) && $settings['aspect_ratio'] !== '' && !in_array($settings['aspect_ratio'], [
+      '1:1',
+      '16:9',
+      '9:16',
+      '4:3',
+      '3:4',
+      '3:2',
+      '2:3',
+      '2:1',
+      '1:2',
+      '19.5:9',
+      '9:19.5',
+      '20:9',
+      '9:20',
+    ], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@ratio" is not a supported xAI image aspect ratio.', [
+        '@ratio' => $settings['aspect_ratio'],
+      ]));
+    }
+    if (($settings['aspect_ratio'] ?? NULL) === '') {
+      unset($settings['aspect_ratio']);
+    }
+    if (isset($settings['resolution']) && !in_array($settings['resolution'], ['1k', '2k'], TRUE)) {
+      throw new AiBadRequestException((string) $this->t('"@resolution" is not a supported xAI image resolution.', [
+        '@resolution' => $settings['resolution'],
+      ]));
+    }
+    return $payload + $settings;
   }
 
   /**
@@ -731,6 +845,20 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * Normalizes base64 image results into Drupal AI image objects.
    */
   private function normalizeImageOutput(array $response): TextToImageOutput {
+    return new TextToImageOutput(...$this->normalizeImageResponse($response, 'images'));
+  }
+
+  /**
+   * Normalizes an image-edit response.
+   */
+  private function normalizeImageToImageOutput(array $response): ImageToImageOutput {
+    return new ImageToImageOutput(...$this->normalizeImageResponse($response, 'image_edits'));
+  }
+
+  /**
+   * Validates and normalizes an xAI image response.
+   */
+  private function normalizeImageResponse(array $response, string $transport): array {
     $items = $response['data'] ?? NULL;
     if (!is_array($items) || $items === []) {
       throw new AiResponseErrorException((string) $this->t('xAI did not return any generated images.'));
@@ -777,12 +905,16 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       ];
     }
 
-    return new TextToImageOutput($images, $response, [
-      'transport' => 'images',
-      'transparent_background_requested' => !empty($this->configuration['transparent_background']),
-      'images' => $details,
-      'usage' => (array) ($response['usage'] ?? []),
-    ]);
+    return [
+      $images,
+      $response,
+      [
+        'transport' => $transport,
+        'transparent_background_requested' => !empty($this->configuration['transparent_background']),
+        'images' => $details,
+        'usage' => (array) ($response['usage'] ?? []),
+      ],
+    ];
   }
 
   /**
@@ -831,6 +963,34 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    */
   private function normalizeImageToVideoInput(string|array|ImageToVideoInput $input): ImageFile {
     if ($input instanceof ImageToVideoInput) {
+      $image = $input->getImageFile();
+    }
+    elseif (is_array($input)) {
+      $file_data = isset($input['file']) && is_array($input['file']) ? $input['file'] : $input;
+      $image = ImageFile::fromArray($file_data);
+    }
+    else {
+      $mime_type = $this->detectMimeType($input, static::ALLOWED_IMAGE_MIME_TYPES);
+      $image = new ImageFile($input, $mime_type ?? '', 'input-image');
+    }
+
+    $binary = $image->getBinary();
+    if ($binary === '' || strlen($binary) > self::MAX_IMAGE_BYTES) {
+      throw new AiBadRequestException((string) $this->t('The source image is empty or exceeds the maximum allowed size.'));
+    }
+    $mime_type = $this->detectMimeType($binary, static::ALLOWED_IMAGE_MIME_TYPES);
+    if ($mime_type === NULL) {
+      throw new AiBadRequestException((string) $this->t('The source image has an unsupported file type.'));
+    }
+    $image->setMimeType($mime_type);
+    return $image;
+  }
+
+  /**
+   * Normalizes and validates Drupal AI image-edit input.
+   */
+  private function normalizeImageToImageInput(string|array|ImageToImageInput $input): ImageFile {
+    if ($input instanceof ImageToImageInput) {
       $image = $input->getImageFile();
     }
     elseif (is_array($input)) {

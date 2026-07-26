@@ -57,6 +57,19 @@ final class XaiImagesClient {
   }
 
   /**
+   * Edits an image from a source image and text prompt.
+   */
+  public function edit(string $endpoint, string $api_key, array $payload, int $timeout = 300): array {
+    return $this->request(
+      'POST',
+      rtrim($endpoint, '/') . '/images/edits',
+      $api_key,
+      $payload,
+      $timeout,
+    );
+  }
+
+  /**
    * Sends and decodes an xAI image API request.
    */
   private function request(string $method, string $url, string $api_key, ?array $payload = NULL, int $timeout = 60): array {

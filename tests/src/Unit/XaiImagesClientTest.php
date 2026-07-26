@@ -54,6 +54,39 @@ final class XaiImagesClientTest extends TestCase {
   }
 
   /**
+   * Tests image editing authentication and payload handling.
+   */
+  public function testEditsImages(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->expects(self::once())
+      ->method('request')
+      ->with(
+        'POST',
+        'https://api.x.ai/v1/images/edits',
+        self::callback(static function (array $options): bool {
+          return $options['headers']['Authorization'] === 'Bearer secret'
+            && $options['json']['model'] === 'grok-imagine-image-quality'
+            && str_starts_with($options['json']['image']['url'], 'data:image/png;base64,')
+            && $options['json']['response_format'] === 'b64_json';
+        }),
+      )
+      ->willReturn(new Response(200, [], '{"data":[{"b64_json":"ZWRpdGVk"}]}'));
+
+    $response = $this->createImagesClient($http_client)->edit(
+      'https://api.x.ai/v1/',
+      'secret',
+      [
+        'model' => 'grok-imagine-image-quality',
+        'prompt' => 'Add stadium lights',
+        'image' => ['url' => 'data:image/png;base64,aW1hZ2U='],
+        'response_format' => 'b64_json',
+      ],
+    );
+
+    self::assertSame('ZWRpdGVk', $response['data'][0]['b64_json']);
+  }
+
+  /**
    * Tests image-model discovery.
    */
   public function testListsImageModels(): void {

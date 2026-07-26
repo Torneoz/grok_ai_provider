@@ -991,3 +991,18 @@ msgstr ""
 
 msgid "Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background"
 msgstr ""
+
+msgid "\"@model\" is not an xAI image editing model."
+msgstr ""
+
+msgid "A non-empty image editing prompt is required."
+msgstr ""
+
+msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgstr ""
+
+msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, <a href=\":image_edit_url\">Image-To-Image Explorer</a>, <a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+
+msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgstr ""
