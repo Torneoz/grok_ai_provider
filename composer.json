@@ -13,5 +13,8 @@
         "drupal/core": "^10.3 || ^11",
         "drupal/ai": "^1.4",
         "drupal/key": "^1.22"
+    },
+    "suggest": {
+        "drupal/media_library_form_element": "Provides the visual Drupal Media Library selector in image-based AI Explorers."
     }
 }

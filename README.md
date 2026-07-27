@@ -54,7 +54,9 @@ Image-to-Image, Image-to-Video, and Image Classification Explorers use the same
 image-source interface. Users can upload an image, select an accessible image
 from a compatible Drupal Media type, or use the module's bundled default
 image. The Drupal Media option appears only when the optional core Media module
-is enabled and a compatible image Media type exists.
+is enabled and a compatible image Media type exists. When the optional
+**Media Library Form Element** module is enabled, the choice uses Drupal's
+visual Media Library selector; otherwise it falls back to entity autocomplete.
 
 The provider configuration form includes a **Cost estimates** section with an
 editable **Model pricing JSON** field. Its packaged defaults cover current Grok

@@ -20,6 +20,34 @@ use Symfony\Component\HttpFoundation\RequestStack;
 final class ExplorerMediaHelperTest extends TestCase {
 
   /**
+   * Tests Media Library and autocomplete value normalization.
+   *
+   * @dataProvider mediaValues
+   */
+  public function testNormalizesSelectedMediaId(mixed $value, int $expected): void {
+    $form_state = $this->createMock(FormStateInterface::class);
+    $form_state->method('getValue')->with('image_media')->willReturn($value);
+
+    self::assertSame($expected, $this->newHelper()->getSelectedMediaId($form_state));
+  }
+
+  /**
+   * Provides supported Media selector values.
+   */
+  public static function mediaValues(): array {
+    return [
+      'integer' => [42, 42],
+      'numeric string' => ['42', 42],
+      'comma string' => ['42,43', 42],
+      'media selection array' => [['media_selection_id' => '42'], 42],
+      'library selection array' => [['media_library_selection' => '42'], 42],
+      'target ID array' => [['target_id' => '42'], 42],
+      'list array' => [['42'], 42],
+      'empty' => [NULL, 0],
+    ];
+  }
+
+  /**
    * Tests the interface when Drupal Media is unavailable.
    */
   public function testBuildsUploadAndDefaultSourcesWithoutMedia(): void {
@@ -34,13 +62,7 @@ final class ExplorerMediaHelperTest extends TestCase {
     $form_state = $this->createMock(FormStateInterface::class);
     $form_state->method('getValue')->with('image_source')->willReturn(NULL);
 
-    $helper = new ExplorerMediaHelper(
-      $module_handler,
-      $this->createMock(EntityTypeManagerInterface::class),
-      $extension_path,
-      $this->createMock(FileSystemInterface::class),
-      $this->createMock(RequestStack::class),
-    );
+    $helper = $this->newHelper($module_handler, $extension_path);
     $elements = $helper->buildImageSourceElements(
       $form_state,
       new TranslatableMarkup('Choose an image.'),
@@ -51,6 +73,22 @@ final class ExplorerMediaHelperTest extends TestCase {
     self::assertArrayHasKey('image', $elements);
     self::assertArrayHasKey('default_media_preview', $elements);
     self::assertArrayNotHasKey('image_media', $elements);
+  }
+
+  /**
+   * Creates the helper with optional module and extension mocks.
+   */
+  private function newHelper(
+    ?ModuleHandlerInterface $module_handler = NULL,
+    ?ExtensionPathResolver $extension_path = NULL,
+  ): ExplorerMediaHelper {
+    return new ExplorerMediaHelper(
+      $module_handler ?? $this->createMock(ModuleHandlerInterface::class),
+      $this->createMock(EntityTypeManagerInterface::class),
+      $extension_path ?? $this->createMock(ExtensionPathResolver::class),
+      $this->createMock(FileSystemInterface::class),
+      $this->createMock(RequestStack::class),
+    );
   }
 
 }

@@ -137,14 +137,12 @@ final class ExplorerMediaHelper {
       ],
     ];
     if ($media_types !== []) {
+      $use_media_library = $this->moduleHandler->moduleExists('media_library')
+        && $this->moduleHandler->moduleExists('media_library_form_element');
       $elements['image_media'] = [
-        '#type' => 'entity_autocomplete',
-        '#target_type' => 'media',
+        '#type' => $use_media_library ? 'media_library' : 'entity_autocomplete',
         '#title' => new TranslatableMarkup('Drupal Media image'),
         '#description' => new TranslatableMarkup('Select an existing image from Drupal Media.'),
-        '#selection_settings' => [
-          'target_bundles' => array_keys($media_types),
-        ],
         '#weight' => -85,
         '#states' => [
           'visible' => [
@@ -155,6 +153,20 @@ final class ExplorerMediaHelper {
           ],
         ],
       ];
+      if ($use_media_library) {
+        $elements['image_media'] += [
+          '#allowed_bundles' => array_keys($media_types),
+          '#cardinality' => 1,
+        ];
+      }
+      else {
+        $elements['image_media'] += [
+          '#target_type' => 'media',
+          '#selection_settings' => [
+            'target_bundles' => array_keys($media_types),
+          ],
+        ];
+      }
     }
     return $elements;
   }
@@ -165,10 +177,41 @@ final class ExplorerMediaHelper {
   public function loadSelectedImage(FormStateInterface $form_state, callable $upload_loader): ?ImageFile {
     return match ((string) ($form_state->getValue('image_source') ?: 'default')) {
       'upload' => $upload_loader(),
-      'media' => $this->loadMediaImage((int) $form_state->getValue('image_media')),
+      'media' => $this->loadMediaImage($this->getSelectedMediaId($form_state)),
       'default' => $this->loadDefaultImage(),
       default => NULL,
     };
+  }
+
+  /**
+   * Normalizes Media Library and entity-autocomplete values to one media ID.
+   */
+  public function getSelectedMediaId(FormStateInterface $form_state): int {
+    $value = $form_state->getValue('image_media');
+    if (is_numeric($value)) {
+      return (int) $value;
+    }
+    if (is_string($value) && str_contains($value, ',')) {
+      $first = explode(',', $value, 2)[0];
+      return is_numeric($first) ? (int) $first : 0;
+    }
+    if (!is_array($value) || $value === []) {
+      return 0;
+    }
+    foreach (['media_selection_id', 'media_library_selection', 'target_id'] as $key) {
+      if (isset($value[$key]) && is_numeric($value[$key])) {
+        return (int) $value[$key];
+      }
+    }
+    foreach ($value as $item) {
+      if (is_numeric($item)) {
+        return (int) $item;
+      }
+      if (is_object($item) && method_exists($item, 'id')) {
+        return (int) $item->id();
+      }
+    }
+    return 0;
   }
 
   /**

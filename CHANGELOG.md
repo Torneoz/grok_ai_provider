@@ -5,6 +5,8 @@
 - Added configurable default prompts for compatible Drupal AI Explorers.
 - Standardized Image-to-Image, Image-to-Video, and Image Classification
   Explorers with upload, Drupal Media, and bundled default image sources.
+- Added optional visual Media Library selection through Media Library Form
+  Element, with entity-autocomplete fallback.
 
 ## 1.0.0-alpha4
 

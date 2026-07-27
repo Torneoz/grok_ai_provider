@@ -254,7 +254,10 @@ function grok_ai_provider_validate_explorer_image_source(array &$form, FormState
     }
     return;
   }
-  if ($source === 'media' && !(int) $form_state->getValue('image_media')) {
+  if (
+    $source === 'media'
+    && !\Drupal::service('grok_ai_provider.explorer_media')->getSelectedMediaId($form_state)
+  ) {
     $form_state->setErrorByName('image_media', new TranslatableMarkup('Select a Drupal Media image.'));
     return;
   }
