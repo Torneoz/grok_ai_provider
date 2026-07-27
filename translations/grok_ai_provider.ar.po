@@ -256,3 +256,9 @@ msgstr "لا ينطبق"
 
 msgid "Saved to Media: @label"
 msgstr "تم الحفظ في الوسائط: @label"
+
+msgid "Cost estimates"
+msgstr "تقديرات التكلفة"
+
+msgid "Model pricing JSON"
+msgstr "JSON لتسعير النماذج"

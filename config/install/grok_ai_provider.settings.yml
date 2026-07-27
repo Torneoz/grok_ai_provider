@@ -4,6 +4,7 @@ default_model: 'grok-4.5-latest'
 transport: auto
 request_timeout: 300
 store_responses: false
+pricing_json: ''
 hosted_tools:
   web_search: false
   x_search: false

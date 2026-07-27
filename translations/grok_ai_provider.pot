@@ -1282,3 +1282,18 @@ msgstr ""
 
 msgid "This is a best-effort estimate using public xAI pricing checked on @date. Actual billing, discounts, cached tokens, tools, and regional pricing can differ."
 msgstr ""
+
+msgid "Cost estimates"
+msgstr ""
+
+msgid "xAI-reported request costs are always preferred. This editable price list is used only when an API response does not include a cost."
+msgstr ""
+
+msgid "Model pricing JSON"
+msgstr ""
+
+msgid "JSON array of pricing rows. Each row requires <code>model</code> and <code>type</code>. Supported types are <code>tokens</code>, <code>image</code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</code>. An optional <code>operation</code> limits a row to one Drupal AI operation. Costs are USD estimates; update this data when xAI pricing changes."
+msgstr ""
+
+msgid "Enter valid model pricing JSON: @message"
+msgstr ""

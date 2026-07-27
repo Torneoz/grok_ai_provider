@@ -8,6 +8,9 @@
 - Added a result fieldset showing input, output, cached, and reasoning token
   counts when available, together with xAI-reported or best-effort estimated
   request cost.
+- Added editable model-pricing JSON to the provider configuration form and a
+  shared fallback estimator for token, image, video, character, and audio-hour
+  pricing.
 
 ## 1.0.0-alpha3
 

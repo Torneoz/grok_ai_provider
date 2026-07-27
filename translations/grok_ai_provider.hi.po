@@ -256,3 +256,9 @@ msgstr "लागू नहीं"
 
 msgid "Saved to Media: @label"
 msgstr "मीडिया में सहेजा गया: @label"
+
+msgid "Cost estimates"
+msgstr "लागत अनुमान"
+
+msgid "Model pricing JSON"
+msgstr "मॉडल मूल्य निर्धारण JSON"

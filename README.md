@@ -44,6 +44,14 @@ fieldset prefers the exact cost reported by xAI and otherwise shows a
 best-effort estimate based on public xAI pricing. Media and voice operations do
 not use text tokens, so their token rows are marked as not applicable.
 
+The provider configuration form includes a **Cost estimates** section with an
+editable **Model pricing JSON** field. Its packaged defaults cover current Grok
+token models, cached and long-context token rates, Imagine image and video
+models, REST text-to-speech characters, and REST speech-to-text audio hours.
+When xAI returns `usage.cost_in_usd_ticks`, that reported value always wins.
+The JSON calculator is used only when the response omits a cost, following the
+same editable-pricing approach used by Torneoz AI Research.
+
 If the optional core Media module is enabled, Text-to-Speech and both video
 Explorers offer **Save to Media**. Only Media types whose source field accepts
 MP3 or MP4 respectively are offered. Saved files use the destination configured
@@ -129,10 +137,11 @@ Explorer. Speech-to-text accepts up to 100 MB in this module, below xAI's
 service limit, to keep Drupal request memory bounded. Realtime WebSocket
 speech-to-speech and custom voice management are not included.
 
-Explorer estimates use the public xAI prices documented on 27 July 2026.
-Reported `cost_in_usd_ticks` values are preferred whenever xAI supplies them.
-Estimates are informational only and can differ from actual billing because of
-model changes, caching, discounts, tools, and regional pricing.
+The packaged Explorer estimates use the public xAI prices documented on 27
+July 2026. Administrators can update the pricing JSON without changing module
+code. Reported `cost_in_usd_ticks` values are preferred whenever xAI supplies
+them. Estimates are informational only and can differ from actual billing
+because of model changes, caching, discounts, tools, and regional pricing.
 
 ## Translations
 

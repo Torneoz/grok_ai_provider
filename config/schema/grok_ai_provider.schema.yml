@@ -20,6 +20,9 @@ grok_ai_provider.settings:
     store_responses:
       type: boolean
       label: 'Allow xAI to store Responses API requests'
+    pricing_json:
+      type: text
+      label: 'Fallback xAI model pricing JSON'
     hosted_tools:
       type: mapping
       label: 'Permitted xAI hosted tools'

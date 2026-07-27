@@ -256,3 +256,9 @@ msgstr "不适用"
 
 msgid "Saved to Media: @label"
 msgstr "已保存到媒体：@label"
+
+msgid "Cost estimates"
+msgstr "费用估算"
+
+msgid "Model pricing JSON"
+msgstr "模型定价 JSON"

@@ -256,3 +256,9 @@ msgstr "Не применимо"
 
 msgid "Saved to Media: @label"
 msgstr "Сохранено в медиатеке: @label"
+
+msgid "Cost estimates"
+msgstr "Оценка стоимости"
+
+msgid "Model pricing JSON"
+msgstr "JSON с ценами моделей"

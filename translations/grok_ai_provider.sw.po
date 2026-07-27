@@ -256,3 +256,9 @@ msgstr "Haitumiki"
 
 msgid "Saved to Media: @label"
 msgstr "Imehifadhiwa kwenye Midia: @label"
+
+msgid "Cost estimates"
+msgstr "Makadirio ya gharama"
+
+msgid "Model pricing JSON"
+msgstr "JSON ya bei za modeli"

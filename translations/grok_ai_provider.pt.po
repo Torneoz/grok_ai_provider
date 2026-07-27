@@ -256,3 +256,9 @@ msgstr "Não aplicável"
 
 msgid "Saved to Media: @label"
 msgstr "Guardado em multimédia: @label"
+
+msgid "Cost estimates"
+msgstr "Estimativas de custos"
+
+msgid "Model pricing JSON"
+msgstr "JSON de preços dos modelos"

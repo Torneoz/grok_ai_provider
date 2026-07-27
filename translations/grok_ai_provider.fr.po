@@ -267,3 +267,9 @@ msgstr "Sans objet"
 
 msgid "Saved to Media: @label"
 msgstr "Enregistré dans les médias : @label"
+
+msgid "Cost estimates"
+msgstr "Estimations des coûts"
+
+msgid "Model pricing JSON"
+msgstr "JSON de tarification des modèles"

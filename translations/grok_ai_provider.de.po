@@ -267,3 +267,9 @@ msgstr "Nicht zutreffend"
 
 msgid "Saved to Media: @label"
 msgstr "In Medien gespeichert: @label"
+
+msgid "Cost estimates"
+msgstr "Kostenschätzungen"
+
+msgid "Model pricing JSON"
+msgstr "JSON für Modellpreise"

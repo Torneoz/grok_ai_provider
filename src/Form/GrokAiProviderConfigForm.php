@@ -10,6 +10,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
+use Drupal\grok_ai_provider\Service\GrokCostEstimator;
 use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,6 +39,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     TypedConfigManagerInterface $typed_config_manager,
     AiProviderPluginManager $ai_provider_manager,
     KeyRepositoryInterface $key_repository,
+    private readonly GrokCostEstimator $costEstimator,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->aiProviderManager = $ai_provider_manager;
@@ -53,6 +55,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $container->get('config.typed'),
       $container->get('ai.provider'),
       $container->get('key.repository'),
+      $container->get('grok_ai_provider.cost_estimator'),
     );
   }
 
@@ -158,6 +161,26 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#max' => 3600,
       '#field_suffix' => $this->t('seconds'),
       '#description' => $this->t('The maximum time Drupal waits for a synchronous Responses API request. Hosted searches, code execution, collections, MCP calls, and reasoning models may take longer than ordinary chat. Increase this value for complex workflows, or reduce it to release PHP workers sooner when an upstream request stalls. Your web server, PHP runtime, reverse proxy, or hosting platform may enforce a shorter timeout.'),
+      '#required' => TRUE,
+    ];
+
+    $form['cost_estimates'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Cost estimates'),
+      '#description' => $this->t('xAI-reported request costs are always preferred. This editable price list is used only when an API response does not include a cost.'),
+      '#open' => FALSE,
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
+    ];
+    $form['cost_estimates']['pricing_json'] = [
+      '#type' => 'textarea',
+      '#title' => $this->t('Model pricing JSON'),
+      '#default_value' => $this->costEstimator->getPricingJson(),
+      '#rows' => 18,
+      '#description' => $this->t('JSON array of pricing rows. Each row requires <code>model</code> and <code>type</code>. Supported types are <code>tokens</code>, <code>image</code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</code>. An optional <code>operation</code> limits a row to one Drupal AI operation. Costs are USD estimates; update this data when xAI pricing changes.'),
       '#required' => TRUE,
     ];
 
@@ -358,6 +381,17 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     if (($form_state->getTriggeringElement()['#name'] ?? '') === 'test_connection') {
       return;
     }
+    try {
+      $form_state->setValue(
+        'pricing_json',
+        $this->costEstimator->normalizePricingJson((string) $form_state->getValue('pricing_json')),
+      );
+    }
+    catch (\Throwable $exception) {
+      $form_state->setErrorByName('pricing_json', $this->t('Enter valid model pricing JSON: @message', [
+        '@message' => $exception->getMessage(),
+      ]));
+    }
     $host = rtrim((string) $form_state->getValue('host'), '/');
     if (parse_url($host, PHP_URL_SCHEME) !== 'https') {
       $form_state->setErrorByName('host', $this->t('The API base URL must use HTTPS to protect the API key.'));
@@ -405,6 +439,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ->set('transport', $form_state->getValue('transport'))
       ->set('request_timeout', max(10, min(3600, (int) $form_state->getValue('request_timeout'))))
       ->set('store_responses', (bool) $form_state->getValue('store_responses'))
+      ->set('pricing_json', (string) $form_state->getValue('pricing_json'))
       ->set('hosted_tools', array_map('boolval', (array) $form_state->getValue('hosted_tools')))
       ->set('mcp_servers', (array) $form_state->getValue('mcp_servers'))
       ->save();

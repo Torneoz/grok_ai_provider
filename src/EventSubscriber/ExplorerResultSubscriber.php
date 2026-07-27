@@ -8,6 +8,7 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\ai\Event\PostGenerateResponseEvent;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\OutputInterface;
+use Drupal\grok_ai_provider\Service\GrokCostEstimator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -26,6 +27,13 @@ final class ExplorerResultSubscriber implements EventSubscriberInterface {
    * The latest Grok result in this request.
    */
   private ?array $result = NULL;
+
+  /**
+   * Constructs the Explorer result subscriber.
+   */
+  public function __construct(
+    private readonly GrokCostEstimator $costEstimator,
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -81,6 +89,7 @@ final class ExplorerResultSubscriber implements EventSubscriberInterface {
       (array) $this->result['configuration'],
       $this->result['input'],
       $metadata,
+      $tokens,
     );
 
     $rows = [
@@ -169,42 +178,8 @@ final class ExplorerResultSubscriber implements EventSubscriberInterface {
   /**
    * Provides a fallback estimate when xAI omits a reported request cost.
    */
-  private function estimateCost(string $operation, string $model, array $configuration, mixed $input, array $metadata): ?float {
-    if ($operation === 'text_to_speech') {
-      $text = is_string($input)
-        ? $input
-        : (is_object($input) && method_exists($input, 'getText') ? $input->getText() : '');
-      return mb_strlen((string) $text) * 15 / 1000000;
-    }
-    if ($operation === 'speech_to_text' && is_numeric($metadata['duration'] ?? NULL)) {
-      return (float) $metadata['duration'] * 0.10 / 3600;
-    }
-    if (in_array($operation, ['text_to_video', 'image_to_video'], TRUE)) {
-      $duration = (float) ($metadata['duration'] ?? $configuration['duration'] ?? 5);
-      $resolution = strtolower((string) ($configuration['resolution'] ?? '480p'));
-      if ($operation === 'image_to_video' && str_contains($model, '1.5')) {
-        return 0.01 + $duration * match ($resolution) {
-          '1080p' => 0.25,
-          '720p' => 0.14,
-          default => 0.08,
-        };
-      }
-      return $duration * ($resolution === '720p' ? 0.07 : 0.05)
-        + ($operation === 'image_to_video' ? 0.002 : 0);
-    }
-    if (in_array($operation, ['text_to_image', 'image_to_image'], TRUE)) {
-      $quality = str_contains($model, 'quality');
-      $resolution = strtolower((string) ($configuration['resolution'] ?? '1k'));
-      $output_cost = $quality
-        ? ($resolution === '2k' ? 0.07 : 0.05)
-        : 0.02;
-      $input_cost = $operation === 'image_to_image' ? ($quality ? 0.01 : 0.002) : 0;
-      $count = $operation === 'text_to_image'
-        ? max(1, min(4, (int) ($configuration['n'] ?? 1)))
-        : 1;
-      return $input_cost + $output_cost * $count;
-    }
-    return NULL;
+  private function estimateCost(string $operation, string $model, array $configuration, mixed $input, array $metadata, array $tokens): ?float {
+    return $this->costEstimator->estimate($operation, $model, $configuration, $input, $metadata, $tokens);
   }
 
   /**

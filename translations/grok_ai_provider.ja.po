@@ -267,3 +267,9 @@ msgstr "該当なし"
 
 msgid "Saved to Media: @label"
 msgstr "メディアに保存しました: @label"
+
+msgid "Cost estimates"
+msgstr "コスト見積もり"
+
+msgid "Model pricing JSON"
+msgstr "モデル料金 JSON"
