@@ -8,6 +8,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\grok_ai_provider\Service\GrokCostEstimator;
@@ -345,21 +346,27 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ]),
     ];
     if (\Drupal::moduleHandler()->moduleExists('ai_api_explorer')) {
-      $next_steps_items[] = $this->t('Try the configured models in the <a href=":chat_url">Chat Generation Explorer</a>, <a href=":image_url">Text-To-Image Generation Explorer</a>, <a href=":image_edit_url">Image-To-Image Explorer</a>, <a href=":image_video_url">Image-To-Video Generation Explorer</a>, and <a href=":video_url">Text-To-Video Generation Explorer</a>.', [
-        ':chat_url' => Url::fromRoute('ai_api_explorer.form.chat_generator')->toString(),
-        ':image_url' => Url::fromRoute('ai_api_explorer.form.text_to_image_generator')->toString(),
-        ':image_edit_url' => Url::fromRoute('ai_api_explorer.form.image_to_image_generator')->toString(),
-        ':image_video_url' => Url::fromRoute('ai_api_explorer.form.grok_image_to_video_generator')->toString(),
-        ':video_url' => Url::fromRoute('ai_api_explorer.form.grok_text_to_video_generator')->toString(),
-      ]);
-      $next_steps_items[] = $this->t('Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=":classification_url">Image Classification Explorer</a> and <a href=":moderation_url">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint.', [
-        ':classification_url' => Url::fromRoute('ai_api_explorer.form.image_classification_generator')->toString(),
-        ':moderation_url' => Url::fromRoute('ai_api_explorer.form.moderation_generator')->toString(),
-      ]);
-      $next_steps_items[] = $this->t('Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=":tts_url">Text-To-Speech Explorer</a> and <a href=":stt_url">Speech-To-Text Explorer</a>.', [
-        ':tts_url' => Url::fromRoute('ai_api_explorer.form.text_to_speech_generator')->toString(),
-        ':stt_url' => Url::fromRoute('ai_api_explorer.form.speech_to_text_generator')->toString(),
-      ]);
+      $next_steps_items[] = [
+        'introduction' => [
+          '#markup' => $this->t('Try the configured models in these Drupal AI Explorers:'),
+        ],
+        'links' => [
+          '#theme' => 'item_list',
+          '#items' => [
+            Link::fromTextAndUrl($this->t('Chat Generation Explorer'), Url::fromRoute('ai_api_explorer.form.chat_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Text-To-Image Generation Explorer'), Url::fromRoute('ai_api_explorer.form.text_to_image_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Image-To-Image Explorer'), Url::fromRoute('ai_api_explorer.form.image_to_image_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Image-To-Video Generation Explorer'), Url::fromRoute('ai_api_explorer.form.grok_image_to_video_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Text-To-Video Generation Explorer'), Url::fromRoute('ai_api_explorer.form.grok_text_to_video_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Image Classification Explorer'), Url::fromRoute('ai_api_explorer.form.image_classification_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Moderation Explorer'), Url::fromRoute('ai_api_explorer.form.moderation_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Text-To-Speech Explorer'), Url::fromRoute('ai_api_explorer.form.text_to_speech_generator'))->toRenderable(),
+            Link::fromTextAndUrl($this->t('Speech-To-Text Explorer'), Url::fromRoute('ai_api_explorer.form.speech_to_text_generator'))->toRenderable(),
+          ],
+        ],
+      ];
+      $next_steps_items[] = $this->t('Configure Grok as the default for Image Classification and Moderation. Moderation is a model-based assessment, not a dedicated xAI safety endpoint.');
+      $next_steps_items[] = $this->t('Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text.');
     }
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),

@@ -53,6 +53,42 @@ msgstr ""
 msgid "Text-to-speech prompt"
 msgstr ""
 
+msgid "Try the configured models in these Drupal AI Explorers:"
+msgstr ""
+
+msgid "Chat Generation Explorer"
+msgstr ""
+
+msgid "Text-To-Image Generation Explorer"
+msgstr ""
+
+msgid "Image-To-Image Explorer"
+msgstr ""
+
+msgid "Image-To-Video Generation Explorer"
+msgstr ""
+
+msgid "Text-To-Video Generation Explorer"
+msgstr ""
+
+msgid "Image Classification Explorer"
+msgstr ""
+
+msgid "Moderation Explorer"
+msgstr ""
+
+msgid "Text-To-Speech Explorer"
+msgstr ""
+
+msgid "Speech-To-Text Explorer"
+msgstr ""
+
+msgid "Configure Grok as the default for Image Classification and Moderation. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr ""
+
+msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text."
+msgstr ""
+
 msgid "Image source"
 msgstr ""
 

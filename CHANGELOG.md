@@ -4,6 +4,7 @@
 
 - Fixed cached and AJAX provider-form rebuilds failing to restore the cost
   estimator service.
+- Reorganized Next Steps Explorer links into a nested unordered list.
 
 ## 1.0.0-alpha5
 
