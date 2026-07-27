@@ -116,12 +116,14 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#description' => $this->t('Select a Key containing an API key created in the xAI Console.'),
       '#default_value' => $config->get('api_key'),
       '#required' => TRUE,
+      '#weight' => -90,
     ];
     $form['advanced'] = [
       '#type' => 'details',
       '#title' => $this->t('Advanced settings'),
       '#description' => $this->t('These settings control how the provider connects to xAI and selects between the legacy Chat Completions transport and the newer Responses transport. The defaults are appropriate for most sites. Change them only when required by your hosting environment, privacy policy, or integration workflow.'),
       '#open' => FALSE,
+      '#weight' => -70,
       '#states' => [
         'visible' => [
           ':input[name="api_key"]' => ['!value' => ''],
@@ -169,6 +171,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#title' => $this->t('Cost estimates'),
       '#description' => $this->t('xAI-reported request costs are always preferred. This editable price list is used only when an API response does not include a cost.'),
       '#open' => FALSE,
+      '#weight' => -60,
       '#states' => [
         'visible' => [
           ':input[name="api_key"]' => ['!value' => ''],
@@ -191,6 +194,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#description' => $this->t('Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default.'),
       '#open' => FALSE,
       '#tree' => TRUE,
+      '#weight' => -50,
       '#states' => [
         'visible' => [
           ':input[name="api_key"]' => ['!value' => ''],
@@ -230,6 +234,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#title' => $this->t('Test connection'),
       '#open' => TRUE,
       '#attributes' => ['id' => 'grok-connection-wrapper'],
+      '#weight' => -80,
       '#states' => [
         'visible' => [
           ':input[name="api_key"]' => ['!value' => ''],
@@ -277,6 +282,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#title' => $this->t('Hosted tool permissions'),
       '#description' => $this->t('These settings permit tools at site level. Individual requests must still select a permitted tool. Hosted tools can incur additional xAI charges.'),
       '#tree' => TRUE,
+      '#weight' => -40,
       '#states' => [
         'visible' => [
           ':input[name="api_key"]' => ['!value' => ''],
@@ -318,6 +324,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#title' => $this->t('Remote MCP server allowlist'),
       '#default_value' => $this->formatMcpServers((array) $config->get('mcp_servers')),
       '#description' => $this->t('One server per line: label|https://server.example/mcp|allowed_tool_1,allowed_tool_2. An explicit allowed-tools list is required.'),
+      '#weight' => -30,
       '#states' => [
         'visible' => [':input[name="hosted_tools[mcp]"]' => ['checked' => TRUE]],
       ],
