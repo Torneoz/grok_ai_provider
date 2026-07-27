@@ -38,6 +38,30 @@ msgstr "テキストから画像へのプロンプト"
 msgid "Text-to-speech prompt"
 msgstr "テキスト読み上げプロンプト"
 
+msgid "Image source"
+msgstr "画像ソース"
+
+msgid "Upload an image"
+msgstr "画像をアップロード"
+
+msgid "Use Drupal Media"
+msgstr "Drupal メディアを使用"
+
+msgid "Use default media"
+msgstr "デフォルトメディアを使用"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "JPG、JPEG、PNG、または WebP 画像をアップロードしてください。"
+
+msgid "Default Explorer image"
+msgstr "エクスプローラーのデフォルト画像"
+
+msgid "Drupal Media image"
+msgstr "Drupal メディア画像"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Drupal メディアから既存の画像を選択してください。"
+
 msgid "Grok xAi Provider"
 msgstr "Grok xAi プロバイダー"
 

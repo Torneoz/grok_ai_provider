@@ -38,6 +38,30 @@ msgstr "Invite texte vers image"
 msgid "Text-to-speech prompt"
 msgstr "Invite de synthèse vocale"
 
+msgid "Image source"
+msgstr "Source de l’image"
+
+msgid "Upload an image"
+msgstr "Téléverser une image"
+
+msgid "Use Drupal Media"
+msgstr "Utiliser un média Drupal"
+
+msgid "Use default media"
+msgstr "Utiliser le média par défaut"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "Téléversez une image JPG, JPEG, PNG ou WebP."
+
+msgid "Default Explorer image"
+msgstr "Image par défaut de l’explorateur"
+
+msgid "Drupal Media image"
+msgstr "Image de média Drupal"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Sélectionnez une image existante dans les médias Drupal."
+
 msgid "Grok xAi Provider"
 msgstr "Fournisseur Grok xAi"
 

@@ -38,6 +38,30 @@ msgstr "Text-zu-Bild-Aufforderung"
 msgid "Text-to-speech prompt"
 msgstr "Text-zu-Sprache-Aufforderung"
 
+msgid "Image source"
+msgstr "Bildquelle"
+
+msgid "Upload an image"
+msgstr "Ein Bild hochladen"
+
+msgid "Use Drupal Media"
+msgstr "Drupal-Medien verwenden"
+
+msgid "Use default media"
+msgstr "Standardmedium verwenden"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "Laden Sie ein JPG-, JPEG-, PNG- oder WebP-Bild hoch."
+
+msgid "Default Explorer image"
+msgstr "Standardbild des Explorers"
+
+msgid "Drupal Media image"
+msgstr "Drupal-Medienbild"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Wählen Sie ein vorhandenes Bild aus Drupal Media aus."
+
 msgid "Grok xAi Provider"
 msgstr "Grok-xAi-Anbieter"
 

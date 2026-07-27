@@ -38,6 +38,30 @@ msgstr "مطالبة نص إلى صورة"
 msgid "Text-to-speech prompt"
 msgstr "مطالبة تحويل النص إلى كلام"
 
+msgid "Image source"
+msgstr "مصدر الصورة"
+
+msgid "Upload an image"
+msgstr "رفع صورة"
+
+msgid "Use Drupal Media"
+msgstr "استخدام وسائط Drupal"
+
+msgid "Use default media"
+msgstr "استخدام الوسائط الافتراضية"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "ارفع صورة بصيغة JPG أو JPEG أو PNG أو WebP."
+
+msgid "Default Explorer image"
+msgstr "صورة المستكشف الافتراضية"
+
+msgid "Drupal Media image"
+msgstr "صورة من وسائط Drupal"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "حدد صورة موجودة من وسائط Drupal."
+
 msgid "Grok xAi Provider"
 msgstr "موفّر Grok xAi"
 

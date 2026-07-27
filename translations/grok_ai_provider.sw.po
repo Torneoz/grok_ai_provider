@@ -38,6 +38,30 @@ msgstr "Kidokezo cha maandishi hadi picha"
 msgid "Text-to-speech prompt"
 msgstr "Kidokezo cha maandishi hadi usemi"
 
+msgid "Image source"
+msgstr "Chanzo cha picha"
+
+msgid "Upload an image"
+msgstr "Pakia picha"
+
+msgid "Use Drupal Media"
+msgstr "Tumia Media ya Drupal"
+
+msgid "Use default media"
+msgstr "Tumia media chaguomsingi"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "Pakia picha ya JPG, JPEG, PNG au WebP."
+
+msgid "Default Explorer image"
+msgstr "Picha chaguomsingi ya Kigunduzi"
+
+msgid "Drupal Media image"
+msgstr "Picha ya Media ya Drupal"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Chagua picha iliyopo kutoka Media ya Drupal."
+
 msgid "Grok xAi Provider"
 msgstr "Mtoa huduma wa Grok xAi"
 

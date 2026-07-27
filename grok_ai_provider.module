@@ -81,6 +81,7 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
     'chat_generator' => 'chat_ai_provider',
     'grok_image_to_video_generator' => 'image_video_generator_ai_provider',
     'grok_text_to_video_generator' => 'video_generator_ai_provider',
+    'image_classification_generator' => 'image_class_ai_provider',
     'image_to_image_generator' => 'image_to_image_ai_provider',
     'moderation_generator' => 'moderation_ai_provider',
     'text_to_image_generator' => 'image_generator_ai_provider',
@@ -115,12 +116,27 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
         grok_ai_provider_explorer_prompt('image_to_image'),
       );
     }
+    if ($provider === 'grok') {
+      grok_ai_provider_add_explorer_image_source(
+        $form,
+        $form_state,
+        new TranslatableMarkup('Choose the image that Grok should edit.'),
+      );
+    }
     $form['#validate'][] = 'grok_ai_provider_validate_image_to_image_explorer';
     return;
   }
 
   if ($provider !== 'grok') {
     return;
+  }
+
+  if ($plugin_id === 'image_classification_generator') {
+    grok_ai_provider_add_explorer_image_source(
+      $form,
+      $form_state,
+      new TranslatableMarkup('Choose the image that Grok should classify.'),
+    );
   }
 
   $defaults = [
@@ -185,13 +201,72 @@ function grok_ai_provider_explorer_ajax_response(array &$form, FormStateInterfac
   $manager = \Drupal::service('plugin.manager.ai_api_explorer');
   $plugin = $manager->createInstance($plugin_id, $manager->getDefinition($plugin_id));
   $results = \Drupal::service('grok_ai_provider.explorer_results');
+  $media = \Drupal::service('grok_ai_provider.explorer_media');
   $results->reset();
-  $response = $plugin->getResponse($form, $form_state);
+  $temporary_image = NULL;
+  if (
+    $form_state->getValue('image_source') !== NULL
+    && in_array($plugin_id, ['image_classification_generator', 'image_to_image_generator'], TRUE)
+  ) {
+    $temporary_image = $media->injectSelectedImageUpload($form_state);
+  }
+  try {
+    $response = $plugin->getResponse($form, $form_state);
+  }
+  finally {
+    $media->removeTemporaryImage($temporary_image);
+  }
   $usage = $results->buildFieldset();
   if ($usage !== []) {
     grok_ai_provider_append_explorer_usage($response, $usage);
   }
   return $response;
+}
+
+/**
+ * Adds the shared upload, Media, and default image controls to an Explorer.
+ */
+function grok_ai_provider_add_explorer_image_source(array &$form, FormStateInterface $form_state, TranslatableMarkup $description): void {
+  if (!isset($form['left']) || !is_array($form['left'])) {
+    return;
+  }
+  unset($form['left']['image']);
+  foreach (\Drupal::service('grok_ai_provider.explorer_media')->buildImageSourceElements($form_state, $description) as $key => $element) {
+    $form['left'][$key] = $element;
+  }
+  $form['#validate'][] = 'grok_ai_provider_validate_explorer_image_source';
+}
+
+/**
+ * Validates the shared image source before an Explorer request.
+ */
+function grok_ai_provider_validate_explorer_image_source(array &$form, FormStateInterface $form_state): void {
+  $trigger = $form_state->getTriggeringElement();
+  if (($trigger['#type'] ?? NULL) !== 'submit') {
+    return;
+  }
+
+  $source = (string) ($form_state->getValue('image_source') ?: 'default');
+  if ($source === 'upload') {
+    $files = \Drupal::request()->files->all();
+    if (!isset($files['files']['image'])) {
+      $form_state->setErrorByName('image', new TranslatableMarkup('Upload an image.'));
+    }
+    return;
+  }
+  if ($source === 'media' && !(int) $form_state->getValue('image_media')) {
+    $form_state->setErrorByName('image_media', new TranslatableMarkup('Select a Drupal Media image.'));
+    return;
+  }
+  try {
+    \Drupal::service('grok_ai_provider.explorer_media')->loadSelectedImage(
+      $form_state,
+      static fn () => NULL,
+    );
+  }
+  catch (\Throwable $exception) {
+    $form_state->setErrorByName('image_source', $exception->getMessage());
+  }
 }
 
 /**

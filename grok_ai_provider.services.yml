@@ -23,7 +23,7 @@ services:
 
   grok_ai_provider.explorer_media:
     class: Drupal\grok_ai_provider\Service\ExplorerMediaHelper
-    arguments: ['@module_handler', '@entity_type.manager']
+    arguments: ['@module_handler', '@entity_type.manager', '@extension.path.resolver', '@file_system', '@request_stack']
 
   grok_ai_provider.cost_estimator:
     class: Drupal\grok_ai_provider\Service\GrokCostEstimator

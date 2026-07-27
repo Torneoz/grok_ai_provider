@@ -38,6 +38,30 @@ msgstr "文生图提示词"
 msgid "Text-to-speech prompt"
 msgstr "文本转语音提示词"
 
+msgid "Image source"
+msgstr "图像来源"
+
+msgid "Upload an image"
+msgstr "上传图像"
+
+msgid "Use Drupal Media"
+msgstr "使用 Drupal 媒体"
+
+msgid "Use default media"
+msgstr "使用默认媒体"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "上传 JPG、JPEG、PNG 或 WebP 图像。"
+
+msgid "Default Explorer image"
+msgstr "探索器默认图像"
+
+msgid "Drupal Media image"
+msgstr "Drupal 媒体图像"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "从 Drupal 媒体中选择现有图像。"
+
 msgid "Grok xAi Provider"
 msgstr "Grok xAi 提供商"
 

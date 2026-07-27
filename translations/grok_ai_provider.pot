@@ -53,6 +53,54 @@ msgstr ""
 msgid "Text-to-speech prompt"
 msgstr ""
 
+msgid "Image source"
+msgstr ""
+
+msgid "Upload an image"
+msgstr ""
+
+msgid "Use Drupal Media"
+msgstr ""
+
+msgid "Use default media"
+msgstr ""
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr ""
+
+msgid "Default Explorer image"
+msgstr ""
+
+msgid "Drupal Media image"
+msgstr ""
+
+msgid "Select an existing image from Drupal Media."
+msgstr ""
+
+msgid "Choose the image that Grok should edit."
+msgstr ""
+
+msgid "Choose the image that Grok should classify."
+msgstr ""
+
+msgid "Choose the still image that Grok should animate. Video generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgstr ""
+
+msgid "Select a Drupal Media image."
+msgstr ""
+
+msgid "Select an accessible Drupal Media image."
+msgstr ""
+
+msgid "The selected Media item does not contain an image file."
+msgstr ""
+
+msgid "The selected Media image could not be read."
+msgstr ""
+
+msgid "The default Explorer image could not be read."
+msgstr ""
+
 msgid "Text to Video"
 msgstr ""
 

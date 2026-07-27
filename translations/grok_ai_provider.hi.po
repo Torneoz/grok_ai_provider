@@ -38,6 +38,30 @@ msgstr "टेक्स्ट-टू-इमेज प्रॉम्प्ट"
 msgid "Text-to-speech prompt"
 msgstr "टेक्स्ट-टू-स्पीच प्रॉम्प्ट"
 
+msgid "Image source"
+msgstr "इमेज स्रोत"
+
+msgid "Upload an image"
+msgstr "इमेज अपलोड करें"
+
+msgid "Use Drupal Media"
+msgstr "Drupal मीडिया का उपयोग करें"
+
+msgid "Use default media"
+msgstr "डिफ़ॉल्ट मीडिया का उपयोग करें"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "JPG, JPEG, PNG या WebP इमेज अपलोड करें।"
+
+msgid "Default Explorer image"
+msgstr "एक्सप्लोरर की डिफ़ॉल्ट इमेज"
+
+msgid "Drupal Media image"
+msgstr "Drupal मीडिया इमेज"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Drupal मीडिया से कोई मौजूदा इमेज चुनें।"
+
 msgid "Grok xAi Provider"
 msgstr "Grok xAi प्रदाता"
 

@@ -50,6 +50,12 @@ Image-to-Image, Text-to-Video, Moderation, Text-to-Image, and Text-to-Speech,
 or leave an entry blank to disable that default. Saved and submitted Explorer
 input always takes precedence over these examples.
 
+Image-to-Image, Image-to-Video, and Image Classification Explorers use the same
+image-source interface. Users can upload an image, select an accessible image
+from a compatible Drupal Media type, or use the module's bundled default
+image. The Drupal Media option appears only when the optional core Media module
+is enabled and a compatible image Media type exists.
+
 The provider configuration form includes a **Cost estimates** section with an
 editable **Model pricing JSON** field. Its packaged defaults cover current Grok
 token models, cached and long-context token rates, Imagine image and video
@@ -104,7 +110,8 @@ translations independently.
 - Responses citations, response IDs, hosted-tool output, and reasoning usage
   preserved in `ChatOutput` metadata and raw output
 - Grok-specific Explorer example prompts, usage summaries, reported or
-  estimated costs, and optional generated audio/video Media saving
+  estimated costs, shared upload/Media/default image inputs, and optional
+  generated audio/video Media saving
 
 Moderation is a probabilistic Grok assessment rather than a dedicated safety
 or compliance service. Applications with legal, regulatory, or high-risk

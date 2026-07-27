@@ -38,6 +38,30 @@ msgstr "Подсказка для создания изображения из �
 msgid "Text-to-speech prompt"
 msgstr "Подсказка для преобразования текста в речь"
 
+msgid "Image source"
+msgstr "Источник изображения"
+
+msgid "Upload an image"
+msgstr "Загрузить изображение"
+
+msgid "Use Drupal Media"
+msgstr "Использовать Drupal Media"
+
+msgid "Use default media"
+msgstr "Использовать медиа по умолчанию"
+
+msgid "Upload a JPG, JPEG, PNG, or WebP image."
+msgstr "Загрузите изображение JPG, JPEG, PNG или WebP."
+
+msgid "Default Explorer image"
+msgstr "Изображение обозревателя по умолчанию"
+
+msgid "Drupal Media image"
+msgstr "Изображение Drupal Media"
+
+msgid "Select an existing image from Drupal Media."
+msgstr "Выберите существующее изображение из Drupal Media."
+
 msgid "Grok xAi Provider"
 msgstr "Поставщик Grok xAi"
 
