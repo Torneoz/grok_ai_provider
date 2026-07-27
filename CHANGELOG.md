@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-alpha4
 
 - Added Grok-specific default prompts to compatible Drupal AI Explorers.
 - Added optional MP3 and MP4 saving to compatible Drupal Media types from
