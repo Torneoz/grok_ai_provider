@@ -23,6 +23,15 @@ grok_ai_provider.settings:
     pricing_json:
       type: text
       label: 'Fallback xAI model pricing JSON'
+    pricing_source:
+      type: string
+      label: 'Fallback pricing schedule source'
+    pricing_checked_at:
+      type: string
+      label: 'Fallback pricing schedule retrieval time'
+    pricing_hash:
+      type: string
+      label: 'Fallback pricing schedule SHA-256 hash'
     explorer_prompts:
       type: mapping
       label: 'Drupal AI Explorer default prompts'

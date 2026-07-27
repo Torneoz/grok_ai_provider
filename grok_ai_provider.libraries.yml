@@ -1,4 +1,9 @@
 config_form:
+  js:
+    js/grok-ai-provider.config-form.js: {}
   css:
     theme:
       css/grok-ai-provider.admin.css: {}
+  dependencies:
+    - core/drupal
+    - core/once

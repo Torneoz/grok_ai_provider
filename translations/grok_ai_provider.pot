@@ -32,7 +32,10 @@ msgstr ""
 msgid "Explorer default prompts"
 msgstr ""
 
-msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgid ""
+"Customize the example prompts shown when Grok is selected in compatible "
+"Drupal AI Explorers. Existing user input is never replaced. Leave a prompt "
+"blank to disable its default."
 msgstr ""
 
 msgid "Chat prompt"
@@ -83,10 +86,14 @@ msgstr ""
 msgid "Speech-To-Text Explorer"
 msgstr ""
 
-msgid "Configure Grok as the default for Image Classification and Moderation. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgid ""
+"Configure Grok as the default for Image Classification and Moderation. "
+"Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr ""
 
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text."
+msgid ""
+"Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To "
+"Text."
 msgstr ""
 
 msgid "Image source"
@@ -119,7 +126,10 @@ msgstr ""
 msgid "Choose the image that Grok should classify."
 msgstr ""
 
-msgid "Choose the still image that Grok should animate. Video generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgid ""
+"Choose the still image that Grok should animate. Video generation is "
+"asynchronous and billed by duration and resolution; keep this page open "
+"until it finishes."
 msgstr ""
 
 msgid "Select a Drupal Media image."
@@ -143,16 +153,15 @@ msgstr ""
 msgid "Generate a short video from a text prompt."
 msgstr ""
 
-msgid "Text-To-Video Generation Explorer"
-msgstr ""
-
 msgid "Experiment with Grok text-to-video generation."
 msgstr ""
 
 msgid "Describe the video to generate."
 msgstr ""
 
-msgid "Video generation is asynchronous, billable by duration and resolution, and can take several minutes. Keep this page open until it finishes."
+msgid ""
+"Video generation is asynchronous, billable by duration and resolution, and "
+"can take several minutes. Keep this page open until it finishes."
 msgstr ""
 
 msgid "Generate a Video"
@@ -167,10 +176,16 @@ msgstr ""
 msgid "Video duration"
 msgstr ""
 
-msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. "
+"Choose the appropriate Grok chat and Grok Imagine models for features that "
+"rely on site-wide defaults."
 msgstr ""
 
-msgid "Length of the generated video in seconds. Longer videos cost more and take longer to generate."
+msgid ""
+"Length of the generated video in seconds. Longer videos cost more and take "
+"longer to generate."
 msgstr ""
 
 msgid "The width-to-height ratio of the generated video."
@@ -179,10 +194,17 @@ msgstr ""
 msgid "The generated video resolution. Higher resolution costs more."
 msgstr ""
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
 msgstr ""
 
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, and text-to-video generation. Operations such as "
+"embeddings and speech require another provider that supports those operation "
+"types."
 msgstr ""
 
 msgid "A non-empty video prompt is required."
@@ -200,7 +222,8 @@ msgstr ""
 msgid "xAI did not return a video request ID."
 msgstr ""
 
-msgid "xAI did not return the video because it did not pass content moderation."
+msgid ""
+"xAI did not return the video because it did not pass content moderation."
 msgstr ""
 
 msgid "xAI returned an invalid generated video URL."
@@ -454,8 +477,8 @@ msgid ""
 "CKEditor 5 text format that needs AI, add the AI button to its active "
 "toolbar, enable the required AI actions, and select <strong>Grok (xAI)</"
 "strong> with a Grok chat model for each action, or verify that the action "
-"uses the site-wide Chat default. Also grant the appropriate roles the <em>"
-"use ai ckeditor</em> permission."
+"uses the site-wide Chat default. Also grant the appropriate roles the "
+"<em>use ai ckeditor</em> permission."
 msgstr ""
 
 #: src/Form/GrokAiProviderConfigForm.php:285
@@ -1028,16 +1051,15 @@ msgstr ""
 msgid "xAI Responses API returned HTTP @status: @message"
 msgstr ""
 
-msgid "Image-To-Video Generation Explorer"
-msgstr ""
-
 msgid "Animate a still image with Grok Imagine Video 1.5."
 msgstr ""
 
 msgid "Source image"
 msgstr ""
 
-msgid "Upload the still image that Grok should animate. Generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgid ""
+"Upload the still image that Grok should animate. Generation is asynchronous "
+"and billed by duration and resolution; keep this page open until it finishes."
 msgstr ""
 
 msgid "A source image is required."
@@ -1049,7 +1071,8 @@ msgstr ""
 msgid "Animation prompt"
 msgstr ""
 
-msgid "Describe how the source image should move or change in the generated video."
+msgid ""
+"Describe how the source image should move or change in the generated video."
 msgstr ""
 
 msgid "\"@model\" does not support xAI image-to-video generation."
@@ -1067,13 +1090,25 @@ msgstr ""
 msgid "The source image has an unsupported file type."
 msgstr ""
 
-msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Video, and "
+"Text To Video. Choose the appropriate Grok chat and Grok Imagine models for "
+"features that rely on site-wide defaults."
 msgstr ""
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, <a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"<a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a "
+"href=\":video_url\">Text-To-Video Generation Explorer</a>."
 msgstr ""
 
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-video generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, image-to-video generation, and text-to-video "
+"generation. Operations such as embeddings and speech require another "
+"provider that supports those operation types."
 msgstr ""
 
 msgid "Use the bundled example image"
@@ -1082,7 +1117,9 @@ msgstr ""
 msgid "Upload my own image"
 msgstr ""
 
-msgid "Video generation is asynchronous and billed by duration and resolution; keep this page open until it finishes."
+msgid ""
+"Video generation is asynchronous and billed by duration and resolution; keep "
+"this page open until it finishes."
 msgstr ""
 
 msgid "Bundled example source image"
@@ -1097,7 +1134,9 @@ msgstr ""
 msgid "The bundled example image could not be read."
 msgstr ""
 
-msgid "Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background"
+msgid ""
+"Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The "
+"goalposts can be seen in the background"
 msgstr ""
 
 msgid "\"@model\" is not an xAI image editing model."
@@ -1112,7 +1151,9 @@ msgstr ""
 msgid "Upload the source image you want Grok to edit."
 msgstr ""
 
-msgid "Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage."
+msgid ""
+"Describe the requested changes in the prompt below. Image editing can take "
+"time to complete and each request may count against your xAI API usage."
 msgstr ""
 
 msgid "Prompt"
@@ -1130,10 +1171,16 @@ msgstr ""
 msgid "Maximum labels"
 msgstr ""
 
-msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
+msgid ""
+"Maximum number of labels Grok may return when candidate labels are not "
+"supplied."
 msgstr ""
 
-msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgid ""
+"Configure Grok as the default for Image Classification and Moderation, then "
+"test it in the <a href=\":classification_url\">Image Classification "
+"Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. "
+"Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
 msgstr ""
 
 msgid "A non-empty moderation input is required."
@@ -1178,10 +1225,19 @@ msgstr ""
 msgid "Image classification labels must be 100 characters or fewer."
 msgstr ""
 
-msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image To Video, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image "
+"To Video, and Text To Video. Choose the appropriate Grok chat and Grok "
+"Imagine models for features that rely on site-wide defaults."
 msgstr ""
 
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, <a href=\":image_edit_url\">Image-To-Image Explorer</a>, <a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"<a href=\":image_edit_url\">Image-To-Image Explorer</a>, <a "
+"href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a "
+"href=\":video_url\">Text-To-Video Generation Explorer</a>."
 msgstr ""
 
 msgid "Text to convert into spoken audio."
@@ -1202,7 +1258,9 @@ msgstr ""
 msgid "Normalize text for speech"
 msgstr ""
 
-msgid "Converts numbers, abbreviations, and symbols into a spoken form before synthesis."
+msgid ""
+"Converts numbers, abbreviations, and symbols into a spoken form before "
+"synthesis."
 msgstr ""
 
 msgid "Audio file to transcribe."
@@ -1211,13 +1269,17 @@ msgstr ""
 msgid "Audio language"
 msgstr ""
 
-msgid "Optional language code used to improve formatting of numbers, currencies, and units."
+msgid ""
+"Optional language code used to improve formatting of numbers, currencies, "
+"and units."
 msgstr ""
 
 msgid "Format transcript"
 msgstr ""
 
-msgid "Formats spoken numbers, currencies, and units when an audio language is selected."
+msgid ""
+"Formats spoken numbers, currencies, and units when an audio language is "
+"selected."
 msgstr ""
 
 msgid "Speaker diarization"
@@ -1235,13 +1297,23 @@ msgstr ""
 msgid "Key terms"
 msgstr ""
 
-msgid "Optional comma- or newline-separated terminology to bias transcription toward."
+msgid ""
+"Optional comma- or newline-separated terminology to bias transcription "
+"toward."
 msgstr ""
 
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
+msgid ""
+"Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To "
+"Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> "
+"and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
 msgstr ""
 
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, image-to-image editing, image-to-video generation, "
+"text-to-video generation, text-to-speech, and speech-to-text. Operations "
+"such as embeddings require another provider that supports those operation "
+"types."
 msgstr ""
 
 msgid "A non-empty text-to-speech input is required."
@@ -1313,19 +1385,30 @@ msgstr ""
 msgid "xAI voice API returned HTTP @status: @message"
 msgstr ""
 
-msgid "Explain how Drupal AI providers connect models to Drupal features, using a short practical example."
+msgid ""
+"Explain how Drupal AI providers connect models to Drupal features, using a "
+"short practical example."
 msgstr ""
 
-msgid "A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal."
+msgid ""
+"A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball "
+"rolling across a floodlit pitch toward the goal."
 msgstr ""
 
-msgid "Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”"
+msgid ""
+"Review this community comment for harassment, hate, sexual content, "
+"violence, self-harm, and other safety concerns: “Great match today—well "
+"played by both teams.”"
 msgstr ""
 
-msgid "Transform this image into a polished editorial illustration while preserving the main subject and composition."
+msgid ""
+"Transform this image into a polished editorial illustration while preserving "
+"the main subject and composition."
 msgstr ""
 
-msgid "Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer."
+msgid ""
+"Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural "
+"text-to-speech generation from the AI Explorer."
 msgstr ""
 
 msgid "Save to Media"
@@ -1385,23 +1468,91 @@ msgstr ""
 msgid "No usage information was returned."
 msgstr ""
 
-msgid "The cost was reported by xAI for this request. Token counts are unavailable for media and voice operations that are billed by image, duration, or character."
+msgid ""
+"The cost was reported by xAI for this request. Token counts are unavailable "
+"for media and voice operations that are billed by image, duration, or "
+"character."
 msgstr ""
 
-msgid "This is a best-effort estimate using public xAI pricing checked on @date. Actual billing, discounts, cached tokens, tools, and regional pricing can differ."
+msgid ""
+"This is a best-effort estimate using public xAI pricing checked on @date. "
+"Actual billing, discounts, cached tokens, tools, and regional pricing can "
+"differ."
 msgstr ""
 
 msgid "Cost estimates"
 msgstr ""
 
-msgid "xAI-reported request costs are always preferred. This editable price list is used only when an API response does not include a cost."
+msgid ""
+"xAI-reported request costs are always preferred. This editable price list is "
+"used only when an API response does not include a cost."
 msgstr ""
 
 msgid "Model pricing JSON"
 msgstr ""
 
-msgid "JSON array of pricing rows. Each row requires <code>model</code> and <code>type</code>. Supported types are <code>tokens</code>, <code>image</code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</code>. An optional <code>operation</code> limits a row to one Drupal AI operation. Costs are USD estimates; update this data when xAI pricing changes."
+msgid ""
+"JSON array of pricing rows. Each row requires <code>model</code> and "
+"<code>type</code>. Supported types are <code>tokens</code>, <code>image</"
+"code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</"
+"code>. An optional <code>operation</code> limits a row to one Drupal AI "
+"operation. Costs are USD estimates; update this data when xAI pricing "
+"changes."
 msgstr ""
 
 msgid "Enter valid model pricing JSON: @message"
+msgstr ""
+
+#: tests/src/Unit/ExplorerMediaHelperTest.php:68
+msgid "Choose an image."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:226
+msgid "Load latest xAI pricing schedule"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:254
+msgid ""
+"Loading or restoring a schedule only updates this form. Review the JSON, "
+"then use <strong>Save configuration</strong> to make it active."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:230
+msgid ""
+"Replace the pricing JSON currently shown with the latest module-maintained "
+"schedule? Unsaved edits in this field will be lost."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:245
+msgid ""
+"Replace the pricing JSON currently shown with the schedule packaged with "
+"this installed module? Unsaved edits in this field will be lost."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:241
+msgid "Restore packaged pricing"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:258
+msgid "Schedule source: @source. Retrieved: @time. SHA-256: @hash."
+msgstr ""
+
+#: src/Service/ExplorerMediaHelper.php:252
+msgid "The current Explorer request is unavailable."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:649
+msgid "The latest pricing schedule could not be loaded: @message"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:686
+msgid "The packaged pricing schedule could not be restored: @message"
+msgstr ""
+
+#: src/Service/ExplorerMediaHelper.php:247
+msgid "The selected image could not be prepared."
+msgstr ""
+
+#: grok_ai_provider.module:253
+msgid "Upload an image."
 msgstr ""

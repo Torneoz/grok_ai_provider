@@ -12,6 +12,7 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\grok_ai_provider\Service\GrokCostEstimator;
+use Drupal\grok_ai_provider\Service\XaiPricingScheduleFetcher;
 use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -38,6 +39,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private ?GrokCostEstimator $costEstimator = NULL;
 
   /**
+   * The remote pricing schedule fetcher.
+   */
+  private ?XaiPricingScheduleFetcher $pricingScheduleFetcher = NULL;
+
+  /**
    * Constructs the configuration form.
    */
   public function __construct(
@@ -46,11 +52,13 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     AiProviderPluginManager $ai_provider_manager,
     KeyRepositoryInterface $key_repository,
     GrokCostEstimator $cost_estimator,
+    XaiPricingScheduleFetcher $pricing_schedule_fetcher,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->aiProviderManager = $ai_provider_manager;
     $this->keyRepository = $key_repository;
     $this->costEstimator = $cost_estimator;
+    $this->pricingScheduleFetcher = $pricing_schedule_fetcher;
   }
 
   /**
@@ -63,6 +71,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $container->get('ai.provider'),
       $container->get('key.repository'),
       $container->get('grok_ai_provider.cost_estimator'),
+      $container->get('grok_ai_provider.pricing_schedule_fetcher'),
     );
   }
 
@@ -173,11 +182,17 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $pricing_schedule = (array) $form_state->get('grok_pricing_schedule');
+    $pricing_json = (string) ($pricing_schedule['json'] ?? $this->getCostEstimator()->getPricingJson());
+    $pricing_source = (string) ($pricing_schedule['source'] ?? $config->get('pricing_source') ?: 'packaged');
+    $pricing_checked_at = (string) ($pricing_schedule['checked_at'] ?? $config->get('pricing_checked_at') ?: '');
+    $pricing_hash = (string) ($pricing_schedule['hash'] ?? $config->get('pricing_hash') ?: hash('sha256', $pricing_json));
     $form['cost_estimates'] = [
       '#type' => 'details',
       '#title' => $this->t('Cost estimates'),
       '#description' => $this->t('xAI-reported request costs are always preferred. This editable price list is used only when an API response does not include a cost.'),
-      '#open' => FALSE,
+      '#open' => $form_state->get('grok_pricing_status') !== NULL,
+      '#attributes' => ['id' => 'grok-pricing-wrapper'],
       '#weight' => -60,
       '#states' => [
         'visible' => [
@@ -188,11 +203,74 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $form['cost_estimates']['pricing_json'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Model pricing JSON'),
-      '#default_value' => $this->getCostEstimator()->getPricingJson(),
+      '#default_value' => $pricing_json,
       '#rows' => 18,
       '#description' => $this->t('JSON array of pricing rows. Each row requires <code>model</code> and <code>type</code>. Supported types are <code>tokens</code>, <code>image</code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</code>. An optional <code>operation</code> limits a row to one Drupal AI operation. Costs are USD estimates; update this data when xAI pricing changes.'),
       '#required' => TRUE,
     ];
+    $form['cost_estimates']['pricing_source'] = [
+      '#type' => 'hidden',
+      '#default_value' => $pricing_source,
+    ];
+    $form['cost_estimates']['pricing_checked_at'] = [
+      '#type' => 'hidden',
+      '#default_value' => $pricing_checked_at,
+    ];
+    $form['cost_estimates']['pricing_hash'] = [
+      '#type' => 'hidden',
+      '#default_value' => $pricing_hash,
+    ];
+    $form['cost_estimates']['load_pricing'] = [
+      '#type' => 'submit',
+      '#name' => 'load_pricing',
+      '#value' => $this->t('Load latest xAI pricing schedule'),
+      '#submit' => ['::loadPricingSchedule'],
+      '#limit_validation_errors' => [],
+      '#attributes' => [
+        'data-grok-confirm' => $this->t('Replace the pricing JSON currently shown with the latest module-maintained schedule? Unsaved edits in this field will be lost.'),
+      ],
+      '#ajax' => [
+        'callback' => '::pricingAjax',
+        'wrapper' => 'grok-pricing-wrapper',
+        'progress' => ['type' => 'throbber'],
+      ],
+    ];
+    $form['cost_estimates']['restore_pricing'] = [
+      '#type' => 'submit',
+      '#name' => 'restore_pricing',
+      '#value' => $this->t('Restore packaged pricing'),
+      '#submit' => ['::restorePackagedPricing'],
+      '#limit_validation_errors' => [],
+      '#attributes' => [
+        'data-grok-confirm' => $this->t('Replace the pricing JSON currently shown with the schedule packaged with this installed module? Unsaved edits in this field will be lost.'),
+      ],
+      '#ajax' => [
+        'callback' => '::pricingAjax',
+        'wrapper' => 'grok-pricing-wrapper',
+        'progress' => ['type' => 'throbber'],
+      ],
+    ];
+    $form['cost_estimates']['update_help'] = [
+      '#markup' => '<p class="description">' . $this->t('Loading or restoring a schedule only updates this form. Review the JSON, then use <strong>Save configuration</strong> to make it active.') . '</p>',
+    ];
+    if ($pricing_checked_at !== '') {
+      $form['cost_estimates']['provenance'] = [
+        '#markup' => '<p class="description">' . $this->t('Schedule source: @source. Retrieved: @time. SHA-256: @hash.', [
+          '@source' => $pricing_source,
+          '@time' => $pricing_checked_at,
+          '@hash' => $pricing_hash,
+        ]) . '</p>',
+      ];
+    }
+    if ($status = $form_state->get('grok_pricing_status')) {
+      $form['cost_estimates']['status'] = [
+        '#type' => 'container',
+        '#attributes' => [
+          'class' => ['messages', $status['type'] === 'error' ? 'messages--error' : 'messages--status'],
+        ],
+        'message' => ['#plain_text' => $status['message']],
+      ];
+    }
 
     $prompt_defaults = \grok_ai_provider_explorer_prompt_defaults();
     $form['explorer_prompts'] = [
@@ -430,7 +508,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state): void {
     parent::validateForm($form, $form_state);
-    if (($form_state->getTriggeringElement()['#name'] ?? '') === 'test_connection') {
+    if (in_array(
+      $form_state->getTriggeringElement()['#name'] ?? '',
+      ['test_connection', 'load_pricing', 'restore_pricing'],
+      TRUE,
+    )) {
       return;
     }
     try {
@@ -492,6 +574,9 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ->set('request_timeout', max(10, min(3600, (int) $form_state->getValue('request_timeout'))))
       ->set('store_responses', (bool) $form_state->getValue('store_responses'))
       ->set('pricing_json', (string) $form_state->getValue('pricing_json'))
+      ->set('pricing_source', (string) $form_state->getValue('pricing_source'))
+      ->set('pricing_checked_at', (string) $form_state->getValue('pricing_checked_at'))
+      ->set('pricing_hash', hash('sha256', (string) $form_state->getValue('pricing_json')))
       ->set('explorer_prompts', array_map(
         static fn (mixed $value): string => trim((string) $value),
         (array) $form_state->getValue('explorer_prompts'),
@@ -540,6 +625,77 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function connectionAjax(array &$form, FormStateInterface $form_state): array {
     return $form['connection'];
+  }
+
+  /**
+   * Loads the latest trusted pricing schedule into the unsaved form.
+   */
+  public function loadPricingSchedule(array &$form, FormStateInterface $form_state): void {
+    try {
+      $schedule = $this->getPricingScheduleFetcher()->fetch();
+      $this->applyPricingSchedule($form_state, $schedule);
+      $form_state->set('grok_pricing_status', [
+        'type' => 'status',
+        'message' => (string) $this->formatPlural(
+          $schedule['rows'],
+          'Loaded one pricing row. Review the schedule and save the form to activate it.',
+          'Loaded @count pricing rows. Review the schedule and save the form to activate it.',
+        ),
+      ]);
+    }
+    catch (\Throwable $exception) {
+      $form_state->set('grok_pricing_status', [
+        'type' => 'error',
+        'message' => (string) $this->t('The latest pricing schedule could not be loaded: @message', [
+          '@message' => $exception->getMessage(),
+        ]),
+      ]);
+    }
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Restores the installed module's pricing schedule into the unsaved form.
+   */
+  public function restorePackagedPricing(array &$form, FormStateInterface $form_state): void {
+    try {
+      $json = $this->getCostEstimator()->normalizePricingJson(
+        $this->getCostEstimator()->getPackagedPricingJson(),
+      );
+      $rows = json_decode($json, TRUE, 512, JSON_THROW_ON_ERROR);
+      $schedule = [
+        'json' => $json,
+        'source' => 'packaged',
+        'checked_at' => gmdate(DATE_ATOM),
+        'hash' => hash('sha256', $json),
+        'rows' => count($rows),
+      ];
+      $this->applyPricingSchedule($form_state, $schedule);
+      $form_state->set('grok_pricing_status', [
+        'type' => 'status',
+        'message' => (string) $this->formatPlural(
+          $schedule['rows'],
+          'Restored one packaged pricing row. Save the form to activate it.',
+          'Restored @count packaged pricing rows. Save the form to activate them.',
+        ),
+      ]);
+    }
+    catch (\Throwable $exception) {
+      $form_state->set('grok_pricing_status', [
+        'type' => 'error',
+        'message' => (string) $this->t('The packaged pricing schedule could not be restored: @message', [
+          '@message' => $exception->getMessage(),
+        ]),
+      ]);
+    }
+    $form_state->setRebuild();
+  }
+
+  /**
+   * Returns the AJAX-rebuilt cost-estimate controls.
+   */
+  public function pricingAjax(array &$form, FormStateInterface $form_state): array {
+    return $form['cost_estimates'];
   }
 
   /**
@@ -613,6 +769,30 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $this->costEstimator = \Drupal::service('grok_ai_provider.cost_estimator');
     }
     return $this->costEstimator;
+  }
+
+  /**
+   * Gets the pricing fetcher after normal or cached form reconstruction.
+   */
+  private function getPricingScheduleFetcher(): XaiPricingScheduleFetcher {
+    if (!$this->pricingScheduleFetcher instanceof XaiPricingScheduleFetcher) {
+      $this->pricingScheduleFetcher = \Drupal::service('grok_ai_provider.pricing_schedule_fetcher');
+    }
+    return $this->pricingScheduleFetcher;
+  }
+
+  /**
+   * Applies a pricing schedule to both form state and submitted input.
+   */
+  private function applyPricingSchedule(FormStateInterface $form_state, array $schedule): void {
+    $form_state->set('grok_pricing_schedule', $schedule);
+    $input = $form_state->getUserInput();
+    foreach (['json', 'source', 'checked_at', 'hash'] as $key) {
+      $element = $key === 'json' ? 'pricing_json' : 'pricing_' . $key;
+      $input[$element] = $schedule[$key];
+      $form_state->setValue($element, $schedule[$key]);
+    }
+    $form_state->setUserInput($input);
   }
 
   /**

@@ -5,6 +5,9 @@ transport: auto
 request_timeout: 300
 store_responses: false
 pricing_json: ''
+pricing_source: packaged
+pricing_checked_at: ''
+pricing_hash: ''
 explorer_prompts:
   chat: 'Explain how Drupal AI providers connect models to Drupal features, using a short practical example.'
   image_to_image: 'Transform this image into a polished editorial illustration while preserving the main subject and composition.'

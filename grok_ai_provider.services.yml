@@ -28,3 +28,7 @@ services:
   grok_ai_provider.cost_estimator:
     class: Drupal\grok_ai_provider\Service\GrokCostEstimator
     arguments: ['@config.factory', '@extension.path.resolver']
+
+  grok_ai_provider.pricing_schedule_fetcher:
+    class: Drupal\grok_ai_provider\Service\XaiPricingScheduleFetcher
+    arguments: ['@http_client', '@grok_ai_provider.cost_estimator']

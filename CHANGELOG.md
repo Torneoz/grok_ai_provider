@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Added an administrator-controlled AJAX action for loading the latest
+  module-maintained xAI pricing schedule, with strict validation, time and size
+  limits, redirect refusal, provenance metadata, and an offline packaged-data
+  restore action.
 - Fixed cached and AJAX provider-form rebuilds failing to restore the cost
   estimator service.
 - Reorganized Next Steps Explorer links into a nested unordered list.

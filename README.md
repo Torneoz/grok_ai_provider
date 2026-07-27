@@ -66,6 +66,13 @@ When xAI returns `usage.cost_in_usd_ticks`, that reported value always wins.
 The JSON calculator is used only when the response omits a cost, following the
 same editable-pricing approach used by Torneoz AI Research.
 
+Administrators can use **Load latest xAI pricing schedule** to retrieve the
+module-maintained, machine-readable schedule from the trusted GitHub repository,
+or **Restore packaged pricing** to return to the schedule shipped with the
+installed release. Both actions validate and preview the JSON without saving
+it. The main **Save configuration** button must be used to activate the new
+schedule. The form records its source, retrieval time, and SHA-256 hash.
+
 If the optional core Media module is enabled, Text-to-Speech and both video
 Explorers offer **Save to Media**. Only Media types whose source field accepts
 MP3 or MP4 respectively are offered. Saved files use the destination configured

@@ -17,9 +17,12 @@ final class GrokAiProviderConfigFormTest extends TestCase {
    */
   public function testCostEstimatorSupportsLazyRecovery(): void {
     $property = new \ReflectionProperty(GrokAiProviderConfigForm::class, 'costEstimator');
+    $fetcher_property = new \ReflectionProperty(GrokAiProviderConfigForm::class, 'pricingScheduleFetcher');
 
     self::assertFalse($property->isReadOnly());
     self::assertTrue($property->getType()?->allowsNull());
+    self::assertFalse($fetcher_property->isReadOnly());
+    self::assertTrue($fetcher_property->getType()?->allowsNull());
   }
 
   /**

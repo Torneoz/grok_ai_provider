@@ -49,6 +49,13 @@ final class GrokCostEstimator {
     if ($configured !== '') {
       return $configured;
     }
+    return $this->getPackagedPricingJson();
+  }
+
+  /**
+   * Returns the pricing schedule shipped with the installed module.
+   */
+  public function getPackagedPricingJson(): string {
     $module_path = $this->extensionPathResolver->getPath('module', 'grok_ai_provider');
     $json = file_get_contents(DRUPAL_ROOT . '/' . $module_path . '/data/xai_pricing.json');
     if (!is_string($json) || trim($json) === '') {
