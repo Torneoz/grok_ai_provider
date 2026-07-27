@@ -37,35 +37,209 @@ function grok_ai_provider_config_schema_info_alter(array &$definitions): void {
 function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStateInterface $form_state): void {
   $build_info = $form_state->getBuildInfo();
   $plugin_id = $build_info['args'][0] ?? NULL;
+  $supported_plugins = [
+    'chat_generator',
+    'grok_image_to_video_generator',
+    'grok_text_to_video_generator',
+    'image_classification_generator',
+    'image_to_image_generator',
+    'moderation_generator',
+    'speech_to_text_generator',
+    'text_to_image_generator',
+    'text_to_speech_generator',
+  ];
+  if (in_array($plugin_id, $supported_plugins, TRUE)) {
+    grok_ai_provider_replace_explorer_ajax_callback($form);
+  }
+
+  $provider_fields = [
+    'chat_generator' => 'chat_ai_provider',
+    'grok_image_to_video_generator' => 'image_video_generator_ai_provider',
+    'grok_text_to_video_generator' => 'video_generator_ai_provider',
+    'image_to_image_generator' => 'image_to_image_ai_provider',
+    'moderation_generator' => 'moderation_ai_provider',
+    'text_to_image_generator' => 'image_generator_ai_provider',
+    'text_to_speech_generator' => 'tts_ai_provider',
+  ];
+  $provider_field = $provider_fields[$plugin_id] ?? NULL;
+  $provider = $provider_field === NULL
+    ? NULL
+    : ($form_state->getValue($provider_field) ?? grok_ai_provider_find_element_value($form, $provider_field));
+
   if ($plugin_id === 'image_to_image_generator') {
     if (isset($form['left']['image'])) {
       $form['left']['image']['#title'] = new TranslatableMarkup('Upload the source image you want Grok to edit.');
       $form['left']['image']['#description'] = new TranslatableMarkup('Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage.');
     }
-    $provider = $form_state->getValue('image_to_image_ai_provider')
-      ?? $form['left']['image_to_image_ai_provider']['#value']
-      ?? $form['left']['image_to_image_ai_provider']['#default_value']
-      ?? NULL;
     $configuration = &$form['left']['image_to_image_ajax_prefix'];
     if ($provider === 'grok' && isset($configuration) && !isset($configuration['prompt'])) {
       $configuration['prompt'] = [
         '#type' => 'textarea',
         '#title' => new TranslatableMarkup('Prompt'),
         '#description' => new TranslatableMarkup('Describe how Grok should change the source image.'),
+        '#default_value' => new TranslatableMarkup('Transform this image into a polished editorial illustration while preserving the main subject and composition.'),
         '#required' => TRUE,
         '#weight' => -20,
       ];
     }
+    elseif ($provider === 'grok' && isset($configuration['prompt'])) {
+      grok_ai_provider_set_explorer_default(
+        $configuration['prompt'],
+        $form_state,
+        'prompt',
+        new TranslatableMarkup('Transform this image into a polished editorial illustration while preserving the main subject and composition.'),
+      );
+    }
     $form['#validate'][] = 'grok_ai_provider_validate_image_to_image_explorer';
     return;
   }
-  if ($plugin_id !== 'text_to_image_generator' || !isset($form['left']['prompt'])) {
+
+  if ($provider !== 'grok') {
     return;
   }
 
-  $default = $form['left']['prompt']['#default_value'] ?? NULL;
-  if ($form_state->getValue('prompt') === NULL && ($default === NULL || $default === '' || $default === [])) {
-    $form['left']['prompt']['#default_value'] = new TranslatableMarkup('Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background');
+  $defaults = [
+    'chat_generator' => [
+      'path' => ['left', 'prompts', 'message_1'],
+      'input' => 'message_1',
+      'value' => new TranslatableMarkup('Explain how Drupal AI providers connect models to Drupal features, using a short practical example.'),
+    ],
+    'grok_text_to_video_generator' => [
+      'path' => ['left', 'prompt'],
+      'input' => 'prompt',
+      'value' => new TranslatableMarkup('A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal.'),
+    ],
+    'moderation_generator' => [
+      'path' => ['left', 'prompt'],
+      'input' => 'prompt',
+      'value' => new TranslatableMarkup('Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”'),
+    ],
+    'text_to_image_generator' => [
+      'path' => ['left', 'prompt'],
+      'input' => 'prompt',
+      'value' => new TranslatableMarkup('Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background'),
+    ],
+    'text_to_speech_generator' => [
+      'path' => ['left', 'prompt'],
+      'input' => 'prompt',
+      'value' => new TranslatableMarkup('Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer.'),
+    ],
+  ];
+  if (isset($defaults[$plugin_id])) {
+    $definition = $defaults[$plugin_id];
+    grok_ai_provider_set_nested_explorer_default(
+      $form,
+      $definition['path'],
+      $form_state,
+      $definition['input'],
+      $definition['value'],
+    );
+  }
+
+  if ($plugin_id === 'text_to_speech_generator' && isset($form['left']['save_as_media'])) {
+    $media_options = \Drupal::service('grok_ai_provider.explorer_media')->getOptions('mp3');
+    $form['left']['save_as_media']['#title'] = new TranslatableMarkup('Save to Media');
+    $form['left']['save_as_media']['#description'] = $media_options === []
+      ? new TranslatableMarkup('No configured Media type accepts MP3 files.')
+      : new TranslatableMarkup('Optionally save the generated MP3 as a permanent Drupal Media item.');
+    $form['left']['save_as_media']['#options'] = [
+      '' => new TranslatableMarkup('Do not save'),
+    ] + $media_options;
+  }
+}
+
+/**
+ * Handles Explorer AJAX responses and appends Grok usage information.
+ */
+function grok_ai_provider_explorer_ajax_response(array &$form, FormStateInterface $form_state): array {
+  $plugin_id = $form_state->getBuildInfo()['args'][0] ?? NULL;
+  if (!is_string($plugin_id) || $plugin_id === '') {
+    return [];
+  }
+
+  $manager = \Drupal::service('plugin.manager.ai_api_explorer');
+  $plugin = $manager->createInstance($plugin_id, $manager->getDefinition($plugin_id));
+  $results = \Drupal::service('grok_ai_provider.explorer_results');
+  $results->reset();
+  $response = $plugin->getResponse($form, $form_state);
+  $usage = $results->buildFieldset();
+  if ($usage !== []) {
+    grok_ai_provider_append_explorer_usage($response, $usage);
+  }
+  return $response;
+}
+
+/**
+ * Replaces Explorer submit callbacks with the Grok result decorator.
+ */
+function grok_ai_provider_replace_explorer_ajax_callback(array &$element): void {
+  if (($element['#type'] ?? NULL) === 'submit'
+    && ($element['#ajax']['callback'] ?? NULL) === '::ajaxResponse') {
+    $element['#ajax']['callback'] = 'grok_ai_provider_explorer_ajax_response';
+  }
+  foreach ($element as $key => &$child) {
+    if (is_string($key) && !str_starts_with($key, '#') && is_array($child)) {
+      grok_ai_provider_replace_explorer_ajax_callback($child);
+    }
+  }
+}
+
+/**
+ * Appends a fieldset to an Explorer inline-template response.
+ */
+function grok_ai_provider_append_explorer_usage(array &$element, array $usage): bool {
+  if (isset($element['#context']['ai_response']) && is_array($element['#context']['ai_response'])) {
+    $element['#context']['ai_response']['grok_usage'] = $usage;
+    return TRUE;
+  }
+  foreach ($element as $key => &$child) {
+    if (is_string($key) && !str_starts_with($key, '#') && is_array($child) && grok_ai_provider_append_explorer_usage($child, $usage)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
+/**
+ * Finds a form element's current or default value by key.
+ */
+function grok_ai_provider_find_element_value(array $element, string $search_key): mixed {
+  foreach ($element as $key => $child) {
+    if ($key === $search_key && is_array($child)) {
+      return $child['#value'] ?? $child['#default_value'] ?? NULL;
+    }
+    if (is_string($key) && !str_starts_with($key, '#') && is_array($child)) {
+      $value = grok_ai_provider_find_element_value($child, $search_key);
+      if ($value !== NULL) {
+        return $value;
+      }
+    }
+  }
+  return NULL;
+}
+
+/**
+ * Applies a default to a nested form element when it exists.
+ */
+function grok_ai_provider_set_nested_explorer_default(array &$form, array $path, FormStateInterface $form_state, string $input_name, TranslatableMarkup $default): void {
+  $element = &$form;
+  foreach ($path as $key) {
+    if (!isset($element[$key]) || !is_array($element[$key])) {
+      return;
+    }
+    $element = &$element[$key];
+  }
+  grok_ai_provider_set_explorer_default($element, $form_state, $input_name, $default);
+}
+
+/**
+ * Applies a default without overwriting submitted or query-provided input.
+ */
+function grok_ai_provider_set_explorer_default(array &$element, FormStateInterface $form_state, string $input_name, TranslatableMarkup $default): void {
+  $current = $form_state->getValue($input_name);
+  $existing = $element['#default_value'] ?? NULL;
+  if ($current === NULL && ($existing === NULL || $existing === '' || $existing === [])) {
+    $element['#default_value'] = $default;
   }
 }
 

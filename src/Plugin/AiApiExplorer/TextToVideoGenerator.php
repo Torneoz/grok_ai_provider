@@ -13,6 +13,7 @@ use Drupal\ai\Service\AiProviderFormHelper;
 use Drupal\ai_api_explorer\AiApiExplorerPluginBase;
 use Drupal\ai_api_explorer\Attribute\AiApiExplorer;
 use Drupal\ai_api_explorer\ExplorerHelper;
+use Drupal\grok_ai_provider\Service\ExplorerMediaHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -38,6 +39,7 @@ final class TextToVideoGenerator extends AiApiExplorerPluginBase {
     ExplorerHelper $explorerHelper,
     AiProviderPluginManager $providerManager,
     private readonly FileSystemInterface $fileSystem,
+    private readonly ExplorerMediaHelper $mediaHelper,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $requestStack, $aiProviderHelper, $explorerHelper, $providerManager);
   }
@@ -55,6 +57,7 @@ final class TextToVideoGenerator extends AiApiExplorerPluginBase {
       $container->get('ai_api_explorer.helper'),
       $container->get('ai.provider'),
       $container->get('file_system'),
+      $container->get('grok_ai_provider.explorer_media'),
     );
   }
 
@@ -84,6 +87,15 @@ final class TextToVideoGenerator extends AiApiExplorerPluginBase {
       AiProviderFormHelper::FORM_CONFIGURATION_FULL,
     );
     $form['left']['video_generator_ai_provider']['#ajax']['callback'] = $this::class . '::loadModelsAjaxCallback';
+    $media_options = $this->mediaHelper->getOptions('mp4');
+    if ($media_options !== []) {
+      $form['left']['save_as_media'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Save to Media'),
+        '#options' => ['' => $this->t('Do not save')] + $media_options,
+        '#description' => $this->t('Optionally save the generated MP4 as a permanent Drupal Media item.'),
+      ];
+    }
     $form['left']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Generate a Video'),
@@ -135,6 +147,15 @@ final class TextToVideoGenerator extends AiApiExplorerPluginBase {
           ],
         ],
       ];
+      $media_type = (string) $form_state->getValue('save_as_media');
+      if ($media_type !== '') {
+        $media = $this->mediaHelper->save($videos[0], $media_type, $filename);
+        $form['right']['response']['#context']['ai_response']['media'] = [
+          '#type' => 'link',
+          '#title' => $this->t('Saved to Media: @label', ['@label' => $media->label()]),
+          '#url' => $media->toUrl(),
+        ];
+      }
     }
     catch (\Throwable $exception) {
       $form['right']['response']['#context']['ai_response'] = [

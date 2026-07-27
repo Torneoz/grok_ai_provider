@@ -237,3 +237,33 @@ msgstr "テキスト読み上げにはxAIの音声を、音声認識にはxAI Sp
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
 msgstr "Grokはチャット形式のテキスト、画像認識、関数ツール、構造化出力、テキストから画像、画像編集、画像から動画、テキストから動画、テキスト読み上げ、音声認識に対応しています。埋め込みなどの操作には対応する別のプロバイダーが必要です。"
+
+msgid "Save to Media"
+msgstr "メディアに保存"
+
+msgid "Do not save"
+msgstr "保存しない"
+
+msgid "Usage and estimated cost"
+msgstr "使用量と推定コスト"
+
+msgid "Input tokens"
+msgstr "入力トークン"
+
+msgid "Output tokens"
+msgstr "出力トークン"
+
+msgid "Total tokens"
+msgstr "合計トークン"
+
+msgid "Reported API cost"
+msgstr "API が報告したコスト"
+
+msgid "Estimated cost"
+msgstr "推定コスト"
+
+msgid "Not applicable"
+msgstr "該当なし"
+
+msgid "Saved to Media: @label"
+msgstr "メディアに保存しました: @label"

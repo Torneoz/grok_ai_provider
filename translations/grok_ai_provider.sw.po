@@ -226,3 +226,33 @@ msgstr "Chagua sauti ya xAI kwa Maandishi kwenda Sauti na xAI Speech to Text kwa
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
 msgstr "Grok inasaidia maandishi ya mazungumzo, uoni, zana za vitendaji, matokeo yaliyopangwa, maandishi kwenda picha, picha kwenda picha, picha kwenda video, maandishi kwenda video, maandishi kwenda sauti na sauti kwenda maandishi. Operesheni kama embeddings zinahitaji mtoa huduma mwingine anayezisaidia."
+
+msgid "Save to Media"
+msgstr "Hifadhi kwenye Midia"
+
+msgid "Do not save"
+msgstr "Usihifadhi"
+
+msgid "Usage and estimated cost"
+msgstr "Matumizi na gharama inayokadiriwa"
+
+msgid "Input tokens"
+msgstr "Tokeni za ingizo"
+
+msgid "Output tokens"
+msgstr "Tokeni za matokeo"
+
+msgid "Total tokens"
+msgstr "Jumla ya tokeni"
+
+msgid "Reported API cost"
+msgstr "Gharama iliyoripotiwa na API"
+
+msgid "Estimated cost"
+msgstr "Gharama inayokadiriwa"
+
+msgid "Not applicable"
+msgstr "Haitumiki"
+
+msgid "Saved to Media: @label"
+msgstr "Imehifadhiwa kwenye Midia: @label"

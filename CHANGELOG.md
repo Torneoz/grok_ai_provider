@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Added Grok-specific default prompts to compatible Drupal AI Explorers.
+- Added optional MP3 and MP4 saving to compatible Drupal Media types from
+  audio and video generation Explorers.
+- Added a result fieldset showing input, output, cached, and reasoning token
+  counts when available, together with xAI-reported or best-effort estimated
+  request cost.
+
 ## 1.0.0-alpha3
 
 - Added Drupal AI Text-to-Speech using xAI REST voice discovery and MP3

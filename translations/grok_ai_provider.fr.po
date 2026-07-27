@@ -237,3 +237,33 @@ msgstr "Sélectionnez une voix xAI pour la synthèse vocale et xAI Speech to Tex
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
 msgstr "Grok prend en charge le texte conversationnel, la vision, les outils de fonction, les sorties structurées, texte-vers-image, image-vers-image, image-vers-vidéo, texte-vers-vidéo, texte-vers-parole et parole-vers-texte. Les opérations telles que les plongements nécessitent un autre fournisseur compatible."
+
+msgid "Save to Media"
+msgstr "Enregistrer dans les médias"
+
+msgid "Do not save"
+msgstr "Ne pas enregistrer"
+
+msgid "Usage and estimated cost"
+msgstr "Utilisation et coût estimé"
+
+msgid "Input tokens"
+msgstr "Jetons d’entrée"
+
+msgid "Output tokens"
+msgstr "Jetons de sortie"
+
+msgid "Total tokens"
+msgstr "Nombre total de jetons"
+
+msgid "Reported API cost"
+msgstr "Coût indiqué par l’API"
+
+msgid "Estimated cost"
+msgstr "Coût estimé"
+
+msgid "Not applicable"
+msgstr "Sans objet"
+
+msgid "Saved to Media: @label"
+msgstr "Enregistré dans les médias : @label"

@@ -226,3 +226,33 @@ msgstr "टेक्स्ट टू स्पीच के लिए xAI आव
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
 msgstr "Grok चैट-आधारित टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट, टेक्स्ट-टू-इमेज, इमेज-टू-इमेज, इमेज-टू-वीडियो, टेक्स्ट-टू-वीडियो, टेक्स्ट-टू-स्पीच और स्पीच-टू-टेक्स्ट का समर्थन करता है। एम्बेडिंग जैसे कार्यों के लिए अन्य समर्थित प्रदाता की आवश्यकता है।"
+
+msgid "Save to Media"
+msgstr "मीडिया में सहेजें"
+
+msgid "Do not save"
+msgstr "न सहेजें"
+
+msgid "Usage and estimated cost"
+msgstr "उपयोग और अनुमानित लागत"
+
+msgid "Input tokens"
+msgstr "इनपुट टोकन"
+
+msgid "Output tokens"
+msgstr "आउटपुट टोकन"
+
+msgid "Total tokens"
+msgstr "कुल टोकन"
+
+msgid "Reported API cost"
+msgstr "रिपोर्ट की गई API लागत"
+
+msgid "Estimated cost"
+msgstr "अनुमानित लागत"
+
+msgid "Not applicable"
+msgstr "लागू नहीं"
+
+msgid "Saved to Media: @label"
+msgstr "मीडिया में सहेजा गया: @label"

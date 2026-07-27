@@ -1204,3 +1204,81 @@ msgstr ""
 
 msgid "xAI voice API returned HTTP @status: @message"
 msgstr ""
+
+msgid "Explain how Drupal AI providers connect models to Drupal features, using a short practical example."
+msgstr ""
+
+msgid "A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal."
+msgstr ""
+
+msgid "Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”"
+msgstr ""
+
+msgid "Transform this image into a polished editorial illustration while preserving the main subject and composition."
+msgstr ""
+
+msgid "Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer."
+msgstr ""
+
+msgid "Save to Media"
+msgstr ""
+
+msgid "Do not save"
+msgstr ""
+
+msgid "No configured Media type accepts MP3 files."
+msgstr ""
+
+msgid "Optionally save the generated MP3 as a permanent Drupal Media item."
+msgstr ""
+
+msgid "Optionally save the generated MP4 as a permanent Drupal Media item."
+msgstr ""
+
+msgid "Saved to Media: @label"
+msgstr ""
+
+msgid "Usage and estimated cost"
+msgstr ""
+
+msgid "Input tokens"
+msgstr ""
+
+msgid "Output tokens"
+msgstr ""
+
+msgid "Total tokens"
+msgstr ""
+
+msgid "Cached input tokens"
+msgstr ""
+
+msgid "Reasoning tokens"
+msgstr ""
+
+msgid "Reported API cost"
+msgstr ""
+
+msgid "Estimated cost"
+msgstr ""
+
+msgid "Unavailable"
+msgstr ""
+
+msgid "Not applicable"
+msgstr ""
+
+msgid "Metric"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "No usage information was returned."
+msgstr ""
+
+msgid "The cost was reported by xAI for this request. Token counts are unavailable for media and voice operations that are billed by image, duration, or character."
+msgstr ""
+
+msgid "This is a best-effort estimate using public xAI pricing checked on @date. Actual billing, discounts, cached tokens, tools, and regional pricing can differ."
+msgstr ""

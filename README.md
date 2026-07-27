@@ -37,6 +37,18 @@ preserved during AJAX submissions. The Grok-specific **Text-To-Video
 Generation Explorer** and **Image-To-Video Generation Explorer** can generate
 and preview short MP4 videos.
 
+When Grok is selected, compatible Explorers provide operation-specific example
+prompts without replacing submitted values. Successful Explorer responses also
+show available input, output, cached, and reasoning token counts. The result
+fieldset prefers the exact cost reported by xAI and otherwise shows a
+best-effort estimate based on public xAI pricing. Media and voice operations do
+not use text tokens, so their token rows are marked as not applicable.
+
+If the optional core Media module is enabled, Text-to-Speech and both video
+Explorers offer **Save to Media**. Only Media types whose source field accepts
+MP3 or MP4 respectively are offered. Saved files use the destination configured
+on the selected Media type and become permanent Media items.
+
 ### Optional recipe
 
 The included recipe installs the Grok AI Provider, AI, and Key modules:
@@ -77,6 +89,8 @@ translations independently.
   and allowlisted remote MCP servers
 - Responses citations, response IDs, hosted-tool output, and reasoning usage
   preserved in `ChatOutput` metadata and raw output
+- Grok-specific Explorer example prompts, usage summaries, reported or
+  estimated costs, and optional generated audio/video Media saving
 
 Moderation is a probabilistic Grok assessment rather than a dedicated safety
 or compliance service. Applications with legal, regulatory, or high-risk
@@ -114,6 +128,11 @@ Audio requests use xAI's REST Voice API. Text-to-speech input is limited to
 Explorer. Speech-to-text accepts up to 100 MB in this module, below xAI's
 service limit, to keep Drupal request memory bounded. Realtime WebSocket
 speech-to-speech and custom voice management are not included.
+
+Explorer estimates use the public xAI prices documented on 27 July 2026.
+Reported `cost_in_usd_ticks` values are preferred whenever xAI supplies them.
+Estimates are informational only and can differ from actual billing because of
+model changes, caching, discounts, tools, and regional pricing.
 
 ## Translations
 

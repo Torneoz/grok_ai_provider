@@ -226,3 +226,33 @@ msgstr "为文本转语音选择一个 xAI 语音，并为语音转文本选择 
 
 msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
 msgstr "Grok 支持聊天文本、视觉、函数工具、结构化输出、文本生成图像、图像编辑、图像生成视频、文本生成视频、文本转语音和语音转文本。嵌入等操作需要其他支持这些类型的提供商。"
+
+msgid "Save to Media"
+msgstr "保存到媒体"
+
+msgid "Do not save"
+msgstr "不保存"
+
+msgid "Usage and estimated cost"
+msgstr "用量和预估费用"
+
+msgid "Input tokens"
+msgstr "输入令牌"
+
+msgid "Output tokens"
+msgstr "输出令牌"
+
+msgid "Total tokens"
+msgstr "令牌总数"
+
+msgid "Reported API cost"
+msgstr "API 报告的费用"
+
+msgid "Estimated cost"
+msgstr "预估费用"
+
+msgid "Not applicable"
+msgstr "不适用"
+
+msgid "Saved to Media: @label"
+msgstr "已保存到媒体：@label"
