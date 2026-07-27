@@ -5,6 +5,13 @@ transport: auto
 request_timeout: 300
 store_responses: false
 pricing_json: ''
+explorer_prompts:
+  chat: 'Explain how Drupal AI providers connect models to Drupal features, using a short practical example.'
+  image_to_image: 'Transform this image into a polished editorial illustration while preserving the main subject and composition.'
+  text_to_video: 'A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal.'
+  moderation: 'Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”'
+  text_to_image: 'Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background'
+  text_to_speech: 'Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer.'
 hosted_tools:
   web_search: false
   x_search: false

@@ -14,6 +14,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "Explorer default prompts"
+msgstr "Invites par défaut des explorateurs"
+
+msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgstr "Personnalisez les exemples d’invites affichés lorsque Grok est sélectionné dans les explorateurs Drupal AI compatibles. Les saisies existantes ne sont jamais remplacées. Laissez une invite vide pour désactiver sa valeur par défaut."
+
+msgid "Chat prompt"
+msgstr "Invite de discussion"
+
+msgid "Image-to-image prompt"
+msgstr "Invite image vers image"
+
+msgid "Text-to-video prompt"
+msgstr "Invite texte vers vidéo"
+
+msgid "Moderation prompt"
+msgstr "Invite de modération"
+
+msgid "Text-to-image prompt"
+msgstr "Invite texte vers image"
+
+msgid "Text-to-speech prompt"
+msgstr "Invite de synthèse vocale"
+
 msgid "Grok xAi Provider"
 msgstr "Fournisseur Grok xAi"
 

@@ -184,6 +184,38 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#required' => TRUE,
     ];
 
+    $prompt_defaults = \grok_ai_provider_explorer_prompt_defaults();
+    $form['explorer_prompts'] = [
+      '#type' => 'details',
+      '#title' => $this->t('Explorer default prompts'),
+      '#description' => $this->t('Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default.'),
+      '#open' => FALSE,
+      '#tree' => TRUE,
+      '#states' => [
+        'visible' => [
+          ':input[name="api_key"]' => ['!value' => ''],
+        ],
+      ],
+    ];
+    foreach ([
+      'chat' => $this->t('Chat prompt'),
+      'image_to_image' => $this->t('Image-to-image prompt'),
+      'text_to_video' => $this->t('Text-to-video prompt'),
+      'moderation' => $this->t('Moderation prompt'),
+      'text_to_image' => $this->t('Text-to-image prompt'),
+      'text_to_speech' => $this->t('Text-to-speech prompt'),
+    ] as $key => $label) {
+      $configured_prompt = $config->get('explorer_prompts.' . $key);
+      $form['explorer_prompts'][$key] = [
+        '#type' => 'textarea',
+        '#title' => $label,
+        '#default_value' => is_string($configured_prompt)
+          ? $configured_prompt
+          : (string) $prompt_defaults[$key],
+        '#rows' => 3,
+      ];
+    }
+
     $models = (array) $form_state->get('grok_models');
     $configured_default = (string) ($config->get('default_model') ?: 'grok-4.5-latest');
     if ($models === []) {
@@ -440,6 +472,10 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ->set('request_timeout', max(10, min(3600, (int) $form_state->getValue('request_timeout'))))
       ->set('store_responses', (bool) $form_state->getValue('store_responses'))
       ->set('pricing_json', (string) $form_state->getValue('pricing_json'))
+      ->set('explorer_prompts', array_map(
+        static fn (mixed $value): string => trim((string) $value),
+        (array) $form_state->getValue('explorer_prompts'),
+      ))
       ->set('hosted_tools', array_map('boolval', (array) $form_state->getValue('hosted_tools')))
       ->set('mcp_servers', (array) $form_state->getValue('mcp_servers'))
       ->save();

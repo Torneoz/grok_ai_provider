@@ -14,6 +14,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "Explorer default prompts"
+msgstr "探索器默认提示词"
+
+msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgstr "自定义在兼容的 Drupal AI 探索器中选择 Grok 时显示的示例提示词。现有用户输入绝不会被替换。将提示词留空可禁用其默认值。"
+
+msgid "Chat prompt"
+msgstr "聊天提示词"
+
+msgid "Image-to-image prompt"
+msgstr "图生图提示词"
+
+msgid "Text-to-video prompt"
+msgstr "文生视频提示词"
+
+msgid "Moderation prompt"
+msgstr "内容审核提示词"
+
+msgid "Text-to-image prompt"
+msgstr "文生图提示词"
+
+msgid "Text-to-speech prompt"
+msgstr "文本转语音提示词"
+
 msgid "Grok xAi Provider"
 msgstr "Grok xAi 提供商"
 

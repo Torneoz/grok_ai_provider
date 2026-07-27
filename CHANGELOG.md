@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Added configurable default prompts for compatible Drupal AI Explorers.
+
 ## 1.0.0-alpha4
 
 - Added Grok-specific default prompts to compatible Drupal AI Explorers.

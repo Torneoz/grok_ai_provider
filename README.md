@@ -44,6 +44,12 @@ fieldset prefers the exact cost reported by xAI and otherwise shows a
 best-effort estimate based on public xAI pricing. Media and voice operations do
 not use text tokens, so their token rows are marked as not applicable.
 
+The provider configuration form includes an **Explorer default prompts**
+section. Administrators can customize the examples used for Chat,
+Image-to-Image, Text-to-Video, Moderation, Text-to-Image, and Text-to-Speech,
+or leave an entry blank to disable that default. Saved and submitted Explorer
+input always takes precedence over these examples.
+
 The provider configuration form includes a **Cost estimates** section with an
 editable **Model pricing JSON** field. Its packaged defaults cover current Grok
 token models, cached and long-context token rates, Imagine image and video

@@ -14,6 +14,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
+msgid "Explorer default prompts"
+msgstr "المطالبات الافتراضية للمستكشفات"
+
+msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgstr "خصّص المطالبات النموذجية التي تظهر عند تحديد Grok في مستكشفات Drupal AI المتوافقة. لا يتم استبدال إدخال المستخدم الحالي مطلقًا. اترك المطالبة فارغة لتعطيل قيمتها الافتراضية."
+
+msgid "Chat prompt"
+msgstr "مطالبة الدردشة"
+
+msgid "Image-to-image prompt"
+msgstr "مطالبة صورة إلى صورة"
+
+msgid "Text-to-video prompt"
+msgstr "مطالبة نص إلى فيديو"
+
+msgid "Moderation prompt"
+msgstr "مطالبة الإشراف"
+
+msgid "Text-to-image prompt"
+msgstr "مطالبة نص إلى صورة"
+
+msgid "Text-to-speech prompt"
+msgstr "مطالبة تحويل النص إلى كلام"
+
 msgid "Grok xAi Provider"
 msgstr "موفّر Grok xAi"
 

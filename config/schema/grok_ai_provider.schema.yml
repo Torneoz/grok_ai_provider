@@ -23,6 +23,28 @@ grok_ai_provider.settings:
     pricing_json:
       type: text
       label: 'Fallback xAI model pricing JSON'
+    explorer_prompts:
+      type: mapping
+      label: 'Drupal AI Explorer default prompts'
+      mapping:
+        chat:
+          type: text
+          label: 'Chat prompt'
+        image_to_image:
+          type: text
+          label: 'Image-to-image prompt'
+        text_to_video:
+          type: text
+          label: 'Text-to-video prompt'
+        moderation:
+          type: text
+          label: 'Moderation prompt'
+        text_to_image:
+          type: text
+          label: 'Text-to-image prompt'
+        text_to_speech:
+          type: text
+          label: 'Text-to-speech prompt'
     hosted_tools:
       type: mapping
       label: 'Permitted xAI hosted tools'

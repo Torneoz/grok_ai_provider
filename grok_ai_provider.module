@@ -9,6 +9,31 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Returns the packaged Explorer prompt defaults keyed by operation.
+ */
+function grok_ai_provider_explorer_prompt_defaults(): array {
+  return [
+    'chat' => new TranslatableMarkup('Explain how Drupal AI providers connect models to Drupal features, using a short practical example.'),
+    'image_to_image' => new TranslatableMarkup('Transform this image into a polished editorial illustration while preserving the main subject and composition.'),
+    'text_to_video' => new TranslatableMarkup('A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal.'),
+    'moderation' => new TranslatableMarkup('Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”'),
+    'text_to_image' => new TranslatableMarkup('Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background'),
+    'text_to_speech' => new TranslatableMarkup('Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer.'),
+  ];
+}
+
+/**
+ * Returns a configured Explorer prompt or its packaged fallback.
+ */
+function grok_ai_provider_explorer_prompt(string $key): string|TranslatableMarkup {
+  $configured = \Drupal::config('grok_ai_provider.settings')->get('explorer_prompts.' . $key);
+  if (is_string($configured)) {
+    return trim($configured);
+  }
+  return grok_ai_provider_explorer_prompt_defaults()[$key] ?? '';
+}
+
+/**
  * Implements hook_ai_operation_types_alter().
  */
 function grok_ai_provider_ai_operation_types_alter(array &$operation_types): void {
@@ -77,7 +102,7 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
         '#type' => 'textarea',
         '#title' => new TranslatableMarkup('Prompt'),
         '#description' => new TranslatableMarkup('Describe how Grok should change the source image.'),
-        '#default_value' => new TranslatableMarkup('Transform this image into a polished editorial illustration while preserving the main subject and composition.'),
+        '#default_value' => grok_ai_provider_explorer_prompt('image_to_image'),
         '#required' => TRUE,
         '#weight' => -20,
       ];
@@ -87,7 +112,7 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
         $configuration['prompt'],
         $form_state,
         'prompt',
-        new TranslatableMarkup('Transform this image into a polished editorial illustration while preserving the main subject and composition.'),
+        grok_ai_provider_explorer_prompt('image_to_image'),
       );
     }
     $form['#validate'][] = 'grok_ai_provider_validate_image_to_image_explorer';
@@ -102,27 +127,27 @@ function grok_ai_provider_form_ai_api_explorer_form_alter(array &$form, FormStat
     'chat_generator' => [
       'path' => ['left', 'prompts', 'message_1'],
       'input' => 'message_1',
-      'value' => new TranslatableMarkup('Explain how Drupal AI providers connect models to Drupal features, using a short practical example.'),
+      'value' => grok_ai_provider_explorer_prompt('chat'),
     ],
     'grok_text_to_video_generator' => [
       'path' => ['left', 'prompt'],
       'input' => 'prompt',
-      'value' => new TranslatableMarkup('A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball rolling across a floodlit pitch toward the goal.'),
+      'value' => grok_ai_provider_explorer_prompt('text_to_video'),
     ],
     'moderation_generator' => [
       'path' => ['left', 'prompt'],
       'input' => 'prompt',
-      'value' => new TranslatableMarkup('Review this community comment for harassment, hate, sexual content, violence, self-harm, and other safety concerns: “Great match today—well played by both teams.”'),
+      'value' => grok_ai_provider_explorer_prompt('moderation'),
     ],
     'text_to_image_generator' => [
       'path' => ['left', 'prompt'],
       'input' => 'prompt',
-      'value' => new TranslatableMarkup('Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The goalposts can be seen in the background'),
+      'value' => grok_ai_provider_explorer_prompt('text_to_image'),
     ],
     'text_to_speech_generator' => [
       'path' => ['left', 'prompt'],
       'input' => 'prompt',
-      'value' => new TranslatableMarkup('Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural text-to-speech generation from the AI Explorer.'),
+      'value' => grok_ai_provider_explorer_prompt('text_to_speech'),
     ],
   ];
   if (isset($defaults[$plugin_id])) {
@@ -221,7 +246,7 @@ function grok_ai_provider_find_element_value(array $element, string $search_key)
 /**
  * Applies a default to a nested form element when it exists.
  */
-function grok_ai_provider_set_nested_explorer_default(array &$form, array $path, FormStateInterface $form_state, string $input_name, TranslatableMarkup $default): void {
+function grok_ai_provider_set_nested_explorer_default(array &$form, array $path, FormStateInterface $form_state, string $input_name, string|TranslatableMarkup $default): void {
   $element = &$form;
   foreach ($path as $key) {
     if (!isset($element[$key]) || !is_array($element[$key])) {
@@ -235,7 +260,7 @@ function grok_ai_provider_set_nested_explorer_default(array &$form, array $path,
 /**
  * Applies a default without overwriting submitted or query-provided input.
  */
-function grok_ai_provider_set_explorer_default(array &$element, FormStateInterface $form_state, string $input_name, TranslatableMarkup $default): void {
+function grok_ai_provider_set_explorer_default(array &$element, FormStateInterface $form_state, string $input_name, string|TranslatableMarkup $default): void {
   $current = $form_state->getValue($input_name);
   $existing = $element['#default_value'] ?? NULL;
   if ($current === NULL && ($existing === NULL || $existing === '' || $existing === [])) {

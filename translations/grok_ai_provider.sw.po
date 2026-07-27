@@ -14,6 +14,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "Explorer default prompts"
+msgstr "Vidokezo chaguomsingi vya Vigunduzi"
+
+msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgstr "Geuza kukufaa vidokezo vya mfano vinavyoonyeshwa Grok inapochaguliwa katika Vigunduzi vinavyooana vya Drupal AI. Ingizo lililopo la mtumiaji halibadilishwi kamwe. Acha kidokezo wazi ili kuzima chaguomsingi lake."
+
+msgid "Chat prompt"
+msgstr "Kidokezo cha gumzo"
+
+msgid "Image-to-image prompt"
+msgstr "Kidokezo cha picha hadi picha"
+
+msgid "Text-to-video prompt"
+msgstr "Kidokezo cha maandishi hadi video"
+
+msgid "Moderation prompt"
+msgstr "Kidokezo cha usimamizi"
+
+msgid "Text-to-image prompt"
+msgstr "Kidokezo cha maandishi hadi picha"
+
+msgid "Text-to-speech prompt"
+msgstr "Kidokezo cha maandishi hadi usemi"
+
 msgid "Grok xAi Provider"
 msgstr "Mtoa huduma wa Grok xAi"
 

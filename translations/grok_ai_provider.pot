@@ -29,6 +29,30 @@ msgstr ""
 msgid "Unofficial"
 msgstr ""
 
+msgid "Explorer default prompts"
+msgstr ""
+
+msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
+msgstr ""
+
+msgid "Chat prompt"
+msgstr ""
+
+msgid "Image-to-image prompt"
+msgstr ""
+
+msgid "Text-to-video prompt"
+msgstr ""
+
+msgid "Moderation prompt"
+msgstr ""
+
+msgid "Text-to-image prompt"
+msgstr ""
+
+msgid "Text-to-speech prompt"
+msgstr ""
+
 msgid "Text to Video"
 msgstr ""
 
