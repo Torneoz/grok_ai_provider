@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-alpha5
 
 - Added configurable default prompts for compatible Drupal AI Explorers.
 - Standardized Image-to-Image, Image-to-Video, and Image Classification
