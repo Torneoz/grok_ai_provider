@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Fixed cached and AJAX provider-form rebuilds failing to restore the cost
+  estimator service.
+
 ## 1.0.0-alpha5
 
 - Added configurable default prompts for compatible Drupal AI Explorers.

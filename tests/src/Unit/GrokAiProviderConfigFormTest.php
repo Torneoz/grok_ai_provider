@@ -13,6 +13,16 @@ use PHPUnit\Framework\TestCase;
 final class GrokAiProviderConfigFormTest extends TestCase {
 
   /**
+   * Ensures cached form reconstruction can restore the cost estimator.
+   */
+  public function testCostEstimatorSupportsLazyRecovery(): void {
+    $property = new \ReflectionProperty(GrokAiProviderConfigForm::class, 'costEstimator');
+
+    self::assertFalse($property->isReadOnly());
+    self::assertTrue($property->getType()?->allowsNull());
+  }
+
+  /**
    * Tests preferred aliases and the available-model fallback.
    */
   public function testPreferredModelSelection(): void {

@@ -32,6 +32,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private ?KeyRepositoryInterface $keyRepository = NULL;
 
   /**
+   * The fallback cost estimator.
+   */
+  private ?GrokCostEstimator $costEstimator = NULL;
+
+  /**
    * Constructs the configuration form.
    */
   public function __construct(
@@ -39,11 +44,12 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     TypedConfigManagerInterface $typed_config_manager,
     AiProviderPluginManager $ai_provider_manager,
     KeyRepositoryInterface $key_repository,
-    private readonly GrokCostEstimator $costEstimator,
+    GrokCostEstimator $cost_estimator,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->aiProviderManager = $ai_provider_manager;
     $this->keyRepository = $key_repository;
+    $this->costEstimator = $cost_estimator;
   }
 
   /**
@@ -181,7 +187,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $form['cost_estimates']['pricing_json'] = [
       '#type' => 'textarea',
       '#title' => $this->t('Model pricing JSON'),
-      '#default_value' => $this->costEstimator->getPricingJson(),
+      '#default_value' => $this->getCostEstimator()->getPricingJson(),
       '#rows' => 18,
       '#description' => $this->t('JSON array of pricing rows. Each row requires <code>model</code> and <code>type</code>. Supported types are <code>tokens</code>, <code>image</code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</code>. An optional <code>operation</code> limits a row to one Drupal AI operation. Costs are USD estimates; update this data when xAI pricing changes.'),
       '#required' => TRUE,
@@ -423,7 +429,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     try {
       $form_state->setValue(
         'pricing_json',
-        $this->costEstimator->normalizePricingJson((string) $form_state->getValue('pricing_json')),
+        $this->getCostEstimator()->normalizePricingJson((string) $form_state->getValue('pricing_json')),
       );
     }
     catch (\Throwable $exception) {
@@ -590,6 +596,16 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $this->keyRepository = \Drupal::service('key.repository');
     }
     return $this->keyRepository;
+  }
+
+  /**
+   * Gets the cost estimator after normal or cached form reconstruction.
+   */
+  private function getCostEstimator(): GrokCostEstimator {
+    if (!$this->costEstimator instanceof GrokCostEstimator) {
+      $this->costEstimator = \Drupal::service('grok_ai_provider.cost_estimator');
+    }
+    return $this->costEstimator;
   }
 
   /**
