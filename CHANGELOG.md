@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-alpha6
 
 - Added an administrator-controlled AJAX action for loading the latest
   module-maintained xAI pricing schedule, with strict validation, time and size
