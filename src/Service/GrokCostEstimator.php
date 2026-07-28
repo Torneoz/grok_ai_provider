@@ -6,6 +6,7 @@ namespace Drupal\grok_ai_provider\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Estimates Grok request costs from editable JSON pricing data.
@@ -39,6 +40,7 @@ final class GrokCostEstimator {
   public function __construct(
     private readonly ConfigFactoryInterface $configFactory,
     private readonly ExtensionPathResolver $extensionPathResolver,
+    private readonly ?ContainerInterface $container = NULL,
   ) {}
 
   /**
@@ -107,6 +109,22 @@ final class GrokCostEstimator {
    * Estimates one request from configured pricing.
    */
   public function estimate(string $operation, string $model, array $configuration, mixed $input, array $metadata, array $tokens = []): ?float {
+    $shared = $this->sharedCatalog();
+    if ($shared !== NULL && method_exists($shared, 'estimate')) {
+      $estimate = $shared->estimate(
+        'grok',
+        $operation,
+        $model,
+        $configuration,
+        $input,
+        $metadata,
+        $tokens,
+      );
+      if (is_numeric($estimate)) {
+        return (float) $estimate;
+      }
+    }
+
     try {
       $pricing = json_decode($this->getPricingJson(), TRUE, 512, JSON_THROW_ON_ERROR);
     }
@@ -129,6 +147,26 @@ final class GrokCostEstimator {
       'audio_hours' => $this->estimateAudioHours($row, $metadata),
       default => NULL,
     };
+  }
+
+  /**
+   * Returns TRUE when Torneo AI provides the active shared catalogue.
+   */
+  public function usesSharedCatalog(): bool {
+    return $this->sharedCatalog() !== NULL;
+  }
+
+  /**
+   * Returns the shared catalogue check date for a model when available.
+   */
+  public function getSharedPricingCheckedAt(string $operation, string $model): ?string {
+    $shared = $this->sharedCatalog();
+    if ($shared === NULL || !method_exists($shared, 'find')) {
+      return NULL;
+    }
+    $row = $shared->find('grok', $model, NULL, $operation);
+    $date = is_array($row) ? trim((string) ($row['checked_at'] ?? '')) : '';
+    return $date !== '' ? $date : NULL;
   }
 
   /**
@@ -226,6 +264,17 @@ final class GrokCostEstimator {
    */
   private function numericValue(mixed $value): ?float {
     return is_numeric($value) ? (float) $value : NULL;
+  }
+
+  /**
+   * Returns the optional Torneo AI catalogue without creating a dependency.
+   */
+  private function sharedCatalog(): ?object {
+    if ($this->container?->has('torneo_ai.pricing_catalog')) {
+      $catalog = $this->container->get('torneo_ai.pricing_catalog');
+      return is_object($catalog) ? $catalog : NULL;
+    }
+    return NULL;
   }
 
 }
