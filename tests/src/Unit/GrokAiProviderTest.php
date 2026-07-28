@@ -436,6 +436,19 @@ final class GrokAiProviderTest extends TestCase {
   }
 
   /**
+   * Tests that the Chat Explorer's zero seed is treated as unset.
+   */
+  public function testNormalizesChatSeed(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeRequestConfiguration');
+    $provider = $this->newProviderWithoutConstructor();
+
+    self::assertArrayNotHasKey('seed', $method->invoke($provider, ['seed' => 0]));
+    self::assertArrayNotHasKey('seed', $method->invoke($provider, ['seed' => -1]));
+    self::assertArrayNotHasKey('seed', $method->invoke($provider, ['seed' => '']));
+    self::assertSame(42, $method->invoke($provider, ['seed' => '42'])['seed']);
+  }
+
+  /**
    * Tests Responses text, metadata, citations, and usage normalization.
    */
   public function testNormalizesResponsesOutput(): void {
