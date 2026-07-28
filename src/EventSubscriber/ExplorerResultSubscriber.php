@@ -91,6 +91,10 @@ final class ExplorerResultSubscriber implements EventSubscriberInterface {
       $metadata,
       $tokens,
     );
+    $pricing_date = $this->costEstimator->getSharedPricingCheckedAt(
+      (string) $this->result['operation'],
+      (string) $this->result['model'],
+    ) ?? self::PRICING_DATE;
 
     $rows = [
       [$this->t('Input tokens'), $this->formatInteger($tokens['input'])],
@@ -124,9 +128,13 @@ final class ExplorerResultSubscriber implements EventSubscriberInterface {
         '#tag' => 'p',
         '#value' => $reported_cost !== NULL
           ? $this->t('The cost was reported by xAI for this request. Token counts are unavailable for media and voice operations that are billed by image, duration, or character.')
-          : $this->t('This is a best-effort estimate using public xAI pricing checked on @date. Actual billing, discounts, cached tokens, tools, and regional pricing can differ.', [
-            '@date' => self::PRICING_DATE,
-          ]),
+          : ($this->costEstimator->usesSharedCatalog()
+            ? $this->t('This is a best-effort estimate from the shared Torneo AI pricing catalogue, using public xAI pricing checked on @date. Actual billing, discounts, cached tokens, tools, and regional pricing can differ.', [
+              '@date' => $pricing_date,
+            ])
+            : $this->t('This is a best-effort estimate using the Grok provider pricing schedule checked on @date. Install Torneo AI to share one pricing catalogue across Explorers and Torneo AI Research. Actual billing, discounts, cached tokens, tools, and regional pricing can differ.', [
+              '@date' => $pricing_date,
+            ])),
       ],
     ];
   }

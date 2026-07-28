@@ -73,6 +73,12 @@ installed release. Both actions validate and preview the JSON without saving
 it. The main **Save configuration** button must be used to activate the new
 schedule. The form records its source, retrieval time, and SHA-256 hash.
 
+When Torneo AI is installed, Grok cost estimation automatically uses the
+shared `torneo_ai.pricing_catalog` service. This keeps Grok AI Explorer usage
+panels and Torneo AI Research logs on the same rates. Torneo AI remains
+optional: standalone installations continue using this module's packaged or
+editable xAI pricing schedule.
+
 If the optional core Media module is enabled, Text-to-Speech and both video
 Explorers offer **Save to Media**. Only Media types whose source field accepts
 MP3 or MP4 respectively are offered. Saved files use the destination configured

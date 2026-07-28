@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0-alpha7
+
+- Fixed Chat Explorer requests failing when Drupal AI supplied its default
+  `seed` value of zero; non-positive seeds are now treated as unset.
+- Added optional shared pricing integration with Torneo AI for Explorer cost
+  estimates while preserving the standalone Grok pricing fallback.
+
 ## 1.0.0-alpha6
 
 - Added an administrator-controlled AJAX action for loading the latest

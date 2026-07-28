@@ -478,6 +478,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration): void {
+    $configuration = $this->normalizeRequestConfiguration($configuration);
     if (isset($configuration['host'])) {
       $this->configuredEndpoint = rtrim(trim((string) $configuration['host']), '/');
       unset($configuration['host']);
@@ -506,6 +507,22 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     $this->providerOptions = array_intersect_key($configuration, array_flip($provider_keys));
     $configuration = array_diff_key($configuration, array_flip($provider_keys));
     parent::setConfiguration($configuration);
+  }
+
+  /**
+   * Removes optional request values that xAI rejects as explicit defaults.
+   */
+  private function normalizeRequestConfiguration(array $configuration): array {
+    if (array_key_exists('seed', $configuration)) {
+      $seed = filter_var($configuration['seed'], FILTER_VALIDATE_INT);
+      if ($seed === FALSE || $seed <= 0) {
+        unset($configuration['seed']);
+      }
+      else {
+        $configuration['seed'] = $seed;
+      }
+    }
+    return $configuration;
   }
 
   /**

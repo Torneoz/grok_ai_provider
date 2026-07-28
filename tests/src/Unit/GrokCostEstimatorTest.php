@@ -9,6 +9,7 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\grok_ai_provider\Service\GrokCostEstimator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests JSON-driven Grok request cost estimates.
@@ -115,9 +116,40 @@ final class GrokCostEstimatorTest extends TestCase {
   }
 
   /**
+   * Tests delegation to Torneo AI without making it a hard dependency.
+   */
+  public function testUsesSharedTorneoPricingWhenAvailable(): void {
+    $catalog = new class {
+
+      public function estimate(string $provider, string $operation, string $model): float {
+        return $provider === 'grok' && $operation === 'chat' && $model === 'grok-test'
+          ? 0.123
+          : 0.0;
+      }
+
+      public function find(): array {
+        return ['checked_at' => '2026-07-28'];
+      }
+
+    };
+    $container = $this->createMock(ContainerInterface::class);
+    $container->method('has')
+      ->with('torneo_ai.pricing_catalog')
+      ->willReturn(TRUE);
+    $container->method('get')
+      ->with('torneo_ai.pricing_catalog')
+      ->willReturn($catalog);
+    $estimator = $this->createEstimator([], $container);
+
+    self::assertSame(0.123, $estimator->estimate('chat', 'grok-test', [], NULL, []));
+    self::assertTrue($estimator->usesSharedCatalog());
+    self::assertSame('2026-07-28', $estimator->getSharedPricingCheckedAt('chat', 'grok-test'));
+  }
+
+  /**
    * Creates an estimator backed by supplied pricing.
    */
-  private function createEstimator(array $pricing): GrokCostEstimator {
+  private function createEstimator(array $pricing, ?ContainerInterface $container = NULL): GrokCostEstimator {
     $config = $this->createMock(ImmutableConfig::class);
     $config->method('get')
       ->with('pricing_json')
@@ -130,6 +162,7 @@ final class GrokCostEstimatorTest extends TestCase {
     return new GrokCostEstimator(
       $config_factory,
       $this->createMock(ExtensionPathResolver::class),
+      $container,
     );
   }
 
