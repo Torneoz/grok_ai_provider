@@ -449,6 +449,16 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),
     ]);
+    if (\Drupal::moduleHandler()->moduleExists('ai_image_studio')) {
+      $next_steps_items[] = $this->t('<a href=":url">Open AI Image Studio</a> to use Grok for iterative image generation and editing. AI Image Studio works with the Grok models configured for Drupal AI\'s Text To Image and Image To Image operations.', [
+        ':url' => Url::fromRoute('ai_image_studio.new')->toString(),
+      ]);
+    }
+    else {
+      $next_steps_items[] = $this->t('Grok works very well with <a href=":url">AI Image Studio</a>, which provides an iterative workspace for generating and editing images. Install and enable AI Image Studio to use it with your configured Grok image models.', [
+        ':url' => 'https://www.drupal.org/project/ai_image_studio',
+      ]);
+    }
     $next_steps_items[] = $this->t('Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings.');
     $next_steps_items[] = $this->t('Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types.');
     $next_steps_items[] = $this->t('To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them.');

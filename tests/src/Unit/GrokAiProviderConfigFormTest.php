@@ -46,4 +46,21 @@ final class GrokAiProviderConfigFormTest extends TestCase {
     ]));
   }
 
+  /**
+   * Ensures Next Steps handles both AI Image Studio installation states.
+   */
+  public function testImageStudioNextStepsAreConditional(): void {
+    $source = file_get_contents(
+      (new \ReflectionClass(GrokAiProviderConfigForm::class))->getFileName(),
+    );
+
+    self::assertIsString($source);
+    self::assertStringContainsString("moduleExists('ai_image_studio')", $source);
+    self::assertStringContainsString("Url::fromRoute('ai_image_studio.new')", $source);
+    self::assertStringContainsString(
+      'https://www.drupal.org/project/ai_image_studio',
+      $source,
+    );
+  }
+
 }

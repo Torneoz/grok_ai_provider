@@ -310,3 +310,9 @@ msgstr "Оценка стоимости"
 
 msgid "Model pricing JSON"
 msgstr "JSON с ценами моделей"
+
+msgid "<a href=\":url\">Open AI Image Studio</a> to use Grok for iterative image generation and editing. AI Image Studio works with the Grok models configured for Drupal AI's Text To Image and Image To Image operations."
+msgstr "<a href=\":url\">Откройте AI Image Studio</a>, чтобы использовать Grok для последовательного создания и редактирования изображений. AI Image Studio работает с моделями Grok, настроенными для операций Drupal AI «Текст в изображение» и «Изображение в изображение»."
+
+msgid "Grok works very well with <a href=\":url\">AI Image Studio</a>, which provides an iterative workspace for generating and editing images. Install and enable AI Image Studio to use it with your configured Grok image models."
+msgstr "Grok отлично работает с <a href=\":url\">AI Image Studio</a>, предоставляющей рабочее пространство для последовательного создания и редактирования изображений. Установите и включите AI Image Studio, чтобы использовать её с настроенными моделями изображений Grok."
