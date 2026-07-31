@@ -50,6 +50,12 @@ Image-to-Image, Text-to-Video, Moderation, Text-to-Image, and Text-to-Speech,
 or leave an entry blank to disable that default. Saved and submitted Explorer
 input always takes precedence over these examples.
 
+The optional **AI Image Studio** module works with Grok's configured
+Text-to-Image and Image-to-Image models for iterative image generation and
+editing. When AI Image Studio is enabled, the provider's **Next Steps** section
+links directly to its workspace. It is recommended when absent but is not a
+dependency of this provider.
+
 Image-to-Image, Image-to-Video, and Image Classification Explorers use the same
 image-source interface. Users can upload an image, select an accessible image
 from a compatible Drupal Media type, or use the module's bundled default

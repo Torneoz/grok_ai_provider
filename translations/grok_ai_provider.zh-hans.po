@@ -310,3 +310,9 @@ msgstr "费用估算"
 
 msgid "Model pricing JSON"
 msgstr "模型定价 JSON"
+
+msgid "<a href=\":url\">Open AI Image Studio</a> to use Grok for iterative image generation and editing. AI Image Studio works with the Grok models configured for Drupal AI's Text To Image and Image To Image operations."
+msgstr "<a href=\":url\">打开 AI Image Studio</a>，使用 Grok 进行迭代式图像生成和编辑。AI Image Studio 可使用为 Drupal AI 的文本生成图像和图像生成图像操作配置的 Grok 模型。"
+
+msgid "Grok works very well with <a href=\":url\">AI Image Studio</a>, which provides an iterative workspace for generating and editing images. Install and enable AI Image Studio to use it with your configured Grok image models."
+msgstr "Grok 与 <a href=\":url\">AI Image Studio</a> 配合良好；后者提供用于生成和编辑图像的迭代式工作区。安装并启用 AI Image Studio，即可将其与已配置的 Grok 图像模型配合使用。"

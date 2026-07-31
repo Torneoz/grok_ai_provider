@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0-alpha8
+
+- Added conditional AI Image Studio guidance to the provider configuration
+  form's Next Steps section.
+- Sites with AI Image Studio enabled receive a direct link to its image
+  workspace and guidance for using Grok Text-to-Image and Image-to-Image
+  models.
+- Sites without AI Image Studio receive an optional recommendation without
+  introducing a module dependency.
+- Added packaged translations for the new AI Image Studio guidance.
+
 ## 1.0.0-alpha7
 
 - Fixed Chat Explorer requests failing when Drupal AI supplied its default
