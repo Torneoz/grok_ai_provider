@@ -14,6 +14,9 @@ use Drupal\ai\Exception\AiRequestErrorException;
 use Drupal\ai\Exception\AiResponseErrorException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Sends asynchronous requests to xAI's video generation API.
@@ -41,23 +44,29 @@ final class XaiVideosClient {
    * Generates a video, polls until completion, and downloads it.
    */
   public function generate(string $endpoint, string $api_key, array $payload, int $timeout = 300, int $poll_interval = 2): array {
-    $started = $this->request('POST', rtrim($endpoint, '/') . '/videos/generations', $api_key, $payload, $timeout);
+    $deadline = microtime(TRUE) + max(10, min(3600, $timeout));
+    $started = $this->request('POST', rtrim($endpoint, '/') . '/videos/generations', $api_key, $payload, $this->remainingSeconds($deadline));
     $request_id = trim((string) ($started['request_id'] ?? ''));
     if ($request_id === '') {
       throw new AiResponseErrorException((string) $this->t('xAI did not return a video request ID.'));
     }
 
-    $deadline = microtime(TRUE) + max(10, min(3600, $timeout));
     do {
       if ($poll_interval > 0) {
-        usleep(min(30, $poll_interval) * 1000000);
+        $sleep = min(30, $poll_interval, max(0, (int) floor($deadline - microtime(TRUE))));
+        if ($sleep > 0) {
+          usleep($sleep * 1000000);
+        }
+      }
+      if (microtime(TRUE) >= $deadline) {
+        break;
       }
       $result = $this->request(
         'GET',
         rtrim($endpoint, '/') . '/videos/' . rawurlencode($request_id),
         $api_key,
         NULL,
-        min(60, $timeout),
+        min(60, $this->remainingSeconds($deadline)),
       );
       $status = strtolower(trim((string) ($result['status'] ?? '')));
       if ($status === 'done') {
@@ -68,7 +77,7 @@ final class XaiVideosClient {
         if ($video_url === '' || !str_starts_with(strtolower($video_url), 'https://')) {
           throw new AiResponseErrorException((string) $this->t('xAI returned an invalid generated video URL.'));
         }
-        $result['_video_binary'] = $this->download($video_url, $timeout);
+        $result['_video_binary'] = $this->download($video_url, $endpoint, $this->remainingSeconds($deadline));
         return $result;
       }
       if (in_array($status, ['failed', 'expired'], TRUE)) {
@@ -84,6 +93,19 @@ final class XaiVideosClient {
   }
 
   /**
+   * Lists video generation models available to the API key.
+   */
+  public function listModels(string $endpoint, string $api_key): array {
+    return $this->request(
+      'GET',
+      rtrim($endpoint, '/') . '/video-generation-models',
+      $api_key,
+      NULL,
+      60,
+    );
+  }
+
+  /**
    * Sends and decodes an xAI video API request.
    */
   private function request(string $method, string $url, string $api_key, ?array $payload, int $timeout): array {
@@ -96,7 +118,7 @@ final class XaiVideosClient {
         'Accept' => 'application/json',
       ],
       'connect_timeout' => min(30, $timeout),
-      'timeout' => max(10, min(3600, $timeout)),
+      'timeout' => max(1, min(3600, $timeout)),
     ];
     if ($payload !== NULL) {
       $options['headers']['Content-Type'] = 'application/json';
@@ -124,12 +146,30 @@ final class XaiVideosClient {
   /**
    * Downloads the ephemeral generated video.
    */
-  private function download(string $url, int $timeout): string {
+  private function download(string $url, string $endpoint, int $timeout): string {
+    $this->assertAllowedDownloadUrl($url, $endpoint);
     try {
       $response = $this->httpClient->request('GET', $url, [
         'connect_timeout' => min(30, $timeout),
-        'timeout' => max(10, min(3600, $timeout)),
-        'allow_redirects' => ['max' => 3, 'strict' => TRUE],
+        'timeout' => max(1, min(3600, $timeout)),
+        'allow_redirects' => [
+          'max' => 3,
+          'strict' => TRUE,
+          'on_redirect' => function (RequestInterface $request, ResponseInterface $response, UriInterface $uri) use ($endpoint): void {
+            $this->assertAllowedDownloadUrl((string) $uri, $endpoint);
+          },
+        ],
+        'on_headers' => function (ResponseInterface $response): void {
+          $content_length = (int) $response->getHeaderLine('Content-Length');
+          if ($content_length > self::MAX_DOWNLOAD_BYTES) {
+            throw new \RuntimeException('The generated xAI video exceeds the maximum allowed size.');
+          }
+        },
+        'progress' => static function (int $download_total, int $downloaded_bytes): void {
+          if ($download_total > self::MAX_DOWNLOAD_BYTES || $downloaded_bytes > self::MAX_DOWNLOAD_BYTES) {
+            throw new \RuntimeException('The generated xAI video exceeds the maximum allowed size.');
+          }
+        },
       ]);
       $content_length = (int) $response->getHeaderLine('Content-Length');
       if ($content_length > self::MAX_DOWNLOAD_BYTES) {
@@ -150,6 +190,45 @@ final class XaiVideosClient {
         '@message' => $exception->getMessage(),
       ]), $exception->getCode(), $exception);
     }
+  }
+
+  /**
+   * Rejects asset URLs outside xAI or the configured compatible gateway.
+   */
+  private function assertAllowedDownloadUrl(string $url, string $endpoint): void {
+    $parts = parse_url($url);
+    $host = strtolower((string) ($parts['host'] ?? ''));
+    $endpoint_host = strtolower((string) (parse_url($endpoint, PHP_URL_HOST) ?? ''));
+    if (
+      ($parts['scheme'] ?? '') !== 'https'
+      || $host === ''
+      || isset($parts['user'])
+      || isset($parts['pass'])
+      || !($host === $endpoint_host || $host === 'x.ai' || str_ends_with($host, '.x.ai'))
+    ) {
+      throw new AiResponseErrorException((string) $this->t('xAI returned a generated video URL outside the trusted asset hosts.'));
+    }
+    if (filter_var($host, FILTER_VALIDATE_IP) !== FALSE && !$this->isPublicIp($host)) {
+      throw new AiResponseErrorException((string) $this->t('xAI returned a generated video URL for a private or reserved address.'));
+    }
+  }
+
+  /**
+   * Determines whether an IP literal is globally routable.
+   */
+  private function isPublicIp(string $ip): bool {
+    return filter_var(
+      $ip,
+      FILTER_VALIDATE_IP,
+      FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE,
+    ) !== FALSE;
+  }
+
+  /**
+   * Returns the bounded number of seconds left in an overall operation.
+   */
+  private function remainingSeconds(float $deadline): int {
+    return max(1, min(3600, (int) ceil($deadline - microtime(TRUE))));
   }
 
   /**

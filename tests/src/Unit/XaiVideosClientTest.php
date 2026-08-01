@@ -6,6 +6,7 @@ namespace Drupal\Tests\grok_ai_provider\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\grok_ai_provider\Service\XaiVideosClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
@@ -15,6 +16,25 @@ use PHPUnit\Framework\TestCase;
  * Tests the asynchronous xAI video transport.
  */
 final class XaiVideosClientTest extends TestCase {
+
+  /**
+   * Tests video model discovery.
+   */
+  public function testListsVideoModels(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->expects(self::once())
+      ->method('request')
+      ->with(
+        'GET',
+        'https://api.x.ai/v1/video-generation-models',
+        self::callback(static fn(array $options): bool => $options['headers']['Authorization'] === 'Bearer secret'),
+      )
+      ->willReturn(new Response(200, [], '{"models":[{"id":"grok-imagine-video"}]}'));
+
+    $models = $this->createClient($http_client)->listModels('https://api.x.ai/v1', 'secret');
+
+    self::assertSame('grok-imagine-video', $models['models'][0]['id']);
+  }
 
   /**
    * Tests starting, polling, and downloading a generated video.
@@ -63,6 +83,28 @@ final class XaiVideosClientTest extends TestCase {
 
     self::assertSame('done', $result['status']);
     self::assertSame('0000ftypisom-video', $result['_video_binary']);
+  }
+
+  /**
+   * Tests that an upstream response cannot trigger an arbitrary HTTPS fetch.
+   */
+  public function testRejectsUntrustedVideoDownloadHost(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->expects(self::exactly(2))
+      ->method('request')
+      ->willReturnOnConsecutiveCalls(
+        new Response(200, [], '{"request_id":"request-123"}'),
+        new Response(200, [], '{"status":"done","video":{"url":"https://internal.example/video.mp4"}}'),
+      );
+
+    $this->expectException(AiResponseErrorException::class);
+    $this->createClient($http_client)->generate(
+      'https://api.x.ai/v1',
+      'secret',
+      ['model' => 'grok-imagine-video', 'prompt' => 'Test'],
+      30,
+      0,
+    );
   }
 
   /**

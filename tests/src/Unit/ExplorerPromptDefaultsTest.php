@@ -31,7 +31,7 @@ final class ExplorerPromptDefaultsTest extends TestCase {
 
     foreach ($defaults as $default) {
       self::assertInstanceOf(TranslatableMarkup::class, $default);
-      self::assertNotSame('', trim((string) $default));
+      self::assertNotSame('', trim($default->getUntranslatedString()));
     }
   }
 

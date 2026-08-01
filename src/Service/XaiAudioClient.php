@@ -14,6 +14,7 @@ use Drupal\ai\Exception\AiRequestErrorException;
 use Drupal\ai\Exception\AiResponseErrorException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Sends requests to xAI's REST voice APIs.
@@ -63,6 +64,17 @@ final class XaiAudioClient {
         'json' => $payload,
         'connect_timeout' => min(30, $timeout),
         'timeout' => max(10, min(3600, $timeout)),
+        'on_headers' => function (ResponseInterface $response): void {
+          $content_length = (int) $response->getHeaderLine('Content-Length');
+          if ($content_length > self::MAX_GENERATED_AUDIO_BYTES) {
+            throw new \RuntimeException('The generated xAI audio exceeds the maximum allowed size.');
+          }
+        },
+        'progress' => static function (int $download_total, int $downloaded_bytes): void {
+          if ($download_total > self::MAX_GENERATED_AUDIO_BYTES || $downloaded_bytes > self::MAX_GENERATED_AUDIO_BYTES) {
+            throw new \RuntimeException('The generated xAI audio exceeds the maximum allowed size.');
+          }
+        },
       ]);
       $content_length = (int) $response->getHeaderLine('Content-Length');
       if ($content_length > self::MAX_GENERATED_AUDIO_BYTES) {
@@ -92,9 +104,16 @@ final class XaiAudioClient {
     if ($binary === '') {
       throw new AiResponseErrorException((string) $this->t('xAI returned an empty text-to-speech response.'));
     }
+    $has_id3_header = str_starts_with($binary, 'ID3');
+    $has_frame_sync = strlen($binary) >= 2
+      && ord($binary[0]) === 0xFF
+      && (ord($binary[1]) & 0xE0) === 0xE0;
+    if (!$has_id3_header && !$has_frame_sync) {
+      throw new AiResponseErrorException((string) $this->t('xAI returned text-to-speech data that is not a valid MP3 stream.'));
+    }
     return [
       'binary' => $binary,
-      'content_type' => $response->getHeaderLine('Content-Type'),
+      'content_type' => 'audio/mpeg',
     ];
   }
 

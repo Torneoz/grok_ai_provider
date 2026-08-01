@@ -16,6 +16,9 @@ Select the Key and save the form. The provider validates access using model
 discovery; it does not make a billable chat request during configuration.
 Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
+After a working connection has been saved, a temporary xAI outage does not
+prevent administrators from saving unrelated provider settings. Changes to
+the key, endpoint, or default chat model continue to require validation.
 To use image generation, select Grok and an available Grok Imagine model for
 the **Text To Image** operation on Drupal AI's default-model settings page.
 Select Grok and an available Grok Imagine image model for the **Image To
@@ -163,13 +166,46 @@ API and remote MCP endpoints must use HTTPS.
 
 Video requests use xAI's asynchronous API and are billed by generated duration
 and resolution. The module polls until completion and immediately downloads the
-MP4 because xAI-hosted result URLs are temporary.
+MP4 because xAI-hosted result URLs are temporary. Video models are discovered
+for the configured key, and image-to-video options are limited to models whose
+discovery metadata advertises image input. Generated-video downloads and
+redirects are accepted only from xAI asset hosts or the configured compatible
+gateway host.
 
 Audio requests use xAI's REST Voice API. Text-to-speech input is limited to
 15,000 characters and returns MP3 for compatibility with Drupal AI's current
 Explorer. Speech-to-text accepts up to 100 MB in this module, below xAI's
 service limit, to keep Drupal request memory bounded. Realtime WebSocket
 speech-to-speech and custom voice management are not included.
+
+Generated media is processed synchronously. Configure PHP and web-server
+limits with enough headroom for the request payload, HTTP response stream,
+Drupal AI file object, and optional Media save. The module rejects generated
+audio above 50 MB, generated video above 200 MB, source audio above 100 MB, and
+individual decoded generated images above 20 MB. Transfer callbacks abort
+oversized audio and video responses while they are being received. Long video
+requests still occupy a PHP worker while the asynchronous xAI operation is
+polled; queue-based generation is not included in beta1.
+
+## Privacy and security
+
+Prompts, uploaded media, generated content, and enabled hosted-tool activity
+are sent to the configured API endpoint. Web Search, X Search, Code
+Interpreter, Collections Search, and remote MCP can send request context to
+additional services. Review those services and the selected custom gateway
+against your organization's privacy, data-residency, and retention policies.
+
+Responses API storage is disabled by default. Enabling it permits xAI to retain
+request and response data. A custom API base URL receives the selected xAI Key,
+so only use an endpoint controlled by or explicitly approved for your
+organization. Report security issues using the private process in
+`SECURITY.md`, not a public issue containing secrets or customer data.
+
+## Development and release verification
+
+Install development dependencies with `composer install`, then run
+`composer phpcs` and `composer test`. See `TESTING.md` for the supported matrix,
+Drupal integration checks, and the beta release checklist.
 
 The packaged Explorer estimates use the public xAI prices documented on 27
 July 2026. Administrators can update the pricing JSON without changing module

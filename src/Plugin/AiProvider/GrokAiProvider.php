@@ -169,11 +169,22 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     }
 
     $this->loadClient();
-    if ($operation_type === 'image_to_video') {
-      return [self::DEFAULT_IMAGE_TO_VIDEO_MODEL => self::DEFAULT_IMAGE_TO_VIDEO_MODEL];
-    }
-    if ($operation_type === 'text_to_video') {
-      return [self::DEFAULT_VIDEO_MODEL => self::DEFAULT_VIDEO_MODEL];
+    if (in_array($operation_type, ['image_to_video', 'text_to_video'], TRUE)) {
+      $cache_context = [$this->getEndpoint(), $this->apiKey, $operation_type];
+      $cache_key = 'grok_video_models_' . Crypt::hashBase64(Json::encode($cache_context));
+      if ($cached = $this->cacheBackend->get($cache_key)) {
+        return $cached->data;
+      }
+      $response = $this->videosClient->listModels(
+        $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+        $this->apiKey ?: $this->loadApiKey(),
+      );
+      $models = $this->filterVideoModels(
+        (array) ($response['models'] ?? []),
+        $operation_type === 'image_to_video',
+      );
+      $this->cacheBackend->set($cache_key, $models, time() + ($models === [] ? 300 : 3600));
+      return $models;
     }
     if ($operation_type === 'speech_to_text') {
       return [self::DEFAULT_SPEECH_TO_TEXT_MODEL => 'xAI Speech to Text'];
@@ -925,7 +936,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     if (trim($prompt) === '') {
       throw new AiBadRequestException((string) $this->t('A non-empty video prompt is required.'));
     }
-    if ($model_id !== self::DEFAULT_VIDEO_MODEL) {
+    if (!preg_match('/^grok-imagine-video(?:-|$)/i', $model_id)) {
       throw new AiBadRequestException((string) $this->t('"@model" does not support xAI text-to-video generation.', [
         '@model' => $model_id,
       ]));
@@ -1120,6 +1131,26 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       if (preg_match('/^grok-imagine-image(?:-|$)/i', $model_id)) {
         $models[$model_id] = $model_id;
       }
+    }
+    asort($models);
+    return $models;
+  }
+
+  /**
+   * Filters video-model discovery results by required input modality.
+   */
+  private function filterVideoModels(array $model_data, bool $requires_image): array {
+    $models = [];
+    foreach ($model_data as $model) {
+      $model_id = trim((string) ($model['id'] ?? ''));
+      $modalities = array_map('strtolower', (array) ($model['input_modalities'] ?? []));
+      if (
+        !preg_match('/^grok-imagine-video(?:-|$)/i', $model_id)
+        || ($requires_image && !in_array('image', $modalities, TRUE))
+      ) {
+        continue;
+      }
+      $models[$model_id] = $model_id;
     }
     asort($models);
     return $models;
@@ -1662,11 +1693,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * Determines whether a model supports image-to-video generation.
    */
   private function isImageToVideoModel(string $model_id): bool {
-    return in_array($model_id, [
-      self::DEFAULT_IMAGE_TO_VIDEO_MODEL,
-      'grok-imagine-video-1.5-preview',
-      'grok-imagine-video-1.5-2026-05-30',
-    ], TRUE);
+    return (bool) preg_match('/^grok-imagine-video(?:-|$)/i', $model_id);
   }
 
   /**

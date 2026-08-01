@@ -6,6 +6,8 @@ namespace Drupal\grok_ai_provider\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
+use Drupal\Core\Extension\ExtensionList;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
@@ -44,6 +46,16 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private ?XaiPricingScheduleFetcher $pricingScheduleFetcher = NULL;
 
   /**
+   * The module extension list.
+   */
+  private ?ExtensionList $moduleList = NULL;
+
+  /**
+   * The module handler.
+   */
+  private ?ModuleHandlerInterface $moduleHandler = NULL;
+
+  /**
    * Constructs the configuration form.
    */
   public function __construct(
@@ -53,12 +65,16 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     KeyRepositoryInterface $key_repository,
     GrokCostEstimator $cost_estimator,
     XaiPricingScheduleFetcher $pricing_schedule_fetcher,
+    ExtensionList $module_list,
+    ModuleHandlerInterface $module_handler,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->aiProviderManager = $ai_provider_manager;
     $this->keyRepository = $key_repository;
     $this->costEstimator = $cost_estimator;
     $this->pricingScheduleFetcher = $pricing_schedule_fetcher;
+    $this->moduleList = $module_list;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -72,6 +88,8 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $container->get('key.repository'),
       $container->get('grok_ai_provider.cost_estimator'),
       $container->get('grok_ai_provider.pricing_schedule_fetcher'),
+      $container->get('extension.list.module'),
+      $container->get('module_handler'),
     );
   }
 
@@ -94,8 +112,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config(self::CONFIG_NAME);
-    $module_list = \Drupal::service('extension.list.module');
-    $module_path = $module_list->getPath('grok_ai_provider');
+    $module_path = $this->getModuleList()->getPath('grok_ai_provider');
 
     $form['#attached']['library'][] = 'grok_ai_provider/config_form';
     $form['branding'] = [
@@ -423,7 +440,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         ':url' => Url::fromRoute('ai.settings_form')->toString(),
       ]),
     ];
-    if (\Drupal::moduleHandler()->moduleExists('ai_api_explorer')) {
+    if ($this->getModuleHandler()->moduleExists('ai_api_explorer')) {
       $next_steps_items[] = [
         'introduction' => [
           '#markup' => $this->t('Try the configured models in these Drupal AI Explorers:'),
@@ -449,7 +466,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $next_steps_items[] = $this->t('To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=":url">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission.', [
       ':url' => Url::fromRoute('filter.admin_overview')->toString(),
     ]);
-    if (\Drupal::moduleHandler()->moduleExists('ai_image_studio')) {
+    if ($this->getModuleHandler()->moduleExists('ai_image_studio')) {
       $next_steps_items[] = $this->t('<a href=":url">Open AI Image Studio</a> to use Grok for iterative image generation and editing. AI Image Studio works with the Grok models configured for Drupal AI\'s Text To Image and Image To Image operations.', [
         ':url' => Url::fromRoute('ai_image_studio.new')->toString(),
       ]);
@@ -556,16 +573,38 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       return;
     }
 
+    $config = $this->config(self::CONFIG_NAME);
+    $connection_changed = (string) $config->get('api_key') !== (string) $form_state->getValue('api_key')
+      || rtrim((string) $config->get('host'), '/') !== $host
+      || (string) $config->get('default_model') !== (string) $form_state->getValue('default_model');
+    $tested_models = $form_state->get('grok_models');
+    $connection_fingerprint = hash('sha256', implode("\0", [
+      (string) $form_state->getValue('api_key'),
+      $host,
+    ]));
+    $models_are_current = is_array($tested_models)
+      && $tested_models !== []
+      && hash_equals((string) $form_state->get('grok_connection_fingerprint'), $connection_fingerprint);
+    if (!$connection_changed && !$models_are_current) {
+      return;
+    }
+
     try {
-      $models = $this->discoverModels(
-        (string) $form_state->getValue('api_key'),
-        $host,
-      );
+      $models = $models_are_current
+        ? $tested_models
+        : $this->discoverModels(
+          (string) $form_state->getValue('api_key'),
+          $host,
+        );
       $default_model = (string) $form_state->getValue('default_model');
       if (!isset($models[$default_model])) {
         $form_state->setErrorByName('default_model', $this->t('Select a model available to the current API key. Test the connection to refresh the model list.'));
       }
       $form_state->set('grok_models', $models);
+      $form_state->set('grok_connection_fingerprint', hash('sha256', implode("\0", [
+        (string) $form_state->getValue('api_key'),
+        rtrim((string) $form_state->getValue('host'), '/'),
+      ])));
     }
     catch (\Throwable $exception) {
       $form_state->setErrorByName('api_key', $this->t('Could not authenticate with xAI: @message', ['@message' => $exception->getMessage()]));
@@ -610,6 +649,10 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       );
       $preferred = $this->preferredModel($models);
       $form_state->set('grok_models', $models);
+      $form_state->set('grok_connection_fingerprint', hash('sha256', implode("\0", [
+        (string) $form_state->getValue('api_key'),
+        rtrim((string) $form_state->getValue('host'), '/'),
+      ])));
       $form_state->setValue('default_model', $preferred);
       $form_state->set('grok_connection_status', [
         'type' => 'status',
@@ -756,6 +799,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   private function getAiProviderManager(): AiProviderPluginManager {
     if (!$this->aiProviderManager instanceof AiProviderPluginManager) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
       $this->aiProviderManager = \Drupal::service('ai.provider');
     }
     return $this->aiProviderManager;
@@ -766,6 +810,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   private function getKeyRepository(): KeyRepositoryInterface {
     if (!$this->keyRepository instanceof KeyRepositoryInterface) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
       $this->keyRepository = \Drupal::service('key.repository');
     }
     return $this->keyRepository;
@@ -776,6 +821,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   private function getCostEstimator(): GrokCostEstimator {
     if (!$this->costEstimator instanceof GrokCostEstimator) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
       $this->costEstimator = \Drupal::service('grok_ai_provider.cost_estimator');
     }
     return $this->costEstimator;
@@ -786,9 +832,32 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   private function getPricingScheduleFetcher(): XaiPricingScheduleFetcher {
     if (!$this->pricingScheduleFetcher instanceof XaiPricingScheduleFetcher) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
       $this->pricingScheduleFetcher = \Drupal::service('grok_ai_provider.pricing_schedule_fetcher');
     }
     return $this->pricingScheduleFetcher;
+  }
+
+  /**
+   * Gets the module extension list after cached form reconstruction.
+   */
+  private function getModuleList(): ExtensionList {
+    if (!$this->moduleList instanceof ExtensionList) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
+      $this->moduleList = \Drupal::service('extension.list.module');
+    }
+    return $this->moduleList;
+  }
+
+  /**
+   * Gets the module handler after cached form reconstruction.
+   */
+  private function getModuleHandler(): ModuleHandlerInterface {
+    if (!$this->moduleHandler instanceof ModuleHandlerInterface) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
+      $this->moduleHandler = \Drupal::service('module_handler');
+    }
+    return $this->moduleHandler;
   }
 
   /**

@@ -9,6 +9,7 @@ use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Extension\ExtensionPathResolver;
 use Drupal\grok_ai_provider\Service\GrokCostEstimator;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -42,9 +43,8 @@ final class GrokCostEstimatorTest extends TestCase {
 
   /**
    * Tests non-token image, video, and voice estimates.
-   *
-   * @dataProvider estimateProvider
    */
+  #[DataProvider('estimateProvider')]
   public function testEstimatesMediaAndVoice(array $pricing, string $operation, string $model, array $configuration, mixed $input, array $metadata, float $expected): void {
     self::assertEqualsWithDelta(
       $expected,
@@ -121,12 +121,18 @@ final class GrokCostEstimatorTest extends TestCase {
   public function testUsesSharedTorneoPricingWhenAvailable(): void {
     $catalog = new class {
 
+      /**
+       * Returns a fixed test estimate for the expected request.
+       */
       public function estimate(string $provider, string $operation, string $model): float {
         return $provider === 'grok' && $operation === 'chat' && $model === 'grok-test'
           ? 0.123
           : 0.0;
       }
 
+      /**
+       * Returns test catalog metadata.
+       */
       public function find(): array {
         return ['checked_at' => '2026-07-28'];
       }

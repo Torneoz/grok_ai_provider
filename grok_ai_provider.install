@@ -52,3 +52,26 @@ function grok_ai_provider_update_10003(): void {
     $config->set('default_model', 'grok-4.5')->save(TRUE);
   }
 }
+
+/**
+ * Adds pricing metadata and configurable Explorer prompt defaults.
+ */
+function grok_ai_provider_update_10004(): void {
+  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+  $defaults = [
+    'pricing_json' => '',
+    'pricing_source' => 'packaged',
+    'pricing_checked_at' => '',
+    'pricing_hash' => '',
+    'explorer_prompts' => array_map(
+      static fn (mixed $prompt): string => (string) $prompt,
+      grok_ai_provider_explorer_prompt_defaults(),
+    ),
+  ];
+  foreach ($defaults as $key => $value) {
+    if ($config->get($key) === NULL) {
+      $config->set($key, $value);
+    }
+  }
+  $config->save(TRUE);
+}

@@ -1564,3 +1564,15 @@ msgstr ""
 #: src/Form/GrokAiProviderConfigForm.php
 msgid "Grok works very well with <a href=\":url\">AI Image Studio</a>, which provides an iterative workspace for generating and editing images. Install and enable AI Image Studio to use it with your configured Grok image models."
 msgstr ""
+
+#: src/Service/XaiVideosClient.php
+msgid "xAI returned a generated video URL outside the trusted asset hosts."
+msgstr ""
+
+#: src/Service/XaiVideosClient.php
+msgid "xAI returned a generated video URL for a private or reserved address."
+msgstr ""
+
+#: src/Service/XaiAudioClient.php
+msgid "xAI returned text-to-speech data that is not a valid MP3 stream."
+msgstr ""

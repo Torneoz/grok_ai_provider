@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\grok_ai_provider\Unit;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\grok_ai_provider\Service\XaiAudioClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
@@ -66,6 +67,22 @@ final class XaiAudioClientTest extends TestCase {
 
     self::assertSame('ID3audio', $response['binary']);
     self::assertSame('audio/mpeg', $response['content_type']);
+  }
+
+  /**
+   * Tests that a successful HTTP response must still contain MP3 data.
+   */
+  public function testRejectsInvalidSynthesizedAudio(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->method('request')
+      ->willReturn(new Response(200, ['Content-Type' => 'text/html'], '<html>error</html>'));
+
+    $this->expectException(AiResponseErrorException::class);
+    $this->createAudioClient($http_client)->synthesize(
+      'https://api.x.ai/v1/',
+      'secret',
+      ['text' => 'Hello', 'voice_id' => 'eve'],
+    );
   }
 
   /**

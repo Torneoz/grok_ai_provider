@@ -16,6 +16,7 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests the HTTP boundary for the xAI image API.
@@ -110,9 +111,8 @@ final class XaiImagesClientTest extends TestCase {
 
   /**
    * Tests provider-neutral HTTP exception mapping.
-   *
-   * @dataProvider errorMappingProvider
    */
+  #[DataProvider('errorMappingProvider')]
   public function testMapsHttpErrors(int $status, string $expected_exception): void {
     $http_client = $this->createMock(ClientInterface::class);
     $http_client->method('request')->willThrowException(new RequestException(

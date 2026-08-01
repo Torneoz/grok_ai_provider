@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="Grok AI Provider">
+  <description>Drupal coding standards for the Grok AI Provider module.</description>
+  <file>grok_ai_provider.module</file>
+  <file>grok_ai_provider.install</file>
+  <file>src</file>
+  <file>tests</file>
+  <arg name="extensions" value="php,module,install"/>
+  <arg name="colors"/>
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice">
+    <!-- Drupal AI exceptions are rendered as administrator/user-facing errors. -->
+    <exclude name="DrupalPractice.General.ExceptionT.ExceptionT"/>
+  </rule>
+  <rule ref="Drupal.Semantics.FunctionT.NotLiteralString">
+    <!-- Translation-service test doubles necessarily receive dynamic strings. -->
+    <exclude-pattern>tests/*</exclude-pattern>
+  </rule>
+</ruleset>

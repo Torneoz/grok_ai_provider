@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.0.0-beta1
+
+- Restricted generated-video downloads and redirects to trusted xAI or
+  configured-gateway hosts and rejected private or reserved IP literals.
+- Added in-transfer size enforcement for generated audio and video responses.
+- Added MP3 signature validation for generated text-to-speech responses.
+- Applied one overall deadline to video start, polling, and download work.
+- Added live xAI video-model discovery, including image-input capability
+  filtering, instead of advertising inaccessible hard-coded models.
+- Allowed unchanged provider settings to be saved during a temporary xAI
+  outage while retaining live validation for connection-setting changes.
+- Added missing alpha-to-beta configuration update defaults.
+- Added Composer autoloading, PHPUnit and PHPCS configuration, and a GitHub
+  Actions quality workflow.
+- Added security, testing, privacy, and memory guidance for beta operators.
+
 ## 1.0.0-alpha8
 
 - Added conditional AI Image Studio guidance to the provider configuration

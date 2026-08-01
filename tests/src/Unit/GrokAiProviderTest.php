@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok_ai_provider\Unit;
 
+use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
@@ -28,6 +30,27 @@ use PHPUnit\Framework\TestCase;
  * Tests Grok-specific model filtering and settings.
  */
 final class GrokAiProviderTest extends TestCase {
+
+  /**
+   * Tests video-model filtering and image-input capability checks.
+   */
+  public function testFiltersVideoModels(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $method = new \ReflectionMethod($provider, 'filterVideoModels');
+    $models = [
+      ['id' => 'grok-imagine-video', 'input_modalities' => ['text', 'image']],
+      ['id' => 'grok-imagine-video-text', 'input_modalities' => ['text']],
+      ['id' => 'unrelated-video', 'input_modalities' => ['text', 'image']],
+    ];
+
+    self::assertSame([
+      'grok-imagine-video' => 'grok-imagine-video',
+      'grok-imagine-video-text' => 'grok-imagine-video-text',
+    ], $method->invoke($provider, $models, FALSE));
+    self::assertSame([
+      'grok-imagine-video' => 'grok-imagine-video',
+    ], $method->invoke($provider, $models, TRUE));
+  }
 
   /**
    * Tests that model discovery retains only Grok models.
@@ -532,7 +555,22 @@ final class GrokAiProviderTest extends TestCase {
    * Creates a provider suitable for testing its pure helper methods.
    */
   private function newProviderWithoutConstructor(): GrokAiProvider {
-    return (new \ReflectionClass(GrokAiProvider::class))->newInstanceWithoutConstructor();
+    $provider = (new \ReflectionClass(GrokAiProvider::class))->newInstanceWithoutConstructor();
+    $translation = $this->createMock(TranslationInterface::class);
+    $translation->method('translate')
+      ->willReturnCallback(static fn(string $string, array $arguments = [], array $options = []): TranslatableMarkup => new TranslatableMarkup(
+        $string,
+        $arguments,
+        $options,
+        $translation,
+      ));
+    $translation->method('translateString')
+      ->willReturnCallback(static fn(TranslatableMarkup $string): string => strtr(
+        $string->getUntranslatedString(),
+        $string->getArguments(),
+      ));
+    $provider->setStringTranslation($translation);
+    return $provider;
   }
 
 }

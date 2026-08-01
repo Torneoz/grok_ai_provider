@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\grok_ai_provider\Service\ExplorerMediaHelper;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -21,9 +22,8 @@ final class ExplorerMediaHelperTest extends TestCase {
 
   /**
    * Tests Media Library and autocomplete value normalization.
-   *
-   * @dataProvider mediaValues
    */
+  #[DataProvider('mediaValues')]
   public function testNormalizesSelectedMediaId(mixed $value, int $expected): void {
     $form_state = $this->createMock(FormStateInterface::class);
     $form_state->method('getValue')->with('image_media')->willReturn($value);
