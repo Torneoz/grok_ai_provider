@@ -5,10 +5,29 @@ text-to-speech, and speech-to-text to Drupal through the AI module, together
 with model-based moderation and image classification using xAI's Chat
 Completions, Responses, Imagine, and Voice APIs.
 
+This is an unofficial community integration and is not affiliated with or
+endorsed by xAI.
+
+## Requirements
+
+- PHP 8.1 or later
+- Drupal 10.3 or Drupal 11
+- [AI 1.4 or later](https://www.drupal.org/project/ai)
+- [Key 1.22 or later](https://www.drupal.org/project/key)
+
 ## Installation
 
-Enable **Grok AI Provider** and its AI and Key dependencies. Create a Key
-entity containing an xAI API key, then visit:
+Install the Drupal.org project with Composer, then enable the module:
+
+```bash
+composer require 'drupal/grok:^1.0@beta'
+drush en grok_ai_provider
+```
+
+The Drupal.org project machine name is `grok`; the module machine name is
+`grok_ai_provider`.
+
+Create a Key entity containing an xAI API key, then visit:
 
 `/admin/config/ai/providers/grok`
 
@@ -19,6 +38,9 @@ populate the default-model selector with the models accessible to that key.
 After a working connection has been saved, a temporary xAI outage does not
 prevent administrators from saving unrelated provider settings. Changes to
 the key, endpoint, or default chat model continue to require validation.
+
+## Configuration
+
 To use image generation, select Grok and an available Grok Imagine model for
 the **Text To Image** operation on Drupal AI's default-model settings page.
 Select Grok and an available Grok Imagine image model for the **Image To
@@ -34,9 +56,7 @@ Select Grok and `grok-imagine-video` for the **Text To Video** operation on the
 same page.
 Select Grok and `grok-imagine-video-1.5` for the **Image To Video** operation.
 When AI API Explorer is enabled, the standard **Image-To-Image Explorer**
-accepts a source image and editing prompt. The module corrects the Explorer's
-copied classification upload text and ensures its dynamically added prompt is
-preserved during AJAX submissions. The Grok-specific **Text-To-Video
+accepts a source image and editing prompt. The Grok-specific **Text-To-Video
 Generation Explorer** and **Image-To-Video Generation Explorer** can generate
 and preview short MP4 videos.
 
@@ -73,7 +93,7 @@ token models, cached and long-context token rates, Imagine image and video
 models, REST text-to-speech characters, and REST speech-to-text audio hours.
 When xAI returns `usage.cost_in_usd_ticks`, that reported value always wins.
 The JSON calculator is used only when the response omits a cost, following the
-same editable-pricing approach used by Torneoz AI Research.
+same editable-pricing approach used by Torneo AI Research.
 
 Administrators can use **Load latest xAI pricing schedule** to retrieve the
 module-maintained, machine-readable schedule from the trusted GitHub repository,
@@ -98,7 +118,7 @@ on the selected Media type and become permanent Media items.
 The included recipe installs the Grok AI Provider, AI, and Key modules:
 
 ```bash
-drush recipe web/modules/contrib/grok_ai_provider/recipes/grok_ai_provider
+drush recipe web/modules/contrib/grok/recipes/grok_ai_provider
 ```
 
 It does not install Language or Interface Translation and does not add
@@ -199,13 +219,14 @@ Responses API storage is disabled by default. Enabling it permits xAI to retain
 request and response data. A custom API base URL receives the selected xAI Key,
 so only use an endpoint controlled by or explicitly approved for your
 organization. Report security issues using the private process in
-`SECURITY.md`, not a public issue containing secrets or customer data.
+[SECURITY.md](SECURITY.md), not a public issue containing secrets or customer
+data.
 
 ## Development and release verification
 
 Install development dependencies with `composer install`, then run
-`composer phpcs` and `composer test`. See `TESTING.md` for the supported matrix,
-Drupal integration checks, and the beta release checklist.
+`composer phpcs` and `composer test`. See [TESTING.md](TESTING.md) for the
+supported matrix, Drupal integration checks, and the beta release checklist.
 
 The packaged Explorer estimates use the public xAI prices documented on 27
 July 2026. Administrators can update the pricing JSON without changing module
