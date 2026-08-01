@@ -21,10 +21,10 @@ if ($autoload === '' || !is_file($autoload)) {
   );
 }
 
-$loader = require_once $autoload;
+$loader = require $autoload;
 if ($loader instanceof ClassLoader) {
-  $loader->addPsr4('Drupal\\grok_ai_provider\\', $module_root . '/src');
-  $loader->addPsr4('Drupal\\Tests\\grok_ai_provider\\', __DIR__ . '/src');
+  $loader->addPsr4('Drupal\\grok\\', $module_root . '/src');
+  $loader->addPsr4('Drupal\\Tests\\grok\\', __DIR__ . '/src');
   $project_root = dirname($autoload, 2);
   $ai_path = (string) getenv('DRUPAL_AI_PATH');
   if ($ai_path === '' && InstalledVersions::isInstalled('drupal/ai')) {

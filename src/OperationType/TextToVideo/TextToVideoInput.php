@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\OperationType\TextToVideo;
+namespace Drupal\grok\OperationType\TextToVideo;
 
 use Drupal\ai\OperationType\InputBase;
 use Drupal\ai\OperationType\InputInterface;

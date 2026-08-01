@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Service;
+namespace Drupal\grok\Service;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
@@ -47,7 +47,7 @@ final class GrokCostEstimator {
    * Returns configured JSON, falling back to the packaged price list.
    */
   public function getPricingJson(): string {
-    $configured = trim((string) $this->configFactory->get('grok_ai_provider.settings')->get('pricing_json'));
+    $configured = trim((string) $this->configFactory->get('grok.settings')->get('pricing_json'));
     if ($configured !== '') {
       return $configured;
     }
@@ -58,7 +58,7 @@ final class GrokCostEstimator {
    * Returns the pricing schedule shipped with the installed module.
    */
   public function getPackagedPricingJson(): string {
-    $module_path = $this->extensionPathResolver->getPath('module', 'grok_ai_provider');
+    $module_path = $this->extensionPathResolver->getPath('module', 'grok');
     $json = file_get_contents(DRUPAL_ROOT . '/' . $module_path . '/data/xai_pricing.json');
     if (!is_string($json) || trim($json) === '') {
       throw new \RuntimeException('The packaged xAI pricing data could not be read.');

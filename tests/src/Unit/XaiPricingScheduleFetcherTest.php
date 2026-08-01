@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
-use Drupal\grok_ai_provider\Service\GrokCostEstimator;
-use Drupal\grok_ai_provider\Service\XaiPricingScheduleFetcher;
+use Drupal\grok\Service\GrokCostEstimator;
+use Drupal\grok\Service\XaiPricingScheduleFetcher;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;

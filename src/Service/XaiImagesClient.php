@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Service;
+namespace Drupal\grok\Service;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\StringTranslation\StringTranslationTrait;

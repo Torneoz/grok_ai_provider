@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -23,7 +23,7 @@ use Drupal\ai\OperationType\Moderation\ModerationOutput;
 use Drupal\ai\OperationType\SpeechToText\SpeechToTextInput;
 use Drupal\ai\OperationType\SpeechToText\SpeechToTextOutput;
 use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
-use Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider;
+use Drupal\grok\Plugin\AiProvider\GrokAiProvider;
 use PHPUnit\Framework\TestCase;
 
 /**

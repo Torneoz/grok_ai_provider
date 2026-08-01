@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Extension\ExtensionPathResolver;
-use Drupal\grok_ai_provider\Service\GrokCostEstimator;
+use Drupal\grok\Service\GrokCostEstimator;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -162,7 +162,7 @@ final class GrokCostEstimatorTest extends TestCase {
       ->willReturn(json_encode($pricing, JSON_THROW_ON_ERROR));
     $config_factory = $this->createMock(ConfigFactoryInterface::class);
     $config_factory->method('get')
-      ->with('grok_ai_provider.settings')
+      ->with('grok.settings')
       ->willReturn($config);
 
     return new GrokCostEstimator(

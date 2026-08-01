@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Exception\AiResponseErrorException;
-use Drupal\grok_ai_provider\Service\XaiAudioClient;
+use Drupal\grok\Service\XaiAudioClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;

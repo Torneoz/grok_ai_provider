@@ -1,12 +1,12 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the grok_ai_provider package.
+# This file is distributed under the same license as the grok package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: grok_ai_provider 1.x\n"
+"Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-25 11:26+0930\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -1553,7 +1553,7 @@ msgstr ""
 msgid "The selected image could not be prepared."
 msgstr ""
 
-#: grok_ai_provider.module:253
+#: grok.module:253
 msgid "Upload an image."
 msgstr ""
 

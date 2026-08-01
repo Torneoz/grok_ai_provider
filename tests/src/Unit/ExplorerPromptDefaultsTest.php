@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__, 3) . '/grok_ai_provider.module';
+require_once dirname(__DIR__, 3) . '/grok.module';
 
 /**
  * Tests the packaged Drupal AI Explorer prompt defaults.
@@ -18,7 +18,7 @@ final class ExplorerPromptDefaultsTest extends TestCase {
    * Ensures every configurable prompt has a non-empty packaged fallback.
    */
   public function testPackagedPromptDefaults(): void {
-    $defaults = grok_ai_provider_explorer_prompt_defaults();
+    $defaults = grok_explorer_prompt_defaults();
 
     self::assertSame([
       'chat',

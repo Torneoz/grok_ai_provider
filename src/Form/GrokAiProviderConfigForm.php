@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Form;
+namespace Drupal\grok\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
@@ -13,8 +13,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
-use Drupal\grok_ai_provider\Service\GrokCostEstimator;
-use Drupal\grok_ai_provider\Service\XaiPricingScheduleFetcher;
+use Drupal\grok\Service\GrokCostEstimator;
+use Drupal\grok\Service\XaiPricingScheduleFetcher;
 use Drupal\key\KeyRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 final class GrokAiProviderConfigForm extends ConfigFormBase {
 
-  private const CONFIG_NAME = 'grok_ai_provider.settings';
+  private const CONFIG_NAME = 'grok.settings';
 
   /**
    * The AI provider plugin manager.
@@ -86,8 +86,8 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $container->get('config.typed'),
       $container->get('ai.provider'),
       $container->get('key.repository'),
-      $container->get('grok_ai_provider.cost_estimator'),
-      $container->get('grok_ai_provider.pricing_schedule_fetcher'),
+      $container->get('grok.cost_estimator'),
+      $container->get('grok.pricing_schedule_fetcher'),
       $container->get('extension.list.module'),
       $container->get('module_handler'),
     );
@@ -97,7 +97,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function getFormId(): string {
-    return 'grok_ai_provider_settings';
+    return 'grok_settings';
   }
 
   /**
@@ -112,9 +112,9 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $config = $this->config(self::CONFIG_NAME);
-    $module_path = $this->getModuleList()->getPath('grok_ai_provider');
+    $module_path = $this->getModuleList()->getPath('grok');
 
-    $form['#attached']['library'][] = 'grok_ai_provider/config_form';
+    $form['#attached']['library'][] = 'grok/config_form';
     $form['branding'] = [
       '#type' => 'container',
       '#attributes' => [
@@ -289,7 +289,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ];
     }
 
-    $prompt_defaults = \grok_ai_provider_explorer_prompt_defaults();
+    $prompt_defaults = \grok_explorer_prompt_defaults();
     $form['explorer_prompts'] = [
       '#type' => 'details',
       '#title' => $this->t('Explorer default prompts'),
@@ -500,8 +500,8 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ],
     ];
 
-    $module_info = $module_list->getExtensionInfo('grok_ai_provider');
-    $version = (string) ($module_info['version'] ?? '1.0.0-alpha8');
+    $module_info = $module_list->getExtensionInfo('grok');
+    $version = (string) ($module_info['version'] ?? '1.0.0-alpha9');
     $form['about'] = [
       '#type' => 'details',
       '#title' => $this->t('About'),
@@ -771,7 +771,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       throw new \InvalidArgumentException((string) $this->t('The selected Key does not contain an API key.'));
     }
 
-    /** @var \Drupal\grok_ai_provider\Plugin\AiProvider\GrokAiProvider $provider */
+    /** @var \Drupal\grok\Plugin\AiProvider\GrokAiProvider $provider */
     $provider = $this->getAiProviderManager()->createInstance('grok');
     $provider->setAuthentication($api_key);
     $provider->setConfiguration(['host' => $host]);
@@ -822,7 +822,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private function getCostEstimator(): GrokCostEstimator {
     if (!$this->costEstimator instanceof GrokCostEstimator) {
       // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
-      $this->costEstimator = \Drupal::service('grok_ai_provider.cost_estimator');
+      $this->costEstimator = \Drupal::service('grok.cost_estimator');
     }
     return $this->costEstimator;
   }
@@ -833,7 +833,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private function getPricingScheduleFetcher(): XaiPricingScheduleFetcher {
     if (!$this->pricingScheduleFetcher instanceof XaiPricingScheduleFetcher) {
       // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
-      $this->pricingScheduleFetcher = \Drupal::service('grok_ai_provider.pricing_schedule_fetcher');
+      $this->pricingScheduleFetcher = \Drupal::service('grok.pricing_schedule_fetcher');
     }
     return $this->pricingScheduleFetcher;
   }

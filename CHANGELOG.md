@@ -1,6 +1,13 @@
 # Changelog
 
-## 1.0.0-beta1
+## 1.0.0-alpha9
+
+- Renamed the Drupal module machine name from `grok_ai_provider` to `grok` so
+  Composer installation and Drush enablement consistently use `grok`.
+- Renamed module files, PHP namespaces, configuration, services, routes,
+  libraries, recipe, translation catalogs, and test namespaces accordingly.
+- Documented the required uninstall and reconfiguration procedure for users
+  upgrading from alpha8 or earlier.
 
 - Restricted generated-video downloads and redirects to trusted xAI or
   configured-gateway hosts and rejected private or reserved IP literals.
@@ -11,10 +18,10 @@
   filtering, instead of advertising inaccessible hard-coded models.
 - Allowed unchanged provider settings to be saved during a temporary xAI
   outage while retaining live validation for connection-setting changes.
-- Added missing alpha-to-beta configuration update defaults.
+- Added missing configuration update defaults for the next release.
 - Added Composer autoloading, PHPUnit and PHPCS configuration, and a GitHub
   Actions quality workflow.
-- Added security, testing, privacy, and memory guidance for beta operators.
+- Added security, testing, privacy, and memory guidance for alpha testers.
 
 ## 1.0.0-alpha8
 

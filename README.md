@@ -20,12 +20,20 @@ endorsed by xAI.
 Install the Drupal.org project with Composer, then enable the module:
 
 ```bash
-composer require 'drupal/grok:^1.0@beta'
-drush en grok_ai_provider
+composer require 'drupal/grok:^1.0@alpha'
+drush en grok
 ```
 
-The Drupal.org project machine name is `grok`; the module machine name is
-`grok_ai_provider`.
+The Drupal.org project and Drupal module machine name are both `grok`.
+
+### Upgrading from alpha8 or earlier
+
+The module machine name changed from `grok_ai_provider` to `grok` in alpha9.
+Drupal treats these as different modules. Before updating the code, record or
+export the existing provider settings, uninstall **Grok AI Provider**, update
+to alpha9, enable `grok`, and restore the settings. This deliberate pre-beta
+break avoids carrying the earlier naming inconsistency into beta and stable
+releases.
 
 Create a Key entity containing an xAI API key, then visit:
 
@@ -118,7 +126,7 @@ on the selected Media type and become permanent Media items.
 The included recipe installs the Grok AI Provider, AI, and Key modules:
 
 ```bash
-drush recipe web/modules/contrib/grok/recipes/grok_ai_provider
+drush recipe web/modules/contrib/grok/recipes/grok
 ```
 
 It does not install Language or Interface Translation and does not add
@@ -205,7 +213,7 @@ audio above 50 MB, generated video above 200 MB, source audio above 100 MB, and
 individual decoded generated images above 20 MB. Transfer callbacks abort
 oversized audio and video responses while they are being received. Long video
 requests still occupy a PHP worker while the asynchronous xAI operation is
-polled; queue-based generation is not included in beta1.
+polled; queue-based generation is not included in alpha9.
 
 ## Privacy and security
 

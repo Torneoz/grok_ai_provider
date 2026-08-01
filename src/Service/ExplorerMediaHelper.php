@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Service;
+namespace Drupal\grok\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
@@ -93,7 +93,7 @@ final class ExplorerMediaHelper {
       $selected = 'default';
     }
 
-    $module_path = $this->extensionPathResolver->getPath('module', 'grok_ai_provider');
+    $module_path = $this->extensionPathResolver->getPath('module', 'grok');
     $elements = [
       'image_source' => [
         '#type' => 'radios',
@@ -330,7 +330,7 @@ final class ExplorerMediaHelper {
    * Loads the module's bundled default image.
    */
   private function loadDefaultImage(): ImageFile {
-    $module_path = $this->extensionPathResolver->getPath('module', 'grok_ai_provider');
+    $module_path = $this->extensionPathResolver->getPath('module', 'grok');
     $path = DRUPAL_ROOT . '/' . $module_path . '/' . self::DEFAULT_IMAGE;
     $binary = file_get_contents($path);
     if ($binary === FALSE || $binary === '') {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Plugin\AiApiExplorer;
+namespace Drupal\grok\Plugin\AiApiExplorer;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -13,7 +13,7 @@ use Drupal\ai\Service\AiProviderFormHelper;
 use Drupal\ai_api_explorer\AiApiExplorerPluginBase;
 use Drupal\ai_api_explorer\Attribute\AiApiExplorer;
 use Drupal\ai_api_explorer\ExplorerHelper;
-use Drupal\grok_ai_provider\Service\ExplorerMediaHelper;
+use Drupal\grok\Service\ExplorerMediaHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -57,7 +57,7 @@ final class TextToVideoGenerator extends AiApiExplorerPluginBase {
       $container->get('ai_api_explorer.helper'),
       $container->get('ai.provider'),
       $container->get('file_system'),
-      $container->get('grok_ai_provider.explorer_media'),
+      $container->get('grok.explorer_media'),
     );
   }
 

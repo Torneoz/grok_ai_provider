@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
-use Drupal\grok_ai_provider\Form\GrokAiProviderConfigForm;
+use Drupal\grok\Form\GrokAiProviderConfigForm;
 use PHPUnit\Framework\TestCase;
 
 /**

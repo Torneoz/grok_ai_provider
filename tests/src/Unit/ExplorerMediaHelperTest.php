@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Extension\ExtensionPathResolver;
@@ -10,7 +10,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
-use Drupal\grok_ai_provider\Service\ExplorerMediaHelper;
+use Drupal\grok\Service\ExplorerMediaHelper;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,8 +56,8 @@ final class ExplorerMediaHelperTest extends TestCase {
 
     $extension_path = $this->createMock(ExtensionPathResolver::class);
     $extension_path->method('getPath')
-      ->with('module', 'grok_ai_provider')
-      ->willReturn('modules/contrib/grok_ai_provider');
+      ->with('module', 'grok')
+      ->willReturn('modules/contrib/grok');
 
     $form_state = $this->createMock(FormStateInterface::class);
     $form_state->method('getValue')->with('image_source')->willReturn(NULL);

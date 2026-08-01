@@ -1,9 +1,9 @@
 # Japanese basic translation for Grok AI Provider.
 # Copyright (C) 2026 Torneoz
-# This file is distributed under the same license as the grok_ai_provider package.
+# This file is distributed under the same license as the grok package.
 msgid ""
 msgstr ""
-"Project-Id-Version: grok_ai_provider 1.x\n"
+"Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2026-07-25 00:00+0000\n"
 "Last-Translator: Torneoz\n"

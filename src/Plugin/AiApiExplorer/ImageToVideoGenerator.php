@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Plugin\AiApiExplorer;
+namespace Drupal\grok\Plugin\AiApiExplorer;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -15,7 +15,7 @@ use Drupal\ai\Service\AiProviderFormHelper;
 use Drupal\ai_api_explorer\AiApiExplorerPluginBase;
 use Drupal\ai_api_explorer\Attribute\AiApiExplorer;
 use Drupal\ai_api_explorer\ExplorerHelper;
-use Drupal\grok_ai_provider\Service\ExplorerMediaHelper;
+use Drupal\grok\Service\ExplorerMediaHelper;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -59,7 +59,7 @@ final class ImageToVideoGenerator extends AiApiExplorerPluginBase {
       $container->get('ai_api_explorer.helper'),
       $container->get('ai.provider'),
       $container->get('file_system'),
-      $container->get('grok_ai_provider.explorer_media'),
+      $container->get('grok.explorer_media'),
     );
   }
 
@@ -81,7 +81,7 @@ final class ImageToVideoGenerator extends AiApiExplorerPluginBase {
     ) as $key => $element) {
       $form['left'][$key] = $element;
     }
-    $form['#validate'][] = 'grok_ai_provider_validate_explorer_image_source';
+    $form['#validate'][] = 'grok_validate_explorer_image_source';
     $this->aiProviderHelper->generateAiProvidersForm(
       $form['left'],
       $form_state,

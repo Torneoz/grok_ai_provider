@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\EventSubscriber;
+namespace Drupal\grok\EventSubscriber;
 
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\ai\Event\PostGenerateResponseEvent;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\OutputInterface;
-use Drupal\grok_ai_provider\Service\GrokCostEstimator;
+use Drupal\grok\Service\GrokCostEstimator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

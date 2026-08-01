@@ -3,7 +3,7 @@ description: Integrates xAI Grok models with Drupal AI for chat, images, video, 
 package: AI Providers
 type: module
 core_version_requirement: ^10.3 || ^11
-configure: grok_ai_provider.settings_form
+configure: grok.settings_form
 
 dependencies:
   - ai:ai

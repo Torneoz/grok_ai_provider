@@ -10,8 +10,8 @@ declare(strict_types=1);
 /**
  * Adds Responses transport and hosted-tool configuration defaults.
  */
-function grok_ai_provider_update_10001(): void {
-  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+function grok_update_10001(): void {
+  $config = \Drupal::configFactory()->getEditable('grok.settings');
   if ($config->get('transport') === NULL) {
     $config->set('transport', 'auto');
   }
@@ -36,8 +36,8 @@ function grok_ai_provider_update_10001(): void {
 /**
  * Adds a bounded timeout for synchronous Responses requests.
  */
-function grok_ai_provider_update_10002(): void {
-  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+function grok_update_10002(): void {
+  $config = \Drupal::configFactory()->getEditable('grok.settings');
   if ($config->get('request_timeout') === NULL) {
     $config->set('request_timeout', 300)->save(TRUE);
   }
@@ -46,8 +46,8 @@ function grok_ai_provider_update_10002(): void {
 /**
  * Adds the configurable default Grok model.
  */
-function grok_ai_provider_update_10003(): void {
-  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+function grok_update_10003(): void {
+  $config = \Drupal::configFactory()->getEditable('grok.settings');
   if ($config->get('default_model') === NULL) {
     $config->set('default_model', 'grok-4.5')->save(TRUE);
   }
@@ -56,8 +56,8 @@ function grok_ai_provider_update_10003(): void {
 /**
  * Adds pricing metadata and configurable Explorer prompt defaults.
  */
-function grok_ai_provider_update_10004(): void {
-  $config = \Drupal::configFactory()->getEditable('grok_ai_provider.settings');
+function grok_update_10004(): void {
+  $config = \Drupal::configFactory()->getEditable('grok.settings');
   $defaults = [
     'pricing_json' => '',
     'pricing_source' => 'packaged',
@@ -65,7 +65,7 @@ function grok_ai_provider_update_10004(): void {
     'pricing_hash' => '',
     'explorer_prompts' => array_map(
       static fn (mixed $prompt): string => (string) $prompt,
-      grok_ai_provider_explorer_prompt_defaults(),
+      grok_explorer_prompt_defaults(),
     ),
   ];
   foreach ($defaults as $key => $value) {

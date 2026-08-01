@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\Tests\grok_ai_provider\Unit;
+namespace Drupal\Tests\grok\Unit;
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -10,7 +10,7 @@ use Drupal\ai\Exception\AiAccessDeniedException;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiRateLimitException;
 use Drupal\ai\Exception\AiResponseErrorException;
-use Drupal\grok_ai_provider\Service\XaiImagesClient;
+use Drupal\grok\Service\XaiImagesClient;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;

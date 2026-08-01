@@ -1,4 +1,4 @@
-grok_ai_provider.settings:
+grok.settings:
   type: config_object
   label: 'Grok AI Provider settings'
   mapping:
@@ -91,6 +91,6 @@ grok_ai_provider.settings:
             sequence:
               type: string
 
-grok_ai_provider.default_operation_provider:
+grok.default_operation_provider:
   type: ai.default_operation_provider
   label: 'Default text to video provider'

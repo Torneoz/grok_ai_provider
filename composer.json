@@ -1,5 +1,5 @@
 {
-    "name": "torneoz/grok_ai_provider",
+    "name": "torneoz/grok",
     "description": "Provides Grok models from xAI to the Drupal AI module.",
     "type": "drupal-module",
     "license": "GPL-2.0-or-later",
@@ -8,6 +8,12 @@
         "issues": "https://github.com/Torneoz/grok_ai_provider/issues",
         "source": "https://github.com/Torneoz/grok_ai_provider"
     },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
     "require": {
         "php": ">=8.1",
         "drupal/core": "^10.3 || ^11",
@@ -20,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Drupal\\grok_ai_provider\\": "src/"
+            "Drupal\\grok\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Drupal\\Tests\\grok_ai_provider\\": "tests/src/"
+            "Drupal\\Tests\\grok\\": "tests/src/"
         }
     },
     "scripts": {
@@ -34,8 +40,11 @@
     },
     "config": {
         "allow-plugins": {
+            "drupal/core-composer-scaffold": false,
             "composer/installers": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-tuf/composer-stager": false,
+            "symfony/runtime": false
         },
         "sort-packages": true
     },

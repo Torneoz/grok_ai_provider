@@ -5,4 +5,4 @@ type: 'AI'
 install:
   - key
   - ai
-  - grok_ai_provider
+  - grok

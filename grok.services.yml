@@ -1,0 +1,34 @@
+services:
+  grok.responses_client:
+    class: Drupal\grok\Service\XaiResponsesClient
+    arguments: ['@http_client', '@string_translation']
+
+  grok.images_client:
+    class: Drupal\grok\Service\XaiImagesClient
+    arguments: ['@http_client', '@string_translation']
+
+  grok.videos_client:
+    class: Drupal\grok\Service\XaiVideosClient
+    arguments: ['@http_client', '@string_translation']
+
+  grok.audio_client:
+    class: Drupal\grok\Service\XaiAudioClient
+    arguments: ['@http_client', '@string_translation']
+
+  grok.explorer_results:
+    class: Drupal\grok\EventSubscriber\ExplorerResultSubscriber
+    arguments: ['@grok.cost_estimator']
+    tags:
+      - { name: event_subscriber }
+
+  grok.explorer_media:
+    class: Drupal\grok\Service\ExplorerMediaHelper
+    arguments: ['@module_handler', '@entity_type.manager', '@extension.path.resolver', '@file_system', '@request_stack']
+
+  grok.cost_estimator:
+    class: Drupal\grok\Service\GrokCostEstimator
+    arguments: ['@config.factory', '@extension.path.resolver', '@service_container']
+
+  grok.pricing_schedule_fetcher:
+    class: Drupal\grok\Service\XaiPricingScheduleFetcher
+    arguments: ['@http_client', '@grok.cost_estimator']

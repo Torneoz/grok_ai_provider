@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Drupal\grok_ai_provider\Plugin\AiProvider;
+namespace Drupal\grok\Plugin\AiProvider;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
@@ -42,13 +42,13 @@ use Drupal\ai\OperationType\TextToImage\TextToImageInput;
 use Drupal\ai\OperationType\TextToImage\TextToImageOutput;
 use Drupal\ai\OperationType\TextToSpeech\TextToSpeechInput;
 use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
-use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInput;
-use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoInterface;
-use Drupal\grok_ai_provider\OperationType\TextToVideo\TextToVideoOutput;
-use Drupal\grok_ai_provider\Service\XaiAudioClient;
-use Drupal\grok_ai_provider\Service\XaiImagesClient;
-use Drupal\grok_ai_provider\Service\XaiResponsesClient;
-use Drupal\grok_ai_provider\Service\XaiVideosClient;
+use Drupal\grok\OperationType\TextToVideo\TextToVideoInput;
+use Drupal\grok\OperationType\TextToVideo\TextToVideoInterface;
+use Drupal\grok\OperationType\TextToVideo\TextToVideoOutput;
+use Drupal\grok\Service\XaiAudioClient;
+use Drupal\grok\Service\XaiImagesClient;
+use Drupal\grok\Service\XaiResponsesClient;
+use Drupal\grok\Service\XaiVideosClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -142,10 +142,10 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
-    $instance->responsesClient = $container->get('grok_ai_provider.responses_client');
-    $instance->imagesClient = $container->get('grok_ai_provider.images_client');
-    $instance->videosClient = $container->get('grok_ai_provider.videos_client');
-    $instance->audioClient = $container->get('grok_ai_provider.audio_client');
+    $instance->responsesClient = $container->get('grok.responses_client');
+    $instance->imagesClient = $container->get('grok.images_client');
+    $instance->videosClient = $container->get('grok.videos_client');
+    $instance->audioClient = $container->get('grok.audio_client');
     return $instance;
   }
 
