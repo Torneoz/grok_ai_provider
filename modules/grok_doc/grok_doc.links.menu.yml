@@ -1,6 +1,0 @@
-grok_doc.collections:
-  title: 'Grok collections'
-  description: 'Manage xAI Collections and indexed documents.'
-  route_name: entity.grok_doc_collection.collection
-  parent: system.admin_config_ai
-

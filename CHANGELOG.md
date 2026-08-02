@@ -1,16 +1,10 @@
 # Changelog
 
-## 1.1.0-alpha1 (unreleased)
+## Unreleased
 
-- Added the optional experimental `grok_doc` submodule for registering existing
-  xAI Collections and bulk-ingesting Drupal-managed documents.
-- Added queued uploads, indexing-state tracking, SHA-256 duplicate detection,
-  batch metadata, least-privilege Management-key configuration, and import size
-  limits.
-- Added an allowlist boundary so Collections Search can only use registrations
-  explicitly approved by Grok Documents when the submodule is installed.
-- Remote Collection creation and destructive deletion remain intentionally out
-  of scope for the first alpha.
+- Added an optional integration boundary that restricts Collections Search to
+  registrations approved by the standalone Grok Documents module when that
+  module is installed.
 
 ## 1.0.0-beta1
 

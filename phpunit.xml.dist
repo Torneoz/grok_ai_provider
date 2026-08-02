@@ -7,7 +7,6 @@
   <testsuites>
     <testsuite name="Grok AI Provider unit tests">
       <directory>tests/src/Unit</directory>
-      <directory>modules/grok_doc/tests/src/Unit</directory>
     </testsuite>
   </testsuites>
 </phpunit>
