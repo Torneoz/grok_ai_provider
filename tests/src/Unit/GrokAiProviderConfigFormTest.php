@@ -63,4 +63,23 @@ final class GrokAiProviderConfigFormTest extends TestCase {
     );
   }
 
+  /**
+   * Ensures the About section uses the injected extension list service.
+   */
+  public function testAboutVersionUsesInjectedModuleList(): void {
+    $source = file_get_contents(
+      (new \ReflectionClass(GrokAiProviderConfigForm::class))->getFileName(),
+    );
+
+    self::assertIsString($source);
+    self::assertStringContainsString(
+      "\$this->moduleList->getExtensionInfo('grok')",
+      $source,
+    );
+    self::assertStringNotContainsString(
+      "\$module_list->getExtensionInfo('grok')",
+      $source,
+    );
+  }
+
 }
