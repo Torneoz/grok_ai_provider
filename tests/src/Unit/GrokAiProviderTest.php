@@ -10,6 +10,7 @@ use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\Exception\AiBadRequestException;
 use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\ai\OperationType\Chat\ChatMessage;
+use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\AudioFile;
 use Drupal\ai\OperationType\GenericType\ImageFile;
@@ -30,6 +31,19 @@ use PHPUnit\Framework\TestCase;
  * Tests Grok-specific model filtering and settings.
  */
 final class GrokAiProviderTest extends TestCase {
+
+  /**
+   * Tests the Drupal AI string-input chat contract.
+   */
+  public function testNormalizesStringChatInput(): void {
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'normalizeChatInput');
+    $input = $method->invoke($this->newProviderWithoutConstructor(), 'Reply only: OK');
+
+    self::assertInstanceOf(ChatInput::class, $input);
+    self::assertCount(1, $input->getMessages());
+    self::assertSame('user', $input->getMessages()[0]->getRole());
+    self::assertSame('Reply only: OK', $input->getMessages()[0]->getText());
+  }
 
   /**
    * Tests video-model filtering and image-input capability checks.

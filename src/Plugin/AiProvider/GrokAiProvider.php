@@ -540,6 +540,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * {@inheritdoc}
    */
   public function chat(array|string|ChatInput $input, string $model_id, array $tags = []): ChatOutput {
+    $input = $this->normalizeChatInput($input);
     if (!$this->shouldUseResponses($input)) {
       return parent::chat($input, $model_id, $tags);
     }
@@ -562,6 +563,15 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       $timeout,
     );
     return $this->normalizeResponsesOutput($response);
+  }
+
+  /**
+   * Converts Drupal AI's shorthand string input to a valid chat message list.
+   */
+  private function normalizeChatInput(array|string|ChatInput $input): array|ChatInput {
+    return is_string($input)
+      ? new ChatInput([new ChatMessage('user', $input)])
+      : $input;
   }
 
   /**

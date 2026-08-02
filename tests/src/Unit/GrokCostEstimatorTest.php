@@ -43,6 +43,8 @@ final class GrokCostEstimatorTest extends TestCase {
 
   /**
    * Tests non-token image, video, and voice estimates.
+   *
+   * @dataProvider estimateProvider
    */
   #[DataProvider('estimateProvider')]
   public function testEstimatesMediaAndVoice(array $pricing, string $operation, string $model, array $configuration, mixed $input, array $metadata, float $expected): void {

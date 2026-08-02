@@ -9,7 +9,9 @@ use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Exception\AiResponseErrorException;
 use Drupal\grok\Service\XaiVideosClient;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\Uri;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -105,6 +107,83 @@ final class XaiVideosClientTest extends TestCase {
       30,
       0,
     );
+  }
+
+  /**
+   * Tests that a compatible gateway cannot point downloads at a private IP.
+   */
+  public function testRejectsPrivateVideoDownloadIp(): void {
+    $method = new \ReflectionMethod(XaiVideosClient::class, 'assertAllowedDownloadUrl');
+
+    $this->expectException(AiResponseErrorException::class);
+    $this->expectExceptionMessage('private or reserved');
+    $method->invoke(
+      $this->createClient($this->createMock(ClientInterface::class)),
+      'https://127.0.0.1/video.mp4',
+      'https://127.0.0.1/v1',
+    );
+  }
+
+  /**
+   * Tests that every generated-video redirect is independently allowlisted.
+   */
+  public function testRejectsUntrustedVideoRedirect(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->method('request')
+      ->willReturnCallback(static function (string $method, string $url, array $options): Response {
+        $options['allow_redirects']['on_redirect'](
+          new Request($method, $url),
+          new Response(302),
+          new Uri('https://internal.example/video.mp4'),
+        );
+        return new Response(200, [], '0000ftypisom-video');
+      });
+    $method = new \ReflectionMethod(XaiVideosClient::class, 'download');
+
+    $this->expectException(AiResponseErrorException::class);
+    $this->expectExceptionMessage('outside the trusted asset hosts');
+    $method->invoke(
+      $this->createClient($http_client),
+      'https://vidgen.x.ai/video.mp4',
+      'https://api.x.ai/v1',
+      30,
+    );
+  }
+
+  /**
+   * Tests that declared oversized video transfers are aborted at the headers.
+   */
+  public function testRejectsOversizedVideoDownload(): void {
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->method('request')
+      ->willReturnCallback(static function (string $method, string $url, array $options): Response {
+        $options['on_headers'](new Response(200, [
+          'Content-Length' => (string) (201 * 1024 * 1024),
+        ]));
+        return new Response(200, [], '0000ftypisom-video');
+      });
+    $method = new \ReflectionMethod(XaiVideosClient::class, 'download');
+
+    $this->expectException(AiResponseErrorException::class);
+    $this->expectExceptionMessage('exceeds the maximum allowed size');
+    $method->invoke(
+      $this->createClient($http_client),
+      'https://vidgen.x.ai/video.mp4',
+      'https://api.x.ai/v1',
+      30,
+    );
+  }
+
+  /**
+   * Tests that every request receives only the remaining overall deadline.
+   */
+  public function testBoundsRemainingVideoDeadline(): void {
+    $method = new \ReflectionMethod(XaiVideosClient::class, 'remainingSeconds');
+    $client = $this->createClient($this->createMock(ClientInterface::class));
+
+    self::assertSame(1, $method->invoke($client, microtime(TRUE) - 10));
+    self::assertLessThanOrEqual(2, $method->invoke($client, microtime(TRUE) + 1));
+    self::assertSame(3600, $method->invoke($client, microtime(TRUE) + 7200));
   }
 
   /**

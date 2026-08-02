@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.0.0-beta1
+
+- Added an explicit CI dependency matrix covering Drupal 10.6 with minimum
+  dependencies and Drupal 11 with current dependencies.
+- Raised the supported Drupal floor to 10.6 and Drupal 11.2 to match maintained
+  Drupal core and current Drupal AI 1.4 dependency constraints.
+- Added reproducible release-archive verification and a required release
+  evidence record for integration, upgrade-path, and live API smoke tests.
+- Updated release-facing documentation and fallback version metadata for the
+  beta channel.
+- Documented that the optional recipe uses Drupal 11's supported recipe runner;
+  Drupal 10 installations continue to use Composer and direct enablement.
+- Fixed string chat inputs being forwarded as an invalid Chat Completions
+  `messages` payload instead of a Drupal AI user message.
+- Added ignore rules for local dependencies, test caches, editor settings, and
+  operating-system metadata.
+
 ## 1.0.0-alpha9
 
 - Renamed the Drupal module machine name from `grok_ai_provider` to `grok` so

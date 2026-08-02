@@ -14,7 +14,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: ['8.1', '8.3']
+        include:
+          - name: Drupal 10.6 / minimum dependencies
+            php: '8.1'
+            drupal: '^10.6'
+            dependency_flags: '--prefer-lowest'
+          - name: Drupal 11 / current dependencies
+            php: '8.3'
+            drupal: '^11'
+            dependency_flags: ''
+    name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
@@ -23,6 +32,21 @@ jobs:
           coverage: none
           tools: composer:v2
       - run: composer validate --strict
-      - run: composer install --no-interaction --prefer-dist
+      - name: Select Drupal core version
+        run: composer require --no-interaction --no-update "drupal/core:${{ matrix.drupal }}"
+      - name: Resolve dependency matrix
+        run: composer update --no-interaction --prefer-dist --with-all-dependencies ${{ matrix.dependency_flags }}
       - run: composer phpcs
       - run: composer test
+
+  release-archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reject forbidden release files
+        run: |
+          git archive --format=tar HEAD > /tmp/grok-release.tar
+          if tar -tf /tmp/grok-release.tar | grep -E '(^|/)(\.DS_Store|\.vscode|vendor|composer\.lock|\.phpunit\.cache)(/|$)|\.(env|key|pem|mp3|mp4)$'; then
+            echo 'Forbidden local, credential, or generated-media file found in release archive.' >&2
+            exit 1
+          fi

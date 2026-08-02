@@ -22,6 +22,8 @@ final class ExplorerMediaHelperTest extends TestCase {
 
   /**
    * Tests Media Library and autocomplete value normalization.
+   *
+   * @dataProvider mediaValues
    */
   #[DataProvider('mediaValues')]
   public function testNormalizesSelectedMediaId(mixed $value, int $expected): void {

@@ -50,6 +50,8 @@ final class XaiResponsesClientTest extends TestCase {
 
   /**
    * Tests provider-neutral HTTP exception mapping.
+   *
+   * @dataProvider errorMappingProvider
    */
   #[DataProvider('errorMappingProvider')]
   public function testMapsHttpErrors(int $status, string $expected_exception): void {

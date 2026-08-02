@@ -11,7 +11,7 @@ endorsed by xAI.
 ## Requirements
 
 - PHP 8.1 or later
-- Drupal 10.3 or Drupal 11
+- Drupal 10.6 or Drupal 11.2+
 - [AI 1.4 or later](https://www.drupal.org/project/ai)
 - [Key 1.22 or later](https://www.drupal.org/project/key)
 
@@ -20,7 +20,7 @@ endorsed by xAI.
 Install the Drupal.org project with Composer, then enable the module:
 
 ```bash
-composer require 'drupal/grok:^1.0@alpha'
+composer require 'drupal/grok:^1.0@beta'
 drush en grok
 ```
 
@@ -121,13 +121,18 @@ Explorers offer **Save to Media**. Only Media types whose source field accepts
 MP3 or MP4 respectively are offered. Saved files use the destination configured
 on the selected Media type and become permanent Media items.
 
-### Optional recipe
+### Optional recipe (Drupal 11)
 
-The included recipe installs the Grok AI Provider, AI, and Key modules:
+The included recipe installs the Grok AI Provider, AI, and Key modules. Apply
+it from a Drupal 11.2 or later project root:
 
 ```bash
-drush recipe web/modules/contrib/grok/recipes/grok
+vendor/bin/dr recipe web/modules/contrib/grok/recipes/grok
 ```
+
+On Drupal 10.6, install the module and its dependencies with Composer and
+enable `grok` directly as described above. Drupal 10's experimental recipe
+runner cannot apply this recipe reliably.
 
 It does not install Language or Interface Translation and does not add
 languages. Sites that already use Drupal localization can import the packaged
@@ -213,7 +218,7 @@ audio above 50 MB, generated video above 200 MB, source audio above 100 MB, and
 individual decoded generated images above 20 MB. Transfer callbacks abort
 oversized audio and video responses while they are being received. Long video
 requests still occupy a PHP worker while the asynchronous xAI operation is
-polled; queue-based generation is not included in alpha9.
+polled; queue-based generation is not included in beta1.
 
 ## Privacy and security
 
