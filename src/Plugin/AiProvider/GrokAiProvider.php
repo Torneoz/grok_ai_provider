@@ -6,6 +6,7 @@ namespace Drupal\grok\Plugin\AiProvider;
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Component\Utility\Crypt;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\ai\Attribute\AiProvider;
@@ -138,6 +139,11 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   private XaiAudioClient $audioClient;
 
   /**
+   * Entity storage used for optional Grok Documents allowlisting.
+   */
+  private EntityTypeManagerInterface $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
@@ -146,6 +152,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     $instance->imagesClient = $container->get('grok.images_client');
     $instance->videosClient = $container->get('grok.videos_client');
     $instance->audioClient = $container->get('grok.audio_client');
+    $instance->entityTypeManager = $container->get('entity_type.manager');
     return $instance;
   }
 
@@ -1970,6 +1977,18 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
           throw new AiBadRequestException((string) $this->t('"@collection_id" is not a valid xAI collection ID.', [
             '@collection_id' => $collection_id,
           ]));
+        }
+      }
+      if ($this->entityTypeManager->hasDefinition('grok_doc_collection')) {
+        $registered = $this->entityTypeManager
+          ->getStorage('grok_doc_collection')
+          ->loadByProperties(['searchable' => TRUE]);
+        $allowed = array_map(
+          static fn ($collection): string => $collection->getRemoteId(),
+          $registered,
+        );
+        if (array_diff($collection_ids, $allowed) !== []) {
+          throw new AiBadRequestException((string) $this->t('Collections Search requested an xAI collection that is not approved by Grok Documents.'));
         }
       }
       $tools[] = [

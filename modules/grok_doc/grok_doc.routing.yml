@@ -1,0 +1,56 @@
+entity.grok_doc_collection.collection:
+  path: '/admin/config/ai/grok/documents/collections'
+  defaults:
+    _entity_list: 'grok_doc_collection'
+    _title: 'Grok collections'
+  requirements:
+    _permission: 'view grok collection status'
+
+entity.grok_doc_collection.add_form:
+  path: '/admin/config/ai/grok/documents/collections/add'
+  defaults:
+    _entity_form: 'grok_doc_collection.add'
+    _title: 'Add Grok collection'
+  requirements:
+    _permission: 'administer grok collections'
+
+entity.grok_doc_collection.edit_form:
+  path: '/admin/config/ai/grok/documents/collections/{grok_doc_collection}'
+  defaults:
+    _entity_form: 'grok_doc_collection.edit'
+    _title: 'Edit Grok collection'
+  requirements:
+    _permission: 'administer grok collections'
+
+entity.grok_doc_collection.delete_form:
+  path: '/admin/config/ai/grok/documents/collections/{grok_doc_collection}/delete'
+  defaults:
+    _entity_form: 'grok_doc_collection.delete'
+    _title: 'Delete Grok collection registration'
+  requirements:
+    _permission: 'administer grok collections'
+
+entity.grok_doc_document.collection:
+  path: '/admin/config/ai/grok/documents'
+  defaults:
+    _entity_list: 'grok_doc_document'
+    _title: 'Grok documents'
+  requirements:
+    _permission: 'view grok collection status'
+
+grok_doc.import:
+  path: '/admin/config/ai/grok/documents/import'
+  defaults:
+    _form: '\Drupal\grok_doc\Form\BulkImportForm'
+    _title: 'Import Grok documents'
+  requirements:
+    _permission: 'upload grok collection documents'
+
+grok_doc.process:
+  path: '/admin/config/ai/grok/documents/process'
+  defaults:
+    _form: '\Drupal\grok_doc\Form\ProcessQueueForm'
+    _title: 'Process Grok document queue'
+  requirements:
+    _permission: 'administer grok collections'
+

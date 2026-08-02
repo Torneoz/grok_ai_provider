@@ -1,0 +1,29 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall safeguards for Grok Documents.
+ */
+
+declare(strict_types=1);
+
+/**
+ * Implements hook_requirements().
+ */
+function grok_doc_requirements(string $phase): array {
+  if ($phase !== 'runtime') {
+    return [];
+  }
+  $failed = \Drupal::entityQuery('grok_doc_document')
+    ->accessCheck(FALSE)
+    ->condition('status', 'failed')
+    ->count()
+    ->execute();
+  return [
+    'grok_doc_failed' => [
+      'title' => t('Grok Documents'),
+      'value' => $failed ? t('@count failed ingestion record(s)', ['@count' => $failed]) : t('No failed ingestion records'),
+      'severity' => $failed ? REQUIREMENT_WARNING : REQUIREMENT_OK,
+    ],
+  ];
+}
