@@ -218,7 +218,7 @@ audio above 50 MB, generated video above 200 MB, source audio above 100 MB, and
 individual decoded generated images above 20 MB. Transfer callbacks abort
 oversized audio and video responses while they are being received. Long video
 requests still occupy a PHP worker while the asynchronous xAI operation is
-polled; queue-based generation is not included in beta1.
+polled; queue-based generation is not included in the current beta.
 
 ## Privacy and security
 

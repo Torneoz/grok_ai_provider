@@ -1,4 +1,4 @@
-name: Grok AI Provider
+name: Grok Integration
 description: Integrates xAI Grok models with Drupal AI for chat, images, video, classification, moderation, and hosted tools.
 package: AI Providers
 type: module

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"PO-Revision-Date: 2026-08-03 00:00+0000\n"
 "Last-Translator: Torneoz\n"
 "Language-Team: Japanese\n"
 "Language: ja\n"
@@ -67,6 +67,9 @@ msgstr "Grok xAi プロバイダー"
 
 msgid "Grok AI Provider"
 msgstr "Grok AI プロバイダー"
+
+msgid "Grok Integration"
+msgstr "Grok 統合"
 
 msgid "Unofficial"
 msgstr "非公式"

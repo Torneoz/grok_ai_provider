@@ -501,7 +501,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     ];
 
     $module_info = $this->moduleList->getExtensionInfo('grok');
-    $version = (string) ($module_info['version'] ?? '1.0.0-beta1');
+    $version = (string) ($module_info['version'] ?? '1.0.0-beta2');
     $form['about'] = [
       '#type' => 'details',
       '#title' => $this->t('About'),

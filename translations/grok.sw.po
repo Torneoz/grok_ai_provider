@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-25 00:00+0000\n"
+"PO-Revision-Date: 2026-08-03 00:00+0000\n"
 "Last-Translator: Torneoz\n"
 "Language-Team: Swahili\n"
 "Language: sw\n"
@@ -67,6 +67,9 @@ msgstr "Mtoa huduma wa Grok xAi"
 
 msgid "Grok AI Provider"
 msgstr "Mtoa huduma wa AI wa Grok"
+
+msgid "Grok Integration"
+msgstr "Muunganisho wa Grok"
 
 msgid "Unofficial"
 msgstr "Isiyo rasmi"

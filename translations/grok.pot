@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-07-25 11:26+0930\n"
+"POT-Creation-Date: 2026-08-03 00:00+0930\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,6 +23,10 @@ msgstr ""
 
 #: src/Form/GrokAiProviderConfigForm.php:97
 msgid "Grok AI Provider"
+msgstr ""
+
+#: grok.info.yml:1 grok.links.menu.yml:8
+msgid "Grok Integration"
 msgstr ""
 
 #: src/Form/GrokAiProviderConfigForm.php:106

@@ -1,10 +1,17 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-beta2
 
 - Added an optional integration boundary that restricts Collections Search to
   registrations approved by the standalone Grok Documents module when that
   module is installed.
+- Renamed the module and Torneoz administration labels to “Grok Integration”
+  while retaining “Grok AI Provider” where it describes the provider itself.
+- Fixed the configuration form version lookup after the module machine-name
+  change from `grok_ai_provider` to `grok`.
+- Updated the translation template and all ten packaged translations for the
+  new administration label.
+- Moved Grok Documents into its own standalone project and repository.
 
 ## 1.0.0-beta1
 
