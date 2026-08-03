@@ -1,5 +1,5 @@
-name: 'Grok AI Provider'
-description: 'Installs the Grok AI provider and its required integrations.'
+name: 'Grok Integration'
+description: 'Installs Grok Integration and its required Drupal AI dependencies.'
 type: 'AI'
 
 install:

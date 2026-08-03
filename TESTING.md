@@ -21,7 +21,7 @@ normal resolution.
 
 Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
 
-1. Install Key, AI, and Grok AI Provider directly on both versions, and through
+1. Install Key, AI, and Grok Integration directly on both versions, and through
    the recipe on Drupal 11.
 2. Run database updates from a database last used by every published alpha.
 3. Validate exported configuration with Drupal's typed configuration manager.

@@ -2,6 +2,12 @@
 
 ## 1.0.0-beta2
 
+- Standardized release documentation and recipe metadata on the name “Grok
+  Integration”. Historical upgrade instructions retain the former module name
+  where users must identify and uninstall it.
+- Documented Grok Collections Search under supported operations and the
+  optional Grok Documents (`grok_doc`) module for collection registration,
+  document upload, and queued bulk ingestion.
 - Added an optional integration boundary that restricts Collections Search to
   registrations approved by the standalone Grok Documents module when that
   module is installed.

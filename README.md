@@ -1,4 +1,4 @@
-# Grok AI Provider
+# Grok Integration
 
 Provides xAI Grok chat, image generation, image editing, video generation,
 text-to-speech, and speech-to-text to Drupal through the AI module, together
@@ -30,7 +30,8 @@ The Drupal.org project and Drupal module machine name are both `grok`.
 
 The module machine name changed from `grok_ai_provider` to `grok` in alpha9.
 Drupal treats these as different modules. Before updating the code, record or
-export the existing provider settings, uninstall **Grok AI Provider**, update
+export the existing provider settings, uninstall the former **Grok AI
+Provider** module, update
 to alpha9, enable `grok`, and restore the settings. This deliberate pre-beta
 break avoids carrying the earlier naming inconsistency into beta and stable
 releases.
@@ -123,7 +124,7 @@ on the selected Media type and become permanent Media items.
 
 ### Optional recipe (Drupal 11)
 
-The included recipe installs the Grok AI Provider, AI, and Key modules. Apply
+The included recipe installs Grok Integration, AI, and Key. Apply
 it from a Drupal 11.2 or later project root:
 
 ```bash
@@ -138,7 +139,7 @@ It does not install Language or Interface Translation and does not add
 languages. Sites that already use Drupal localization can import the packaged
 translations independently.
 
-## Supported features
+## Supported operations
 
 - Text chat and streaming
 - Image input on supported Grok models
@@ -164,6 +165,9 @@ translations independently.
   hosted-tool requests use the Responses API
 - Opt-in xAI Web Search, X Search, Code Interpreter, Collections Search,
   and allowlisted remote MCP servers
+- Grok Collections knowledge-base search, with optional collection registration,
+  document upload, and queued bulk ingestion supplied by the standalone
+  [Grok Documents (`grok_doc`)](https://github.com/Torneoz/grok_doc) module
 - Responses citations, response IDs, hosted-tool output, and reasoning usage
   preserved in `ChatOutput` metadata and raw output
 - Grok-specific Explorer example prompts, usage summaries, reported or
@@ -188,8 +192,12 @@ Responses are not stored by xAI unless an administrator opts in. Drupal
 function tools continue to use Chat Completions so the existing Drupal AI tool
 execution loop remains unchanged.
 
-Streaming Responses requests, stateful response continuation, and
-collection/file management are not yet included. Streaming ordinary chat
+Streaming Responses requests and stateful response continuation are not yet
+included. Grok Integration includes Collections Search but does not itself
+manage collections or documents. Install the optional, separately maintained
+[Grok Documents (`grok_doc`)](https://github.com/Torneoz/grok_doc) module for
+registration of existing xAI Collections, document upload, and queued bulk
+ingestion. Streaming ordinary chat
 continues to work through Chat Completions, including when the provider-wide
 transport preference is Responses. Hosted tools are never silently removed
 from a streamed request.
