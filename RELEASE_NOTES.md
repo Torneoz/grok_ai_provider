@@ -1,27 +1,20 @@
 # Release notes
 
-## Grok Integration 1.0.0-beta2
+## Grok Integration 1.0.0-beta3
 
-Grok Integration 1.0.0-beta2 is the second beta of the Drupal AI integration
-for xAI. It fixes configuration after the module machine-name transition,
-standardizes the public module name, and introduces a safe integration boundary
-for the optional Grok Documents project.
+Grok Integration 1.0.0-beta3 is the third beta of the Drupal AI integration
+for xAI. It completes translation handling for provider metadata and improves
+the guidance attached to configurable Explorer prompts.
 
 ### Highlights
 
-- The module is now consistently presented as **Grok Integration** in current
-  documentation, administration labels, recipe metadata, and release material.
-- The provider configuration form now obtains extension information from the
-  correct `grok` module, fixing the fatal error that could occur after the old
-  `grok_ai_provider` machine name was removed.
-- Collections Search remains an opt-in xAI hosted tool in Grok Integration.
-  When the separately installed Grok Documents (`grok_doc`) module is present,
-  searches can be restricted to collection registrations approved there.
-- Grok Documents provides the optional administration workflow for registering
-  existing xAI Collections, uploading documents, and processing bulk ingestion
-  through Drupal queues. It remains a separate project and dependency.
-- The translation template and all ten packaged translations include the new
-  administration label.
+- Provider API-definition descriptions and form-visible example values now use
+  Drupal's String Translation API.
+- The text-to-video default-provider schema label is now translatable.
+- Every configurable Explorer default prompt has help text explaining where
+  the example is displayed.
+- The translation template and all ten packaged language catalogs include the
+  newly exposed interface strings.
 
 ### Requirements
 
@@ -44,7 +37,7 @@ needs to administer collection registrations or document ingestion.
 
 ### Upgrade notes
 
-Sites already running `1.0.0-beta1` can update normally and should rebuild
+Sites already running `1.0.0-beta1` or `1.0.0-beta2` can update normally and should rebuild
 Drupal caches after deployment.
 
 Sites upgrading from alpha8 or earlier must first export or record their
@@ -66,10 +59,11 @@ settings. Drupal treats the old and new machine names as separate modules.
 
 ### Release verification
 
-The beta2 candidate passed the PHP coding-standard and unit-test suites (79
-tests, 274 assertions), translation catalog validation, and the GitHub Actions
-dependency matrix for Drupal 10.6 with minimum dependencies and Drupal 11 with
-current dependencies. The release archive job also passed.
+The beta3 candidate passed Composer validation, the PHP coding-standard and
+unit-test suites (79 tests, 274 assertions), translation catalog validation,
+and local release-archive inspection. The published commit is also subject to
+the GitHub Actions dependency matrix for Drupal 10.6 with minimum dependencies
+and Drupal 11 with current dependencies.
 
 See [CHANGELOG.md](CHANGELOG.md), [TESTING.md](TESTING.md), and
 [SECURITY.md](SECURITY.md) for the complete history, release gate, and security

@@ -51,7 +51,7 @@ function grok_ai_operation_types_alter(array &$operation_types): void {
  */
 function grok_config_schema_info_alter(array &$definitions): void {
   $definitions['ai.settings']['mapping']['default_providers']['mapping']['text_to_video'] = [
-    'label' => 'Default text to video provider',
+    'label' => new TranslatableMarkup('Default text to video provider'),
     'type' => 'grok.default_operation_provider',
   ];
 }

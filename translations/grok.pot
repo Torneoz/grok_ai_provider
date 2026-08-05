@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-03 00:00+0930\n"
+"POT-Creation-Date: 2026-08-06 00:00+0930\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1579,4 +1579,58 @@ msgstr ""
 
 #: src/Service/XaiAudioClient.php
 msgid "xAI returned text-to-speech data that is not a valid MP3 stream."
+msgstr ""
+
+#: grok.module
+msgid "Default text to video provider"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid "Example user message shown in the Chat Generation Explorer."
+msgstr ""
+
+msgid "Example editing instructions shown in the Image-To-Image Explorer."
+msgstr ""
+
+msgid "Example video description shown in the Text-To-Video Generation Explorer."
+msgstr ""
+
+msgid "Example content shown in the Moderation Explorer."
+msgstr ""
+
+msgid "Example image description shown in the Text-To-Image Generation Explorer."
+msgstr ""
+
+msgid "Example narration shown in the Text-To-Speech Explorer."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php
+msgid "Messages supplied to the model."
+msgstr ""
+
+msgid "A text description of the image to generate."
+msgstr ""
+
+msgid "A source image to edit."
+msgstr ""
+
+msgid "A text description of the video to generate."
+msgstr ""
+
+msgid "A still image to animate."
+msgstr ""
+
+msgid "xAI API key."
+msgstr ""
+
+msgid "You are a helpful assistant."
+msgstr ""
+
+msgid "Introduce yourself!"
+msgstr ""
+
+msgid "Welcome to the Grok AI Provider for Drupal."
+msgstr ""
+
+msgid "Make the flag wave. Halfway through, have a huge crack of lightning appear."
 msgstr ""

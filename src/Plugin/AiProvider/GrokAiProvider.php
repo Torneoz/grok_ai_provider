@@ -280,6 +280,44 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   /**
    * {@inheritdoc}
    */
+  public function getApiDefinition(): array {
+    $definition = parent::getApiDefinition();
+    $input_descriptions = [
+      'chat' => $this->t('Messages supplied to the model.'),
+      'moderation' => $this->t('Text content to assess for potentially harmful material.'),
+      'image_classification' => $this->t('An image and optional candidate labels to classify.'),
+      'text_to_speech' => $this->t('Text to convert into spoken audio.'),
+      'speech_to_text' => $this->t('Audio file to transcribe.'),
+      'text_to_image' => $this->t('A text description of the image to generate.'),
+      'image_to_image' => $this->t('A source image to edit.'),
+      'text_to_video' => $this->t('A text description of the video to generate.'),
+      'image_to_video' => $this->t('A still image to animate.'),
+    ];
+    foreach ($definition as $operation => &$operation_definition) {
+      if (!is_array($operation_definition)) {
+        continue;
+      }
+      if (isset($input_descriptions[$operation], $operation_definition['input'])) {
+        $operation_definition['input']['description'] = $input_descriptions[$operation];
+      }
+      if (isset($operation_definition['authentication'])) {
+        $operation_definition['authentication']['description'] = $this->t('xAI API key.');
+      }
+    }
+    unset($operation_definition);
+
+    // These example values can be displayed in provider configuration forms.
+    $definition['chat']['input']['default'][0]['content'] = (string) $this->t('You are a helpful assistant.');
+    $definition['chat']['input']['default'][1]['content'] = (string) $this->t('Introduce yourself!');
+    $definition['text_to_speech']['input']['default'] = (string) $this->t('Welcome to the Grok AI Provider for Drupal.');
+    $definition['image_to_video']['configuration']['prompt']['default'] = (string) $this->t('Make the flag wave. Halfway through, have a huge crack of lightning appear.');
+
+    return $definition;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getModelSettings(string $model_id, array $generalConfig = []): array {
     if (!preg_match('/^grok-4/i', $model_id)) {
       foreach ([

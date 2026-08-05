@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-beta3
+
+- Made the text-to-video default-provider schema label translatable.
+- Applied Drupal string translation to API-definition input and authentication
+  descriptions and to example values that can appear in provider forms.
+- Added translated help descriptions to every configurable Explorer default
+  prompt field.
+- Updated the translation template and all ten packaged language catalogs with
+  the newly exposed interface strings.
+
 ## 1.0.0-beta2
 
 - Standardized release documentation and recipe metadata on the name “Grok

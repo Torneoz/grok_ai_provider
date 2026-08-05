@@ -304,17 +304,36 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ],
     ];
     foreach ([
-      'chat' => $this->t('Chat prompt'),
-      'image_to_image' => $this->t('Image-to-image prompt'),
-      'text_to_video' => $this->t('Text-to-video prompt'),
-      'moderation' => $this->t('Moderation prompt'),
-      'text_to_image' => $this->t('Text-to-image prompt'),
-      'text_to_speech' => $this->t('Text-to-speech prompt'),
-    ] as $key => $label) {
+      'chat' => [
+        'label' => $this->t('Chat prompt'),
+        'description' => $this->t('Example user message shown in the Chat Generation Explorer.'),
+      ],
+      'image_to_image' => [
+        'label' => $this->t('Image-to-image prompt'),
+        'description' => $this->t('Example editing instructions shown in the Image-To-Image Explorer.'),
+      ],
+      'text_to_video' => [
+        'label' => $this->t('Text-to-video prompt'),
+        'description' => $this->t('Example video description shown in the Text-To-Video Generation Explorer.'),
+      ],
+      'moderation' => [
+        'label' => $this->t('Moderation prompt'),
+        'description' => $this->t('Example content shown in the Moderation Explorer.'),
+      ],
+      'text_to_image' => [
+        'label' => $this->t('Text-to-image prompt'),
+        'description' => $this->t('Example image description shown in the Text-To-Image Generation Explorer.'),
+      ],
+      'text_to_speech' => [
+        'label' => $this->t('Text-to-speech prompt'),
+        'description' => $this->t('Example narration shown in the Text-To-Speech Explorer.'),
+      ],
+    ] as $key => $prompt) {
       $configured_prompt = $config->get('explorer_prompts.' . $key);
       $form['explorer_prompts'][$key] = [
         '#type' => 'textarea',
-        '#title' => $label,
+        '#title' => $prompt['label'],
+        '#description' => $prompt['description'],
         '#default_value' => is_string($configured_prompt)
           ? $configured_prompt
           : (string) $prompt_defaults[$key],
@@ -501,7 +520,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     ];
 
     $module_info = $this->moduleList->getExtensionInfo('grok');
-    $version = (string) ($module_info['version'] ?? '1.0.0-beta2');
+    $version = (string) ($module_info['version'] ?? '1.0.0-beta3');
     $form['about'] = [
       '#type' => 'details',
       '#title' => $this->t('About'),

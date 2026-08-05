@@ -5,6 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-06 00:00+0930\n"
 "PO-Revision-Date: 2026-08-03 00:00+0000\n"
 "Last-Translator: Torneoz\n"
 "Language-Team: Hindi\n"
@@ -14,11 +15,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: src/Form/GrokAiProviderConfigForm.php:91
+msgid "Grok"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:97
+msgid "Grok AI Provider"
+msgstr "Grok AI प्रदाता"
+
+#: grok.info.yml:1 grok.links.menu.yml:8
+msgid "Grok Integration"
+msgstr "Grok एकीकरण"
+
+#: src/Form/GrokAiProviderConfigForm.php:106
+msgid "Unofficial"
+msgstr "अनौपचारिक"
+
 msgid "Explorer default prompts"
 msgstr "एक्सप्लोरर के डिफ़ॉल्ट प्रॉम्प्ट"
 
-msgid "Customize the example prompts shown when Grok is selected in compatible Drupal AI Explorers. Existing user input is never replaced. Leave a prompt blank to disable its default."
-msgstr "संगत Drupal AI एक्सप्लोरर में Grok चुने जाने पर दिखने वाले उदाहरण प्रॉम्प्ट को अनुकूलित करें। मौजूदा उपयोगकर्ता इनपुट कभी बदला नहीं जाता। किसी डिफ़ॉल्ट को अक्षम करने के लिए उसका प्रॉम्प्ट खाली छोड़ें।"
+msgid ""
+"Customize the example prompts shown when Grok is selected in compatible "
+"Drupal AI Explorers. Existing user input is never replaced. Leave a prompt "
+"blank to disable its default."
+msgstr ""
+"संगत Drupal AI एक्सप्लोरर में Grok चुने जाने पर दिखने वाले उदाहरण प्रॉम्प्ट को अनुकूलित करें। "
+"मौजूदा उपयोगकर्ता इनपुट कभी बदला नहीं जाता। किसी डिफ़ॉल्ट को अक्षम करने के लिए उसका "
+"प्रॉम्प्ट खाली छोड़ें।"
 
 msgid "Chat prompt"
 msgstr "चैट प्रॉम्प्ट"
@@ -37,6 +60,46 @@ msgstr "टेक्स्ट-टू-इमेज प्रॉम्प्ट"
 
 msgid "Text-to-speech prompt"
 msgstr "टेक्स्ट-टू-स्पीच प्रॉम्प्ट"
+
+msgid "Try the configured models in these Drupal AI Explorers:"
+msgstr ""
+
+msgid "Chat Generation Explorer"
+msgstr ""
+
+msgid "Text-To-Image Generation Explorer"
+msgstr ""
+
+msgid "Image-To-Image Explorer"
+msgstr ""
+
+msgid "Image-To-Video Generation Explorer"
+msgstr ""
+
+msgid "Text-To-Video Generation Explorer"
+msgstr "टेक्स्ट-टू-वीडियो जनरेशन एक्सप्लोरर"
+
+msgid "Image Classification Explorer"
+msgstr ""
+
+msgid "Moderation Explorer"
+msgstr ""
+
+msgid "Text-To-Speech Explorer"
+msgstr ""
+
+msgid "Speech-To-Text Explorer"
+msgstr ""
+
+msgid ""
+"Configure Grok as the default for Image Classification and Moderation. "
+"Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr ""
+
+msgid ""
+"Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To "
+"Text."
+msgstr ""
 
 msgid "Image source"
 msgstr "इमेज स्रोत"
@@ -62,17 +125,32 @@ msgstr "Drupal मीडिया इमेज"
 msgid "Select an existing image from Drupal Media."
 msgstr "Drupal मीडिया से कोई मौजूदा इमेज चुनें।"
 
-msgid "Grok xAi Provider"
-msgstr "Grok xAi प्रदाता"
+msgid "Choose the image that Grok should edit."
+msgstr ""
 
-msgid "Grok AI Provider"
-msgstr "Grok AI प्रदाता"
+msgid "Choose the image that Grok should classify."
+msgstr ""
 
-msgid "Grok Integration"
-msgstr "Grok एकीकरण"
+msgid ""
+"Choose the still image that Grok should animate. Video generation is "
+"asynchronous and billed by duration and resolution; keep this page open "
+"until it finishes."
+msgstr ""
 
-msgid "Unofficial"
-msgstr "अनौपचारिक"
+msgid "Select a Drupal Media image."
+msgstr ""
+
+msgid "Select an accessible Drupal Media image."
+msgstr ""
+
+msgid "The selected Media item does not contain an image file."
+msgstr ""
+
+msgid "The selected Media image could not be read."
+msgstr ""
+
+msgid "The default Explorer image could not be read."
+msgstr ""
 
 msgid "Text to Video"
 msgstr "टेक्स्ट से वीडियो"
@@ -80,14 +158,16 @@ msgstr "टेक्स्ट से वीडियो"
 msgid "Generate a short video from a text prompt."
 msgstr "टेक्स्ट प्रॉम्प्ट से एक छोटा वीडियो बनाएँ।"
 
-msgid "Text-To-Video Generation Explorer"
-msgstr "टेक्स्ट-टू-वीडियो जनरेशन एक्सप्लोरर"
-
 msgid "Experiment with Grok text-to-video generation."
 msgstr "Grok टेक्स्ट-टू-वीडियो जनरेशन आज़माएँ।"
 
 msgid "Describe the video to generate."
 msgstr "बनाए जाने वाले वीडियो का वर्णन करें।"
+
+msgid ""
+"Video generation is asynchronous, billable by duration and resolution, and "
+"can take several minutes. Keep this page open until it finishes."
+msgstr ""
 
 msgid "Generate a Video"
 msgstr "वीडियो बनाएँ"
@@ -95,161 +175,1027 @@ msgstr "वीडियो बनाएँ"
 msgid "Video generation failed"
 msgstr "वीडियो बनाना विफल रहा"
 
+msgid "The provider did not return a video."
+msgstr ""
+
 msgid "Video duration"
 msgstr "वीडियो अवधि"
 
-msgid "These settings permit tools at site level. Individual requests must still select a permitted tool. Hosted tools can incur additional xAI charges."
-msgstr "ये सेटिंग साइट स्तर पर टूल की अनुमति देती हैं। प्रत्येक अनुरोध को अनुमत टूल चुनना होगा। होस्टेड टूल पर अतिरिक्त xAI शुल्क लग सकता है।"
-msgid "Allows Grok to search and browse the public web for current information. Requests can optionally restrict searches to allowed or excluded domains and enable image search or image understanding. xAI charges separately for hosted search calls."
-msgstr "Grok को वर्तमान जानकारी के लिए सार्वजनिक वेब खोजने देता है। अनुरोध डोमेन सीमित कर सकते हैं और छवि खोज या समझ सक्षम कर सकते हैं। होस्टेड खोज का शुल्क अलग है।"
-msgid "Allows Grok to search public posts, users, and threads on X. Individual requests can restrict handles and dates or enable image and video understanding. xAI charges separately for hosted search calls."
-msgstr "Grok को X पर सार्वजनिक पोस्ट, उपयोगकर्ता और थ्रेड खोजने देता है। अनुरोध हैंडल और तारीख सीमित कर सकते हैं या छवि और वीडियो समझ सक्षम कर सकते हैं।"
-msgid "Allows Grok to write and execute Python in an isolated environment managed by xAI. It is useful for calculations and data analysis. The environment has no access to this Drupal site unless data is included in the prompt, and tool calls may incur additional charges."
-msgstr "Grok को xAI द्वारा प्रबंधित अलग वातावरण में Python लिखने और चलाने देता है। यह गणना और डेटा विश्लेषण के लिए उपयोगी है। प्रॉम्प्ट में डेटा दिए बिना वातावरण साइट तक नहीं पहुँचता और अतिरिक्त शुल्क लग सकता है।"
-msgid "Allows Grok to search xAI collections containing previously uploaded documents. Individual requests must provide permitted collection IDs. Collection storage, retrieval, and search can incur additional xAI charges."
-msgstr "Grok को पहले अपलोड किए दस्तावेज़ों वाली xAI संग्रह खोजने देता है। अनुरोध को अनुमत संग्रह ID देना होगा। भंडारण, प्राप्ति और खोज पर अतिरिक्त शुल्क लग सकता है।"
-msgid "Allows xAI to connect Grok to explicitly allowlisted remote MCP servers. Each server must use HTTPS and expose only the tool names listed below. Enable this only for trusted servers because MCP tools may read or modify external systems."
-msgstr "xAI को Grok को स्पष्ट रूप से अनुमत दूरस्थ MCP सर्वर से जोड़ने देता है। सर्वर HTTPS उपयोग करे और केवल सूचीबद्ध टूल दे। इसे केवल विश्वसनीय सर्वर के लिए सक्षम करें।"
-msgid "After saving a working xAI API key and default Grok model, connect Grok to the Drupal AI features that should use it:"
-msgstr "कार्यशील xAI API कुंजी और डिफ़ॉल्ट Grok मॉडल सहेजने के बाद Grok को उसका उपयोग करने वाली Drupal AI सुविधाओं से जोड़ें:"
-msgid "Use <strong>Test connection and load models</strong>, select the Grok model you want this provider to use by default, and save this form."
-msgstr "<strong>कनेक्शन जाँचें और मॉडल लोड करें</strong> का उपयोग करें, डिफ़ॉल्ट Grok मॉडल चुनें और फ़ॉर्म सहेजें।"
-msgid "Open <a href=\":url\">Default Models for AI Operations</a> and select <strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. Choose the appropriate Grok chat and Grok Imagine models for features that rely on site-wide defaults."
-msgstr "<a href=\":url\">AI ऑपरेशन के डिफ़ॉल्ट मॉडल</a> खोलें और Chat, Text To Image तथा Text To Video के लिए <strong>Grok (xAI)</strong> चुनें।"
-msgid "Review each Drupal AI module or feature you enable. Configure it to use the site-wide Chat default, or select Grok explicitly when that feature provides its own provider and model settings."
-msgstr "हर सक्षम Drupal AI मॉड्यूल या सुविधा की समीक्षा करें। साइट का Chat डिफ़ॉल्ट उपयोग करें या अलग सेटिंग होने पर Grok चुनें।"
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, and text-to-video generation. Operations such as embeddings and speech require another provider that supports those operation types."
-msgstr "Grok Chat टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट और टेक्स्ट से छवि व वीडियो निर्माण का समर्थन करता है। एम्बेडिंग और वाणी के लिए दूसरा प्रदाता चाहिए।"
-msgid "To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</strong>, then enable the permitted tools in the individual model or request configuration that needs them."
-msgstr "xAI होस्टेड टूल के लिए उन्हें <strong>होस्टेड टूल अनुमतियाँ</strong> में अनुमति दें और फिर संबंधित मॉडल या अनुरोध में सक्षम करें।"
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, and Text To Video. "
+"Choose the appropriate Grok chat and Grok Imagine models for features that "
+"rely on site-wide defaults."
+msgstr ""
+"<a href=\":url\">AI ऑपरेशन के डिफ़ॉल्ट मॉडल</a> खोलें और Chat, Text To Image तथा "
+"Text To Video के लिए <strong>Grok (xAI)</strong> चुनें।"
 
-msgid "Provides Grok models from xAI to the Drupal AI modules."
-msgstr "Drupal AI मॉड्यूल के लिए xAI के Grok मॉडल उपलब्ध कराता है।"
+msgid ""
+"Length of the generated video in seconds. Longer videos cost more and take "
+"longer to generate."
+msgstr ""
 
-msgid "AI Providers"
-msgstr "AI प्रदाता"
+msgid "The width-to-height ratio of the generated video."
+msgstr ""
 
-msgid "Grok authentication"
-msgstr "Grok प्रमाणीकरण"
+msgid "The generated video resolution. Higher resolution costs more."
+msgstr ""
 
-msgid "Configure access to the xAI API."
-msgstr "xAI API तक पहुँच कॉन्फ़िगर करें।"
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+"कॉन्फ़िगर किए गए मॉडल को <a href=\":chat_url\">चैट जनरेशन एक्सप्लोरर</a>, <a "
+"href=\":image_url\">टेक्स्ट-टू-इमेज जनरेशन एक्सप्लोरर</a> और <a "
+"href=\":video_url\">टेक्स्ट-टू-वीडियो जनरेशन एक्सप्लोरर</a> में आज़माएँ।"
 
-msgid "Configure Grok authentication, models, transports, and hosted tools."
-msgstr "Grok प्रमाणीकरण, मॉडल, ट्रांसपोर्ट और होस्ट किए गए टूल कॉन्फ़िगर करें।"
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, and text-to-video generation. Operations such as "
+"embeddings and speech require another provider that supports those operation "
+"types."
+msgstr ""
+"Grok Chat टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट और टेक्स्ट से छवि व वीडियो निर्माण का "
+"समर्थन करता है। एम्बेडिंग और वाणी के लिए दूसरा प्रदाता चाहिए।"
 
-msgid "Configure Grok Integrations"
-msgstr "Grok एकीकरण कॉन्फ़िगर करें"
+msgid "A non-empty video prompt is required."
+msgstr ""
 
+msgid "\"@model\" does not support xAI text-to-video generation."
+msgstr ""
+
+msgid "\"@ratio\" is not a supported xAI video aspect ratio."
+msgstr ""
+
+msgid "\"@resolution\" is not a supported xAI text-to-video resolution."
+msgstr ""
+
+msgid "xAI did not return a video request ID."
+msgstr ""
+
+msgid ""
+"xAI did not return the video because it did not pass content moderation."
+msgstr ""
+
+msgid "xAI returned an invalid generated video URL."
+msgstr ""
+
+msgid "xAI video generation ended with status “@status”."
+msgstr ""
+
+msgid "xAI video generation did not finish within @seconds seconds."
+msgstr ""
+
+msgid "The xAI video payload could not be decoded: @message"
+msgstr ""
+
+msgid "xAI returned an invalid video payload."
+msgstr ""
+
+msgid "The generated xAI video exceeds the maximum allowed size."
+msgstr ""
+
+msgid "Could not download the generated xAI video: @message"
+msgstr ""
+
+msgid "Could not connect to the xAI video API: @message"
+msgstr ""
+
+msgid "xAI video API returned HTTP @status."
+msgstr ""
+
+msgid "xAI returned invalid or oversized generated video data."
+msgstr ""
+
+msgid "xAI returned a generated video with an unsupported file type."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:103
 msgid "xAI API key"
 msgstr "xAI API कुंजी"
 
+#: src/Form/GrokAiProviderConfigForm.php:104
 msgid "Select a Key containing an API key created in the xAI Console."
 msgstr "xAI कंसोल में बनाई गई API कुंजी वाली कुंजी चुनें।"
 
+#: src/Form/GrokAiProviderConfigForm.php:110
 msgid "Advanced settings"
 msgstr "उन्नत सेटिंग्स"
 
+#: src/Form/GrokAiProviderConfigForm.php:111
+msgid ""
+"These settings control how the provider connects to xAI and selects between "
+"the legacy Chat Completions transport and the newer Responses transport. The "
+"defaults are appropriate for most sites. Change them only when required by "
+"your hosting environment, privacy policy, or integration workflow."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:121
 msgid "API base URL"
 msgstr "API आधार URL"
 
+#: src/Form/GrokAiProviderConfigForm.php:123
+msgid ""
+"The HTTPS base URL used for xAI inference and model-discovery requests. Keep "
+"the official <code>https://api.x.ai/v1</code> endpoint unless your "
+"organization uses an approved xAI-compatible gateway or regional proxy. URLs "
+"containing credentials, query strings, or fragments are rejected to protect "
+"the selected API key."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:128
 msgid "Transport"
 msgstr "ट्रांसपोर्ट"
 
+#: src/Form/GrokAiProviderConfigForm.php:130
 msgid "Automatic (recommended)"
 msgstr "स्वचालित (अनुशंसित)"
 
+#: src/Form/GrokAiProviderConfigForm.php:131
 msgid "Chat Completions only"
 msgstr "केवल Chat Completions"
 
+#: src/Form/GrokAiProviderConfigForm.php:132
 msgid "Responses API for compatible requests"
 msgstr "संगत अनुरोधों के लिए Responses API"
 
+#: src/Form/GrokAiProviderConfigForm.php:135
+msgid ""
+"<strong>Automatic</strong> uses Chat Completions for ordinary Drupal AI and "
+"Drupal function-tool requests, then switches to Responses when an xAI-hosted "
+"tool is requested. <strong>Chat Completions only</strong> provides the "
+"broadest compatibility but prevents hosted Web Search, X Search, Code "
+"Interpreter, Collections Search, and remote MCP. <strong>Responses API</"
+"strong> prefers Responses for compatible non-streaming requests; Drupal "
+"function tools and ordinary streaming continue to use Chat Completions until "
+"equivalent Responses support is available."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:140
 msgid "Allow xAI to store Responses API requests"
 msgstr "xAI को Responses API अनुरोध संग्रहीत करने दें"
 
+#: src/Form/GrokAiProviderConfigForm.php:142
+msgid ""
+"Controls xAI server-side storage for requests sent through the Responses "
+"API. It is disabled by default, causing the provider to send "
+"<code>store=false</code>. Enable it only when your privacy and data-"
+"retention policies allow prompts, uploaded content, tool activity, and "
+"responses to be retained by xAI. Storage is required for future workflows "
+"that continue a conversation using a previous response ID, but it is not "
+"required for normal Drupal AI chat history."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:146
 msgid "Responses request timeout"
 msgstr "Responses अनुरोध समय-सीमा"
 
-msgid "Test connection"
-msgstr "कनेक्शन जाँचें"
-
-msgid "Test connection and load models"
-msgstr "कनेक्शन जाँचें और मॉडल लोड करें"
-
-msgid "Default Grok model"
-msgstr "डिफ़ॉल्ट Grok मॉडल"
-
-msgid "Hosted tool permissions"
-msgstr "होस्ट किए गए टूल की अनुमतियाँ"
-
-msgid "Permit Web Search"
-msgstr "वेब खोज की अनुमति दें"
-
-msgid "Permit X Search"
-msgstr "X खोज की अनुमति दें"
-
-msgid "Permit Code Interpreter"
-msgstr "कोड इंटरप्रेटर की अनुमति दें"
-
-msgid "Permit Collections Search"
-msgstr "संग्रह खोज की अनुमति दें"
-
-msgid "Permit allowlisted remote MCP servers"
-msgstr "अनुमत सूची वाले दूरस्थ MCP सर्वर की अनुमति दें"
-
-msgid "Remote MCP server allowlist"
-msgstr "दूरस्थ MCP सर्वर अनुमत सूची"
-
-msgid "About"
-msgstr "परिचय"
-
-msgid "Next Steps"
-msgstr "अगले चरण"
-
-msgid "Try the configured models in the <a href=\":chat_url\">Chat Generation Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, and <a href=\":video_url\">Text-To-Video Generation Explorer</a>."
-msgstr "कॉन्फ़िगर किए गए मॉडल को <a href=\":chat_url\">चैट जनरेशन एक्सप्लोरर</a>, <a href=\":image_url\">टेक्स्ट-टू-इमेज जनरेशन एक्सप्लोरर</a> और <a href=\":video_url\">टेक्स्ट-टू-वीडियो जनरेशन एक्सप्लोरर</a> में आज़माएँ।"
-
-msgid "To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> module, then open <a href=\":url\">Text formats and editors</a>. Edit each CKEditor 5 text format that needs AI, add the AI button to its active toolbar, enable the required AI actions, and select <strong>Grok (xAI)</strong> with a Grok chat model for each action, or verify that the action uses the site-wide Chat default. Also grant the appropriate roles the <em>use ai ckeditor</em> permission."
-msgstr "CKEditor में Grok का उपयोग करने के लिए <strong>AI CKEditor integration</strong> मॉड्यूल सक्षम करें, फिर <a href=\":url\">टेक्स्ट प्रारूप और संपादक</a> खोलें। AI की आवश्यकता वाले प्रत्येक CKEditor 5 टेक्स्ट प्रारूप को संपादित करें, AI बटन को सक्रिय टूलबार में जोड़ें, आवश्यक AI क्रियाएँ सक्षम करें और प्रत्येक क्रिया के लिए Grok चैट मॉडल के साथ <strong>Grok (xAI)</strong> चुनें, या सुनिश्चित करें कि क्रिया साइट-व्यापी Chat डिफ़ॉल्ट का उपयोग करती है। उपयुक्त भूमिकाओं को <em>use ai ckeditor</em> अनुमति भी दें।"
-
-msgid "Number of images"
-msgstr "छवियों की संख्या"
-
-msgid "Aspect ratio"
-msgstr "पक्षानुपात"
-
-msgid "Resolution"
-msgstr "रिज़ॉल्यूशन"
-
-msgid "Request transparent background"
-msgstr "पारदर्शी पृष्ठभूमि का अनुरोध करें"
-
-msgid "Version: @version"
-msgstr "संस्करण: @version"
-
+#: src/Form/GrokAiProviderConfigForm.php:150
 msgid "seconds"
 msgstr "सेकंड"
 
-msgid "The selected Key does not contain an API key."
-msgstr "चुनी गई कुंजी में API कुंजी नहीं है।"
+#: src/Form/GrokAiProviderConfigForm.php:151
+msgid ""
+"The maximum time Drupal waits for a synchronous Responses API request. "
+"Hosted searches, code execution, collections, MCP calls, and reasoning "
+"models may take longer than ordinary chat. Increase this value for complex "
+"workflows, or reduce it to release PHP workers sooner when an upstream "
+"request stalls. Your web server, PHP runtime, reverse proxy, or hosting "
+"platform may enforce a shorter timeout."
+msgstr ""
 
+#: src/Form/GrokAiProviderConfigForm.php:166
+msgid "Test connection"
+msgstr "कनेक्शन जाँचें"
+
+#: src/Form/GrokAiProviderConfigForm.php:178
+msgid "Test connection and load models"
+msgstr "कनेक्शन जाँचें और मॉडल लोड करें"
+
+#: src/Form/GrokAiProviderConfigForm.php:192
+msgid "Default Grok model"
+msgstr "डिफ़ॉल्ट Grok मॉडल"
+
+#: src/Form/GrokAiProviderConfigForm.php:196
+msgid ""
+"Test the connection to load the models available to the selected API key."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:197
+msgid ""
+"Used as this provider’s default chat, vision, tools, and structured-output "
+"model."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:213
+msgid "Hosted tool permissions"
+msgstr "होस्ट किए गए टूल की अनुमतियाँ"
+
+#: src/Form/GrokAiProviderConfigForm.php:214
+msgid ""
+"These settings permit tools at site level. Individual requests must still "
+"select a permitted tool. Hosted tools can incur additional xAI charges."
+msgstr ""
+"ये सेटिंग साइट स्तर पर टूल की अनुमति देती हैं। प्रत्येक अनुरोध को अनुमत टूल चुनना होगा। "
+"होस्टेड टूल पर अतिरिक्त xAI शुल्क लग सकता है।"
+
+#: src/Form/GrokAiProviderConfigForm.php:224
+msgid "Permit Web Search"
+msgstr "वेब खोज की अनुमति दें"
+
+#: src/Form/GrokAiProviderConfigForm.php:225
+msgid ""
+"Allows Grok to search and browse the public web for current information. "
+"Requests can optionally restrict searches to allowed or excluded domains and "
+"enable image search or image understanding. xAI charges separately for "
+"hosted search calls."
+msgstr ""
+"Grok को वर्तमान जानकारी के लिए सार्वजनिक वेब खोजने देता है। अनुरोध डोमेन सीमित कर सकते "
+"हैं और छवि खोज या समझ सक्षम कर सकते हैं। होस्टेड खोज का शुल्क अलग है।"
+
+#: src/Form/GrokAiProviderConfigForm.php:228
+msgid "Permit X Search"
+msgstr "X खोज की अनुमति दें"
+
+#: src/Form/GrokAiProviderConfigForm.php:229
+msgid ""
+"Allows Grok to search public posts, users, and threads on X. Individual "
+"requests can restrict handles and dates or enable image and video "
+"understanding. xAI charges separately for hosted search calls."
+msgstr ""
+"Grok को X पर सार्वजनिक पोस्ट, उपयोगकर्ता और थ्रेड खोजने देता है। अनुरोध हैंडल और तारीख "
+"सीमित कर सकते हैं या छवि और वीडियो समझ सक्षम कर सकते हैं।"
+
+#: src/Form/GrokAiProviderConfigForm.php:232
+msgid "Permit Code Interpreter"
+msgstr "कोड इंटरप्रेटर की अनुमति दें"
+
+#: src/Form/GrokAiProviderConfigForm.php:233
+msgid ""
+"Allows Grok to write and execute Python in an isolated environment managed "
+"by xAI. It is useful for calculations and data analysis. The environment has "
+"no access to this Drupal site unless data is included in the prompt, and "
+"tool calls may incur additional charges."
+msgstr ""
+"Grok को xAI द्वारा प्रबंधित अलग वातावरण में Python लिखने और चलाने देता है। यह गणना और "
+"डेटा विश्लेषण के लिए उपयोगी है। प्रॉम्प्ट में डेटा दिए बिना वातावरण साइट तक नहीं पहुँचता "
+"और अतिरिक्त शुल्क लग सकता है।"
+
+#: src/Form/GrokAiProviderConfigForm.php:236
+msgid "Permit Collections Search"
+msgstr "संग्रह खोज की अनुमति दें"
+
+#: src/Form/GrokAiProviderConfigForm.php:237
+msgid ""
+"Allows Grok to search xAI collections containing previously uploaded "
+"documents. Individual requests must provide permitted collection IDs. "
+"Collection storage, retrieval, and search can incur additional xAI charges."
+msgstr ""
+"Grok को पहले अपलोड किए दस्तावेज़ों वाली xAI संग्रह खोजने देता है। अनुरोध को अनुमत संग्रह "
+"ID देना होगा। भंडारण, प्राप्ति और खोज पर अतिरिक्त शुल्क लग सकता है।"
+
+#: src/Form/GrokAiProviderConfigForm.php:240
+msgid "Permit allowlisted remote MCP servers"
+msgstr "अनुमत सूची वाले दूरस्थ MCP सर्वर की अनुमति दें"
+
+#: src/Form/GrokAiProviderConfigForm.php:241
+msgid ""
+"Allows xAI to connect Grok to explicitly allowlisted remote MCP servers. "
+"Each server must use HTTPS and expose only the tool names listed below. "
+"Enable this only for trusted servers because MCP tools may read or modify "
+"external systems."
+msgstr ""
+"xAI को Grok को स्पष्ट रूप से अनुमत दूरस्थ MCP सर्वर से जोड़ने देता है। सर्वर HTTPS उपयोग "
+"करे और केवल सूचीबद्ध टूल दे। इसे केवल विश्वसनीय सर्वर के लिए सक्षम करें।"
+
+#: src/Form/GrokAiProviderConfigForm.php:254
+msgid "Remote MCP server allowlist"
+msgstr "दूरस्थ MCP सर्वर अनुमत सूची"
+
+#: src/Form/GrokAiProviderConfigForm.php:256
+msgid ""
+"One server per line: label|https://server.example/mcp|"
+"allowed_tool_1,allowed_tool_2. An explicit allowed-tools list is required."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:266
+msgid "Next Steps"
+msgstr "अगले चरण"
+
+#: src/Form/GrokAiProviderConfigForm.php:275
+msgid ""
+"After saving a working xAI API key and default Grok model, connect Grok to "
+"the Drupal AI features that should use it:"
+msgstr ""
+"कार्यशील xAI API कुंजी और डिफ़ॉल्ट Grok मॉडल सहेजने के बाद Grok को उसका उपयोग करने "
+"वाली Drupal AI सुविधाओं से जोड़ें:"
+
+#: src/Form/GrokAiProviderConfigForm.php:281
+msgid ""
+"Use <strong>Test connection and load models</strong>, select the Grok model "
+"you want this provider to use by default, and save this form."
+msgstr ""
+"<strong>कनेक्शन जाँचें और मॉडल लोड करें</strong> का उपयोग करें, डिफ़ॉल्ट Grok मॉडल चुनें "
+"और फ़ॉर्म सहेजें।"
+
+#: src/Form/GrokAiProviderConfigForm.php:276
+msgid ""
+"To use Grok in CKEditor, enable the <strong>AI CKEditor integration</strong> "
+"module, then open <a href=\":url\">Text formats and editors</a>. Edit each "
+"CKEditor 5 text format that needs AI, add the AI button to its active "
+"toolbar, enable the required AI actions, and select <strong>Grok (xAI)</"
+"strong> with a Grok chat model for each action, or verify that the action "
+"uses the site-wide Chat default. Also grant the appropriate roles the "
+"<em>use ai ckeditor</em> permission."
+msgstr ""
+"CKEditor में Grok का उपयोग करने के लिए <strong>AI CKEditor integration</strong> "
+"मॉड्यूल सक्षम करें, फिर <a href=\":url\">टेक्स्ट प्रारूप और संपादक</a> खोलें। AI की "
+"आवश्यकता वाले प्रत्येक CKEditor 5 टेक्स्ट प्रारूप को संपादित करें, AI बटन को सक्रिय टूलबार "
+"में जोड़ें, आवश्यक AI क्रियाएँ सक्षम करें और प्रत्येक क्रिया के लिए Grok चैट मॉडल के साथ "
+"<strong>Grok (xAI)</strong> चुनें, या सुनिश्चित करें कि क्रिया साइट-व्यापी Chat "
+"डिफ़ॉल्ट का उपयोग करती है। उपयुक्त भूमिकाओं को <em>use ai ckeditor</em> अनुमति भी दें।"
+
+#: src/Form/GrokAiProviderConfigForm.php:285
+msgid ""
+"Review each Drupal AI module or feature you enable. Configure it to use the "
+"site-wide Chat default, or select Grok explicitly when that feature provides "
+"its own provider and model settings."
+msgstr ""
+"हर सक्षम Drupal AI मॉड्यूल या सुविधा की समीक्षा करें। साइट का Chat डिफ़ॉल्ट उपयोग करें "
+"या अलग सेटिंग होने पर Grok चुनें।"
+
+#: src/Form/GrokAiProviderConfigForm.php:287
+msgid ""
+"To use xAI-hosted tools, permit them in <strong>Hosted tool permissions</"
+"strong>, then enable the permitted tools in the individual model or request "
+"configuration that needs them."
+msgstr ""
+"xAI होस्टेड टूल के लिए उन्हें <strong>होस्टेड टूल अनुमतियाँ</strong> में अनुमति दें और फिर "
+"संबंधित मॉडल या अनुरोध में सक्षम करें।"
+
+#: src/Form/GrokAiProviderConfigForm.php:296
+msgid "About"
+msgstr "परिचय"
+
+#: src/Form/GrokAiProviderConfigForm.php:303
+msgid "Built By Crocodiles 🐊"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:306
+msgid "Version: @version"
+msgstr "संस्करण: @version"
+
+#: src/Form/GrokAiProviderConfigForm.php:309
+msgid ""
+"A part of the <a href=\":url\" title=\"@title\" target=\"_blank\" "
+"rel=\"noopener noreferrer\">Torneoz</a> framework"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:311
+msgid "Torneoz is a global management AI system for Drupal."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:315
+msgid ""
+"This project is not affiliated with, funded, or endorsed by SpaceXAi or its "
+"subsidiaries. Copyright on all assets is retained by the owners."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:332
+msgid "The API base URL must use HTTPS to protect the API key."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:335
+msgid ""
+"Enter an HTTPS API base URL without credentials, a query, or a fragment."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:338
+msgid "Select a valid transport."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:357
+msgid ""
+"Select a model available to the current API key. Test the connection to "
+"refresh the model list."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:362
 msgid "Could not authenticate with xAI: @message"
 msgstr "xAI से प्रमाणीकरण नहीं हो सका: @message"
 
+#: src/Form/GrokAiProviderConfigForm.php:410
 msgid "Connection failed: @message"
 msgstr "कनेक्शन विफल: @message"
 
+#: src/Form/GrokAiProviderConfigForm.php:435
+msgid "Enter a valid HTTPS API base URL."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:440
+msgid "The selected Key does not contain an API key."
+msgstr "चुनी गई कुंजी में API कुंजी नहीं है।"
+
+#: src/Form/GrokAiProviderConfigForm.php:449
 msgid "xAI did not return any accessible Grok models for this key."
 msgstr "xAI ने इस कुंजी के लिए कोई सुलभ Grok मॉडल नहीं लौटाया।"
+
+#: src/Form/GrokAiProviderConfigForm.php:498
+msgid ""
+"MCP allowlist line @line must contain a label, valid URL, and allowed-tools "
+"list separated by |."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:501
+msgid "MCP server URLs must use HTTPS (line @line)."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:504
+msgid "MCP server URLs cannot contain credentials or fragments (line @line)."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:507
+msgid ""
+"MCP server labels may contain only letters, numbers, underscores, and "
+"hyphens (line @line)."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:510
+msgid "MCP server label @label is duplicated."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:514
+msgid "MCP allowlist line @line must name at least one allowed tool."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:518
+msgid "MCP tool name @tool contains unsupported characters."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:34
+msgid "Grok (xAI)"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:119
+msgid "Unable to retrieve models from xAI: @message"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:125
+msgid "xAI returned an invalid model-list payload."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:174
+msgid "Reasoning effort"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:175
+msgid "Controls how much reasoning effort the model uses."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:202
+msgid "Max tokens"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:203
+msgid "The maximum number of tokens generated in the response."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:206
+msgid "Temperature"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:207
+msgid ""
+"Sampling temperature. Change temperature or Top P, but normally not both."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:210
+msgid "Top P"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:211
+msgid ""
+"Nucleus sampling probability. Change Top P or temperature, but normally not "
+"both."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:214
+msgid "Frequency penalty"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:215
+msgid "Penalizes tokens according to how often they already occur."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:218
+msgid "Presence penalty"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:219
+msgid "Penalizes tokens that have already occurred."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:222
+msgid "Seed"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:223
+msgid "Requests deterministic sampling on a best-effort basis."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:226
+msgid "Use Responses API"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:227
+msgid "Use xAI Responses even when no hosted tool is selected."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:230
+msgid "Web Search"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:231
+msgid ""
+"Allow Grok to search and browse the web. This must also be permitted in the "
+"provider settings."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:234
+msgid "Allowed web domains"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:235
+msgid ""
+"Optional comma-separated domain allowlist, with a maximum of five domains."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:238
+msgid "Excluded web domains"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:239
+msgid ""
+"Optional comma-separated domain denylist, with a maximum of five domains. Do "
+"not combine with allowed domains."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:242
+msgid "Web image search"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:243
+msgid "Allow Web Search to find images for the response."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:246
+msgid "Web image understanding"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:247
+msgid "Allow Grok to inspect images found while browsing."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:250
+msgid "X Search"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:251
+msgid ""
+"Allow Grok to search X. This must also be permitted in the provider settings."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:254
+msgid "Allowed X handles"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:255
+msgid "Optional comma-separated X handle allowlist."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:258
+msgid "Excluded X handles"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:259
+msgid "Optional comma-separated X handle denylist."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:262
+msgid "X search start date"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:263
+#: src/Plugin/AiProvider/GrokAiProvider.php:267
+msgid "Optional inclusive date in YYYY-MM-DD format."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:266
+msgid "X search end date"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:270
+msgid "X image understanding"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:271
+msgid "Allow Grok to inspect images found on X."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:274
+msgid "X video understanding"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:275
+msgid "Allow Grok to inspect videos found on X."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:278
+msgid "Code Interpreter"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:279
+msgid "Allow Grok to execute Python in xAI’s isolated environment."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:282
+msgid "Collections Search"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:283
+msgid "Allow Grok to search the configured xAI collections."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:286
+msgid "Collection IDs"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:287
+msgid "Comma-separated xAI collection IDs available to this request."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:290
+msgid "Maximum collection results"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:291
+msgid "Maximum number of collection search results."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:294
+msgid "Remote MCP servers"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:295
+msgid "Comma-separated labels of allowlisted MCP servers to expose to Grok."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:298
+msgid "Number of images"
+msgstr "छवियों की संख्या"
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:299
+msgid "The number of image variations to generate."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:302
+msgid "Aspect ratio"
+msgstr "पक्षानुपात"
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:303
+msgid "The width-to-height ratio of each generated image."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:306
+msgid "Resolution"
+msgstr "रिज़ॉल्यूशन"
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:307
+msgid ""
+"The output resolution of each generated image. Higher resolution can "
+"increase cost and generation time."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:310
+msgid "Request transparent background"
+msgstr "पारदर्शी पृष्ठभूमि का अनुरोध करें"
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:311
+msgid ""
+"Asks Grok to generate a PNG with a genuine transparent alpha-channel "
+"background. This is best effort because xAI does not provide a native "
+"transparency control."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:381
+msgid ""
+"Streaming xAI Responses requests are not yet supported. Disable streaming or "
+"use Chat Completions."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:403
+msgid "A non-empty image prompt is required."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:406
+msgid "\"@model\" is not an xAI image generation model."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:441
+msgid "\"@ratio\" is not a supported xAI image aspect ratio."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:446
+msgid "\"@resolution\" is not a supported xAI image resolution."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:483
+msgid "Failed to initialize the xAI client: @message"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:547
+msgid "xAI did not return any generated images."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:555
+msgid "xAI did not return image data for result @number."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:560
+msgid "Generated image @number exceeds the maximum allowed size."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:566
+msgid "Generated image @number contains invalid or oversized image data."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:572
+#: src/Plugin/AiProvider/GrokAiProvider.php:580
+msgid "Generated image @number has an unsupported file type."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:638
+msgid ""
+"Hosted xAI tools require the Responses API, but this provider is configured "
+"for Chat Completions only."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:717
+msgid "A non-empty chat prompt is required."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:723
+msgid "At least one input message is required."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:734
+msgid "The message role \"@role\" is not supported by xAI Responses."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:747
+msgid "Responses input does not yet support the file type \"@type\"."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:753
+msgid "Each chat message must contain text or a supported image."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:771
+msgid ""
+"The xAI hosted tool \"@tool\" is not permitted in the Grok provider settings."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:781
+msgid "Web Search allowed and excluded domains cannot be combined."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:784
+msgid "Web Search accepts no more than five allowed or excluded domains."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:788
+msgid "\"@domain\" is not a valid Web Search domain."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:810
+msgid "X Search allowed and excluded handles cannot be combined."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:813
+msgid "X Search accepts no more than twenty allowed or excluded handles."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:824
+msgid "start date"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:828
+msgid "end date"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:836
+msgid "The X Search @field value must use YYYY-MM-DD format."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:844
+msgid "X Search start date cannot be later than its end date."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:856
+msgid "Collections Search requires at least one xAI collection ID."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:860
+msgid "\"@collection_id\" is not a valid xAI collection ID."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:887
+msgid "The following MCP servers are not allowlisted: @servers"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:893
+msgid "Remote MCP tools are not permitted in the Grok provider settings."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:904
+msgid "xAI Responses failed: @error"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:911
+msgid "xAI Responses finished with status \"@status\" (@reason)."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:932
+msgid "The request was refused."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:938
+msgid "xAI refused the request: @reason"
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:942
+msgid "xAI Responses did not return output text."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php:987
+msgid "\"@handle\" is not a valid X handle."
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:64 src/Service/XaiResponsesClient.php:40
+msgid "An xAI API key is required."
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:87
+msgid "The xAI image payload could not be decoded: @message"
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:93
+msgid "xAI returned an invalid image payload."
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:97
+msgid "xAI returned an image error: @message"
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:110
+msgid "Could not connect to the xAI image API: @message"
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:117
+msgid "xAI image API returned HTTP @status: @message"
+msgstr ""
+
+#: src/Service/XaiImagesClient.php:154 src/Service/XaiResponsesClient.php:126
+msgid "No error details were returned."
+msgstr ""
+
+#: src/Service/XaiResponsesClient.php:58
+msgid "The xAI Responses payload could not be decoded: @message"
+msgstr ""
+
+#: src/Service/XaiResponsesClient.php:64
+msgid "xAI returned an invalid Responses payload."
+msgstr ""
+
+#: src/Service/XaiResponsesClient.php:68
+msgid "xAI returned an error: @message"
+msgstr ""
+
+#: src/Service/XaiResponsesClient.php:82
+msgid "Could not connect to the xAI Responses API: @message"
+msgstr ""
+
+#: src/Service/XaiResponsesClient.php:89
+msgid "xAI Responses API returned HTTP @status: @message"
+msgstr ""
+
+msgid "Animate a still image with Grok Imagine Video 1.5."
+msgstr ""
+
+msgid "Source image"
+msgstr ""
+
+msgid ""
+"Upload the still image that Grok should animate. Generation is asynchronous "
+"and billed by duration and resolution; keep this page open until it finishes."
+msgstr ""
+
+msgid "A source image is required."
+msgstr ""
+
+msgid "Image-to-video generation failed"
+msgstr ""
+
+msgid "Animation prompt"
+msgstr ""
+
+msgid ""
+"Describe how the source image should move or change in the generated video."
+msgstr ""
+
+msgid "\"@model\" does not support xAI image-to-video generation."
+msgstr ""
+
+msgid "\"@resolution\" is not a supported xAI image-to-video resolution."
+msgstr ""
+
+msgid "A non-empty image-to-video prompt is required."
+msgstr ""
+
+msgid "The source image is empty or exceeds the maximum allowed size."
+msgstr ""
+
+msgid "The source image has an unsupported file type."
+msgstr ""
+
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Video, and "
+"Text To Video. Choose the appropriate Grok chat and Grok Imagine models for "
+"features that rely on site-wide defaults."
+msgstr ""
+
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"<a href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a "
+"href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, image-to-video generation, and text-to-video "
+"generation. Operations such as embeddings and speech require another "
+"provider that supports those operation types."
+msgstr ""
+
+msgid "Use the bundled example image"
+msgstr ""
+
+msgid "Upload my own image"
+msgstr ""
+
+msgid ""
+"Video generation is asynchronous and billed by duration and resolution; keep "
+"this page open until it finishes."
+msgstr ""
+
+msgid "Bundled example source image"
+msgstr ""
+
+msgid "Upload source image"
+msgstr ""
+
+msgid "Upload the still image that Grok should animate."
+msgstr ""
+
+msgid "The bundled example image could not be read."
+msgstr ""
+
+msgid ""
+"Image of a Drupal AI and Torneoz themed soccer ball sitting on a pitch. The "
+"goalposts can be seen in the background"
+msgstr ""
+
+msgid "\"@model\" is not an xAI image editing model."
+msgstr ""
+
+msgid "A non-empty image editing prompt is required."
+msgstr ""
+
 msgid "An image editing prompt is required."
 msgstr "छवि संपादन प्रॉम्प्ट आवश्यक है।"
 
 msgid "Upload the source image you want Grok to edit."
 msgstr "वह स्रोत छवि अपलोड करें जिसे आप Grok से संपादित कराना चाहते हैं।"
 
-msgid "Describe the requested changes in the prompt below. Image editing can take time to complete and each request may count against your xAI API usage."
-msgstr "नीचे दिए गए प्रॉम्प्ट में इच्छित बदलावों का वर्णन करें। छवि संपादन पूरा होने में समय लग सकता है और प्रत्येक अनुरोध आपके xAI API उपयोग में गिना जा सकता है।"
+msgid ""
+"Describe the requested changes in the prompt below. Image editing can take "
+"time to complete and each request may count against your xAI API usage."
+msgstr ""
+"नीचे दिए गए प्रॉम्प्ट में इच्छित बदलावों का वर्णन करें। छवि संपादन पूरा होने में समय लग सकता "
+"है और प्रत्येक अनुरोध आपके xAI API उपयोग में गिना जा सकता है।"
 
 msgid "Prompt"
 msgstr "प्रॉम्प्ट"
@@ -266,23 +1212,274 @@ msgstr "वर्गीकरण के लिए एक छवि और वै
 msgid "Maximum labels"
 msgstr "अधिकतम लेबल"
 
-msgid "Maximum number of labels Grok may return when candidate labels are not supplied."
-msgstr "उम्मीदवार लेबल न दिए जाने पर Grok द्वारा लौटाए जा सकने वाले लेबल की अधिकतम संख्या।"
+msgid ""
+"Maximum number of labels Grok may return when candidate labels are not "
+"supplied."
+msgstr ""
+"उम्मीदवार लेबल न दिए जाने पर Grok द्वारा लौटाए जा सकने वाले लेबल की अधिकतम संख्या।"
 
-msgid "Configure Grok as the default for Image Classification and Moderation, then test it in the <a href=\":classification_url\">Image Classification Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
-msgstr "छवि वर्गीकरण और मॉडरेशन के लिए Grok को डिफ़ॉल्ट के रूप में कॉन्फ़िगर करें, फिर <a href=\":classification_url\">छवि वर्गीकरण एक्सप्लोरर</a> और <a href=\":moderation_url\">मॉडरेशन एक्सप्लोरर</a> में इसका परीक्षण करें। मॉडरेशन मॉडल-आधारित आकलन है, कोई समर्पित xAI सुरक्षा एंडपॉइंट नहीं।"
+msgid ""
+"Configure Grok as the default for Image Classification and Moderation, then "
+"test it in the <a href=\":classification_url\">Image Classification "
+"Explorer</a> and <a href=\":moderation_url\">Moderation Explorer</a>. "
+"Moderation is a model-based assessment, not a dedicated xAI safety endpoint."
+msgstr ""
+"छवि वर्गीकरण और मॉडरेशन के लिए Grok को डिफ़ॉल्ट के रूप में कॉन्फ़िगर करें, फिर <a "
+"href=\":classification_url\">छवि वर्गीकरण एक्सप्लोरर</a> और <a "
+"href=\":moderation_url\">मॉडरेशन एक्सप्लोरर</a> में इसका परीक्षण करें। मॉडरेशन मॉडल-"
+"आधारित आकलन है, कोई समर्पित xAI सुरक्षा एंडपॉइंट नहीं।"
 
-msgid "Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
-msgstr "टेक्स्ट टू स्पीच के लिए xAI आवाज़ और स्पीच टू टेक्स्ट के लिए xAI Speech to Text चुनें, फिर <a href=\":tts_url\">टेक्स्ट-टू-स्पीच एक्सप्लोरर</a> और <a href=\":stt_url\">स्पीच-टू-टेक्स्ट एक्सप्लोरर</a> में उनका परीक्षण करें।"
+msgid "A non-empty moderation input is required."
+msgstr ""
 
-msgid "Grok supports Chat-based text, vision, function tools, structured output, text-to-image generation, image-to-image editing, image-to-video generation, text-to-video generation, text-to-speech, and speech-to-text. Operations such as embeddings require another provider that supports those operation types."
-msgstr "Grok चैट-आधारित टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट, टेक्स्ट-टू-इमेज, इमेज-टू-इमेज, इमेज-टू-वीडियो, टेक्स्ट-टू-वीडियो, टेक्स्ट-टू-स्पीच और स्पीच-टू-टेक्स्ट का समर्थन करता है। एम्बेडिंग जैसे कार्यों के लिए अन्य समर्थित प्रदाता की आवश्यकता है।"
+msgid "\"@model\" does not support Grok structured moderation."
+msgstr ""
+
+msgid "\"@model\" does not support Grok structured image classification."
+msgstr ""
+
+msgid "Grok returned an invalid structured moderation result."
+msgstr ""
+
+msgid "Grok returned an invalid structured image classification result."
+msgstr ""
+
+msgid "Grok returned an invalid image classification item."
+msgstr ""
+
+msgid "Grok returned an image classification label that was not requested."
+msgstr ""
+
+msgid "Grok did not return any usable image classifications."
+msgstr ""
+
+msgid "Grok returned an unexpected streamed @operation result."
+msgstr ""
+
+msgid "Grok returned malformed JSON for @operation."
+msgstr ""
+
+msgid "The classification image is empty or exceeds the maximum allowed size."
+msgstr ""
+
+msgid "The classification image has an unsupported file type."
+msgstr ""
+
+msgid "Image classification accepts at most 50 candidate labels."
+msgstr ""
+
+msgid "Image classification labels must be 100 characters or fewer."
+msgstr ""
+
+msgid ""
+"Open <a href=\":url\">Default Models for AI Operations</a> and select "
+"<strong>Grok (xAI)</strong> for Chat, Text To Image, Image To Image, Image "
+"To Video, and Text To Video. Choose the appropriate Grok chat and Grok "
+"Imagine models for features that rely on site-wide defaults."
+msgstr ""
+
+msgid ""
+"Try the configured models in the <a href=\":chat_url\">Chat Generation "
+"Explorer</a>, <a href=\":image_url\">Text-To-Image Generation Explorer</a>, "
+"<a href=\":image_edit_url\">Image-To-Image Explorer</a>, <a "
+"href=\":image_video_url\">Image-To-Video Generation Explorer</a>, and <a "
+"href=\":video_url\">Text-To-Video Generation Explorer</a>."
+msgstr ""
+
+msgid "Text to convert into spoken audio."
+msgstr ""
+
+msgid "Speech language"
+msgstr ""
+
+msgid "Language for generated speech. Auto detects the input language."
+msgstr ""
+
+msgid "Speech speed"
+msgstr ""
+
+msgid "Speech speed multiplier from 0.7 to 1.5."
+msgstr ""
+
+msgid "Normalize text for speech"
+msgstr ""
+
+msgid ""
+"Converts numbers, abbreviations, and symbols into a spoken form before "
+"synthesis."
+msgstr ""
+
+msgid "Audio file to transcribe."
+msgstr ""
+
+msgid "Audio language"
+msgstr ""
+
+msgid ""
+"Optional language code used to improve formatting of numbers, currencies, "
+"and units."
+msgstr ""
+
+msgid "Format transcript"
+msgstr ""
+
+msgid ""
+"Formats spoken numbers, currencies, and units when an audio language is "
+"selected."
+msgstr ""
+
+msgid "Speaker diarization"
+msgstr ""
+
+msgid "Adds a speaker identifier to each timed word in the raw response."
+msgstr ""
+
+msgid "Include filler words"
+msgstr ""
+
+msgid "Preserves words such as “uh” and “um” in the transcript."
+msgstr ""
+
+msgid "Key terms"
+msgstr ""
+
+msgid ""
+"Optional comma- or newline-separated terminology to bias transcription "
+"toward."
+msgstr ""
+
+msgid ""
+"Select an xAI voice for Text To Speech and xAI Speech to Text for Speech To "
+"Text, then test them in the <a href=\":tts_url\">Text-To-Speech Explorer</a> "
+"and <a href=\":stt_url\">Speech-To-Text Explorer</a>."
+msgstr ""
+"टेक्स्ट टू स्पीच के लिए xAI आवाज़ और स्पीच टू टेक्स्ट के लिए xAI Speech to Text चुनें, फिर "
+"<a href=\":tts_url\">टेक्स्ट-टू-स्पीच एक्सप्लोरर</a> और <a href=\":stt_url\">स्पीच-टू-"
+"टेक्स्ट एक्सप्लोरर</a> में उनका परीक्षण करें।"
+
+msgid ""
+"Grok supports Chat-based text, vision, function tools, structured output, "
+"text-to-image generation, image-to-image editing, image-to-video generation, "
+"text-to-video generation, text-to-speech, and speech-to-text. Operations "
+"such as embeddings require another provider that supports those operation "
+"types."
+msgstr ""
+"Grok चैट-आधारित टेक्स्ट, विज़न, फ़ंक्शन टूल, संरचित आउटपुट, टेक्स्ट-टू-इमेज, इमेज-टू-इमेज, इमेज-"
+"टू-वीडियो, टेक्स्ट-टू-वीडियो, टेक्स्ट-टू-स्पीच और स्पीच-टू-टेक्स्ट का समर्थन करता है। एम्बेडिंग "
+"जैसे कार्यों के लिए अन्य समर्थित प्रदाता की आवश्यकता है।"
+
+msgid "A non-empty text-to-speech input is required."
+msgstr ""
+
+msgid "Text-to-speech input must be 15,000 characters or fewer."
+msgstr ""
+
+msgid "\"@voice\" is not a valid xAI voice ID."
+msgstr ""
+
+msgid "\"@language\" is not a supported xAI text-to-speech language."
+msgstr ""
+
+msgid "Text-to-speech speed must be between 0.7 and 1.5."
+msgstr ""
+
+msgid "\"@model\" is not the xAI REST speech-to-text model."
+msgstr ""
+
+msgid "\"@language\" is not a supported xAI speech-to-text language."
+msgstr ""
+
+msgid "xAI returned invalid text-to-speech audio."
+msgstr ""
+
+msgid "xAI returned text-to-speech audio in an unsupported format."
+msgstr ""
+
+msgid "xAI did not return any transcribed text."
+msgstr ""
+
+msgid "The source audio is empty or exceeds the 100 MB module limit."
+msgstr ""
+
+msgid "The source audio has an unsupported file type."
+msgstr ""
+
+msgid "Speech-to-text accepts at most 100 key terms."
+msgstr ""
+
+msgid "Speech-to-text key terms must be 50 characters or fewer."
+msgstr ""
+
+msgid "The generated xAI audio exceeds the maximum allowed size."
+msgstr ""
+
+msgid "Could not read the generated xAI audio: @message"
+msgstr ""
+
+msgid "xAI returned an empty text-to-speech response."
+msgstr ""
+
+msgid "The xAI transcription payload could not be decoded: @message"
+msgstr ""
+
+msgid "xAI returned an invalid transcription payload."
+msgstr ""
+
+msgid "The xAI voice payload could not be decoded: @message"
+msgstr ""
+
+msgid "xAI returned an invalid voice payload."
+msgstr ""
+
+msgid "Could not connect to the xAI voice API: @message"
+msgstr ""
+
+msgid "xAI voice API returned HTTP @status: @message"
+msgstr ""
+
+msgid ""
+"Explain how Drupal AI providers connect models to Drupal features, using a "
+"short practical example."
+msgstr ""
+
+msgid ""
+"A cinematic tracking shot of a Drupal AI and Torneoz themed soccer ball "
+"rolling across a floodlit pitch toward the goal."
+msgstr ""
+
+msgid ""
+"Review this community comment for harassment, hate, sexual content, "
+"violence, self-harm, and other safety concerns: “Great match today—well "
+"played by both teams.”"
+msgstr ""
+
+msgid ""
+"Transform this image into a polished editorial illustration while preserving "
+"the main subject and composition."
+msgstr ""
+
+msgid ""
+"Welcome to the Grok AI Provider for Drupal. This sample demonstrates natural "
+"text-to-speech generation from the AI Explorer."
+msgstr ""
 
 msgid "Save to Media"
 msgstr "मीडिया में सहेजें"
 
 msgid "Do not save"
 msgstr "न सहेजें"
+
+msgid "No configured Media type accepts MP3 files."
+msgstr ""
+
+msgid "Optionally save the generated MP3 as a permanent Drupal Media item."
+msgstr ""
+
+msgid "Optionally save the generated MP4 as a permanent Drupal Media item."
+msgstr ""
+
+msgid "Saved to Media: @label"
+msgstr "मीडिया में सहेजा गया: @label"
 
 msgid "Usage and estimated cost"
 msgstr "उपयोग और अनुमानित लागत"
@@ -296,26 +1493,229 @@ msgstr "आउटपुट टोकन"
 msgid "Total tokens"
 msgstr "कुल टोकन"
 
+msgid "Cached input tokens"
+msgstr ""
+
+msgid "Reasoning tokens"
+msgstr ""
+
 msgid "Reported API cost"
 msgstr "रिपोर्ट की गई API लागत"
 
 msgid "Estimated cost"
 msgstr "अनुमानित लागत"
 
+msgid "Unavailable"
+msgstr ""
+
 msgid "Not applicable"
 msgstr "लागू नहीं"
 
-msgid "Saved to Media: @label"
-msgstr "मीडिया में सहेजा गया: @label"
+msgid "Metric"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "No usage information was returned."
+msgstr ""
+
+msgid ""
+"The cost was reported by xAI for this request. Token counts are unavailable "
+"for media and voice operations that are billed by image, duration, or "
+"character."
+msgstr ""
+
+msgid ""
+"This is a best-effort estimate using public xAI pricing checked on @date. "
+"Actual billing, discounts, cached tokens, tools, and regional pricing can "
+"differ."
+msgstr ""
 
 msgid "Cost estimates"
 msgstr "लागत अनुमान"
 
+msgid ""
+"xAI-reported request costs are always preferred. This editable price list is "
+"used only when an API response does not include a cost."
+msgstr ""
+
 msgid "Model pricing JSON"
 msgstr "मॉडल मूल्य निर्धारण JSON"
 
-msgid "<a href=\":url\">Open AI Image Studio</a> to use Grok for iterative image generation and editing. AI Image Studio works with the Grok models configured for Drupal AI's Text To Image and Image To Image operations."
-msgstr "क्रमिक छवि निर्माण और संपादन के लिए Grok का उपयोग करने हेतु <a href=\":url\">AI Image Studio खोलें</a>। AI Image Studio, Drupal AI के टेक्स्ट से छवि और छवि से छवि संचालन के लिए कॉन्फ़िगर किए गए Grok मॉडलों के साथ काम करता है।"
+msgid ""
+"JSON array of pricing rows. Each row requires <code>model</code> and "
+"<code>type</code>. Supported types are <code>tokens</code>, <code>image</"
+"code>, <code>video</code>, <code>characters</code>, and <code>audio_hours</"
+"code>. An optional <code>operation</code> limits a row to one Drupal AI "
+"operation. Costs are USD estimates; update this data when xAI pricing "
+"changes."
+msgstr ""
 
-msgid "Grok works very well with <a href=\":url\">AI Image Studio</a>, which provides an iterative workspace for generating and editing images. Install and enable AI Image Studio to use it with your configured Grok image models."
-msgstr "Grok <a href=\":url\">AI Image Studio</a> के साथ बहुत अच्छी तरह काम करता है, जो छवियां बनाने और संपादित करने के लिए एक क्रमिक कार्यक्षेत्र प्रदान करता है। इसे अपने कॉन्फ़िगर किए गए Grok छवि मॉडलों के साथ उपयोग करने के लिए AI Image Studio स्थापित और सक्षम करें।"
+msgid "Enter valid model pricing JSON: @message"
+msgstr ""
+
+#: tests/src/Unit/ExplorerMediaHelperTest.php:68
+msgid "Choose an image."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:226
+msgid "Load latest xAI pricing schedule"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:254
+msgid ""
+"Loading or restoring a schedule only updates this form. Review the JSON, "
+"then use <strong>Save configuration</strong> to make it active."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:230
+msgid ""
+"Replace the pricing JSON currently shown with the latest module-maintained "
+"schedule? Unsaved edits in this field will be lost."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:245
+msgid ""
+"Replace the pricing JSON currently shown with the schedule packaged with "
+"this installed module? Unsaved edits in this field will be lost."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:241
+msgid "Restore packaged pricing"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:258
+msgid "Schedule source: @source. Retrieved: @time. SHA-256: @hash."
+msgstr ""
+
+#: src/Service/ExplorerMediaHelper.php:252
+msgid "The current Explorer request is unavailable."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:649
+msgid "The latest pricing schedule could not be loaded: @message"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php:686
+msgid "The packaged pricing schedule could not be restored: @message"
+msgstr ""
+
+#: src/Service/ExplorerMediaHelper.php:247
+msgid "The selected image could not be prepared."
+msgstr ""
+
+#: grok.module:253
+msgid "Upload an image."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid ""
+"<a href=\":url\">Open AI Image Studio</a> to use Grok for iterative image "
+"generation and editing. AI Image Studio works with the Grok models "
+"configured for Drupal AI's Text To Image and Image To Image operations."
+msgstr ""
+"क्रमिक छवि निर्माण और संपादन के लिए Grok का उपयोग करने हेतु <a href=\":url\">AI "
+"Image Studio खोलें</a>। AI Image Studio, Drupal AI के टेक्स्ट से छवि और छवि से छवि "
+"संचालन के लिए कॉन्फ़िगर किए गए Grok मॉडलों के साथ काम करता है।"
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid ""
+"Grok works very well with <a href=\":url\">AI Image Studio</a>, which "
+"provides an iterative workspace for generating and editing images. Install "
+"and enable AI Image Studio to use it with your configured Grok image models."
+msgstr ""
+"Grok <a href=\":url\">AI Image Studio</a> के साथ बहुत अच्छी तरह काम करता है, जो "
+"छवियां बनाने और संपादित करने के लिए एक क्रमिक कार्यक्षेत्र प्रदान करता है। इसे अपने "
+"कॉन्फ़िगर किए गए Grok छवि मॉडलों के साथ उपयोग करने के लिए AI Image Studio स्थापित "
+"और सक्षम करें।"
+
+#: src/Service/XaiVideosClient.php
+msgid "xAI returned a generated video URL outside the trusted asset hosts."
+msgstr ""
+
+#: src/Service/XaiVideosClient.php
+msgid "xAI returned a generated video URL for a private or reserved address."
+msgstr ""
+
+#: src/Service/XaiAudioClient.php
+msgid "xAI returned text-to-speech data that is not a valid MP3 stream."
+msgstr ""
+
+#: grok.module
+msgid "Default text to video provider"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid "Example user message shown in the Chat Generation Explorer."
+msgstr ""
+
+msgid "Example editing instructions shown in the Image-To-Image Explorer."
+msgstr ""
+
+msgid ""
+"Example video description shown in the Text-To-Video Generation Explorer."
+msgstr ""
+
+msgid "Example content shown in the Moderation Explorer."
+msgstr ""
+
+msgid ""
+"Example image description shown in the Text-To-Image Generation Explorer."
+msgstr ""
+
+msgid "Example narration shown in the Text-To-Speech Explorer."
+msgstr ""
+
+#: src/Plugin/AiProvider/GrokAiProvider.php
+msgid "Messages supplied to the model."
+msgstr ""
+
+msgid "A text description of the image to generate."
+msgstr ""
+
+msgid "A source image to edit."
+msgstr ""
+
+msgid "A text description of the video to generate."
+msgstr ""
+
+msgid "A still image to animate."
+msgstr ""
+
+msgid "xAI API key."
+msgstr ""
+
+msgid "You are a helpful assistant."
+msgstr ""
+
+msgid "Introduce yourself!"
+msgstr ""
+
+msgid "Welcome to the Grok AI Provider for Drupal."
+msgstr ""
+
+msgid ""
+"Make the flag wave. Halfway through, have a huge crack of lightning appear."
+msgstr ""
+
+#~ msgid "Grok xAi Provider"
+#~ msgstr "Grok xAi प्रदाता"
+
+#~ msgid "Provides Grok models from xAI to the Drupal AI modules."
+#~ msgstr "Drupal AI मॉड्यूल के लिए xAI के Grok मॉडल उपलब्ध कराता है।"
+
+#~ msgid "AI Providers"
+#~ msgstr "AI प्रदाता"
+
+#~ msgid "Grok authentication"
+#~ msgstr "Grok प्रमाणीकरण"
+
+#~ msgid "Configure access to the xAI API."
+#~ msgstr "xAI API तक पहुँच कॉन्फ़िगर करें।"
+
+#~ msgid "Configure Grok authentication, models, transports, and hosted tools."
+#~ msgstr "Grok प्रमाणीकरण, मॉडल, ट्रांसपोर्ट और होस्ट किए गए टूल कॉन्फ़िगर करें।"
+
+#~ msgid "Configure Grok Integrations"
+#~ msgstr "Grok एकीकरण कॉन्फ़िगर करें"
