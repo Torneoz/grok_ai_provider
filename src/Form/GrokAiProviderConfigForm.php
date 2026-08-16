@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\grok\Form;
 
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Extension\ExtensionList;
@@ -11,6 +13,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
 use Drupal\grok\Service\GrokCostEstimator;
@@ -56,6 +59,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   private ?ModuleHandlerInterface $moduleHandler = NULL;
 
   /**
+   * Drupal state storage for the latest discovered model.
+   */
+  private ?StateInterface $state = NULL;
+
+  /**
    * Constructs the configuration form.
    */
   public function __construct(
@@ -67,6 +75,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     XaiPricingScheduleFetcher $pricing_schedule_fetcher,
     ExtensionList $module_list,
     ModuleHandlerInterface $module_handler,
+    StateInterface $state,
   ) {
     parent::__construct($config_factory, $typed_config_manager);
     $this->aiProviderManager = $ai_provider_manager;
@@ -75,6 +84,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     $this->pricingScheduleFetcher = $pricing_schedule_fetcher;
     $this->moduleList = $module_list;
     $this->moduleHandler = $module_handler;
+    $this->state = $state;
   }
 
   /**
@@ -90,6 +100,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $container->get('grok.pricing_schedule_fetcher'),
       $container->get('extension.list.module'),
       $container->get('module_handler'),
+      $container->get('state'),
     );
   }
 
@@ -536,7 +547,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     ];
 
     $module_info = $this->moduleList->getExtensionInfo('grok');
-    $version = (string) ($module_info['version'] ?? '1.0.0-beta3');
+    $version = (string) ($module_info['version'] ?? '1.0.0-beta4');
     $form['about'] = [
       '#type' => 'details',
       '#title' => $this->t('About'),
@@ -683,6 +694,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         rtrim((string) $form_state->getValue('host'), '/'),
       );
       $preferred = $this->preferredModel($models);
+      $this->getState()->set('grok.latest_discovered_chat_model', $preferred);
       $configured = (string) ($this->config(self::CONFIG_NAME)->get('default_model') ?: '');
       $this->syncDiscoveredPricing($form_state, array_keys($models));
       $form_state->set('grok_models', $models);
@@ -715,8 +727,11 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
   /**
    * Returns the AJAX-rebuilt connection controls.
    */
-  public function connectionAjax(array &$form, FormStateInterface $form_state): array {
-    return $form['connection'];
+  public function connectionAjax(array &$form, FormStateInterface $form_state): AjaxResponse {
+    $response = new AjaxResponse();
+    $response->addCommand(new ReplaceCommand('#grok-connection-wrapper', $form['connection']));
+    $response->addCommand(new ReplaceCommand('#grok-pricing-wrapper', $form['cost_estimates']));
+    return $response;
   }
 
   /**
@@ -1001,6 +1016,17 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       $this->moduleHandler = \Drupal::service('module_handler');
     }
     return $this->moduleHandler;
+  }
+
+  /**
+   * Gets state storage after cached form reconstruction.
+   */
+  private function getState(): StateInterface {
+    if (!$this->state instanceof StateInterface) {
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal -- Recovers a dependency after cached form reconstruction.
+      $this->state = \Drupal::service('state');
+    }
+    return $this->state;
   }
 
   /**

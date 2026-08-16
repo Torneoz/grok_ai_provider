@@ -107,6 +107,25 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * Ensures model discovery refreshes both affected AJAX sections.
+   */
+  public function testConnectionAjaxRefreshesPricing(): void {
+    $source = file_get_contents(
+      (new \ReflectionClass(GrokAiProviderConfigForm::class))->getFileName(),
+    );
+
+    self::assertIsString($source);
+    self::assertStringContainsString(
+      "new ReplaceCommand('#grok-connection-wrapper', \$form['connection'])",
+      $source,
+    );
+    self::assertStringContainsString(
+      "new ReplaceCommand('#grok-pricing-wrapper', \$form['cost_estimates'])",
+      $source,
+    );
+  }
+
+  /**
    * Ensures Next Steps handles both AI Image Studio installation states.
    */
   public function testImageStudioNextStepsAreConditional(): void {

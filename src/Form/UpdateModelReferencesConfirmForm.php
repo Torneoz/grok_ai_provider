@@ -49,7 +49,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl(): Url {
-    return Url::fromRoute('grok.settings_form');
+    return Url::fromRoute('ai.settings_form');
   }
 
   /**
@@ -66,7 +66,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
       version_compare($to_version, $from_version, '<=')
     ) {
       $this->messenger()->addError($this->t('The requested Grok model update is invalid.'));
-      $form_state->setRedirect('grok.settings_form');
+      $form_state->setRedirect('ai.settings_form');
       return;
     }
 
@@ -98,7 +98,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
       'Updated @count Drupal AI capabilities to use @model.',
       ['@model' => $to],
     ));
-    $form_state->setRedirect('grok.settings_form');
+    $form_state->setRedirect('ai.settings_form');
   }
 
   /**

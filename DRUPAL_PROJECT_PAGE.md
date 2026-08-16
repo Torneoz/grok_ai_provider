@@ -71,6 +71,10 @@ drush en grok
 Create a Drupal Key entity containing an xAI API key, then configure Grok
 Integration at `/admin/config/ai/providers/grok`. Use **Test connection and
 load models** to verify credentials and discover models available to the key.
+When discovery finds a newer numbered Grok family, Drupal AI's **AI
+Capabilities from Installed Providers** section offers a confirmed action to
+update older Grok defaults. Newly published pricing rows are also merged into
+the provider form for review without overwriting custom pricing.
 
 Drupal 11.2+ sites can alternatively apply the included recipe after Composer
 installation:

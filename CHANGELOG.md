@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0-beta4
+
+- Detects newer numbered Grok model families whenever an administrator uses
+  **Test connection and load models**.
+- Adds a confirmed, family-wide migration action above Drupal AI's **AI
+  Capabilities from Installed Providers** table for outdated Grok defaults.
+- Keeps the Grok provider default synchronized when capability references are
+  migrated, without modifying other providers or model families.
+- Merges published rows for newly discovered models from the trusted pricing
+  schedule into the editable pricing JSON while preserving custom rows.
+- Identifies discovered models without published fallback rates rather than
+  copying or inventing prices; exact costs returned by xAI remain authoritative.
+- Selects the newest available numbered Grok model dynamically instead of
+  hard-coding the previous preferred model family.
+
 ## 1.0.0-beta3
 
 - Made the text-to-video default-provider schema label translatable.

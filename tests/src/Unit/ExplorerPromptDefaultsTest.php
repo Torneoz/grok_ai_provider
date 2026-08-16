@@ -35,4 +35,14 @@ final class ExplorerPromptDefaultsTest extends TestCase {
     }
   }
 
+  /**
+   * Tests numbered model families used by capability upgrade notices.
+   */
+  public function testNumberedModelVersion(): void {
+    self::assertSame('4.5', grok_numbered_model_version('grok-4.5-latest'));
+    self::assertSame('4.6', grok_numbered_model_version('grok-4.6'));
+    self::assertNull(grok_numbered_model_version('grok-build-latest'));
+    self::assertNull(grok_numbered_model_version('other-4.5'));
+  }
+
 }

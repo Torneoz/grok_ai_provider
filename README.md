@@ -44,6 +44,11 @@ Select the Key and save the form. The provider validates access using model
 discovery; it does not make a billable chat request during configuration.
 Use **Test connection and load models** to verify unsaved credentials and
 populate the default-model selector with the models accessible to that key.
+Model discovery records the newest available numbered Grok family. If Drupal
+AI capabilities still use an older family, the **AI Capabilities from
+Installed Providers** section displays a confirmed update action. The action
+updates only Grok defaults from that numbered family and leaves other providers
+and model families unchanged.
 After a working connection has been saved, a temporary xAI outage does not
 prevent administrators from saving unrelated provider settings. Changes to
 the key, endpoint, or default chat model continue to require validation.
@@ -110,6 +115,12 @@ or **Restore packaged pricing** to return to the schedule shipped with the
 installed release. Both actions validate and preview the JSON without saving
 it. The main **Save configuration** button must be used to activate the new
 schedule. The form records its source, retrieval time, and SHA-256 hash.
+
+Model discovery also checks the active pricing JSON for exact rows matching
+newly available models and aliases. Published rows from the trusted schedule
+are merged into the form without replacing custom rows; review and save the
+form to activate them. When no published fallback rate exists, the form lists
+the unpriced models instead of assuming that an older model's rate applies.
 
 When Torneo AI is installed, Grok cost estimation automatically uses the
 shared `torneo_ai.pricing_catalog` service. This keeps Grok AI Explorer usage

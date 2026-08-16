@@ -8,6 +8,13 @@
 declare(strict_types=1);
 
 /**
+ * Removes non-configuration discovery state on uninstall.
+ */
+function grok_uninstall(): void {
+  \Drupal::state()->delete('grok.latest_discovered_chat_model');
+}
+
+/**
  * Adds Responses transport and hosted-tool configuration defaults.
  */
 function grok_update_10001(): void {

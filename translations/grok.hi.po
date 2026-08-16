@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: grok 1.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 00:00+0930\n"
+"POT-Creation-Date: 2026-08-16 00:00+0930\n"
 "PO-Revision-Date: 2026-08-03 00:00+0000\n"
 "Last-Translator: Torneoz\n"
 "Language-Team: Hindi\n"
@@ -1697,6 +1697,68 @@ msgstr ""
 
 msgid ""
 "Make the flag wave. Halfway through, have a huge crack of lightning appear."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid ""
+"A newer Grok model is available: <strong>@new</strong>. <a "
+"href=\":url\">Update all Drupal AI capability references from @old to @new</"
+"a>."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid ""
+"Added published pricing for one newly discovered model. Review and save the "
+"form to activate it."
+msgid_plural ""
+"Added published pricing for @count newly discovered models. Review and save "
+"the form to activate it."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid ""
+"No published fallback pricing is available for: @models. Actual costs "
+"reported by xAI will still be used."
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
+msgid "Models loaded, but their latest pricing could not be checked: @message"
+msgstr ""
+
+#: grok.module
+msgid ""
+"Newer Grok models were found when the provider models were last loaded. "
+"Review and update the affected AI capabilities:"
+msgstr ""
+
+#: grok.module
+msgid "Update all Grok capability references from @old to @new"
+msgstr ""
+
+#: src/Form/UpdateModelReferencesConfirmForm.php
+msgid "Update Grok capability references from @old to @new?"
+msgstr ""
+
+#: src/Form/UpdateModelReferencesConfirmForm.php
+msgid ""
+"Every Drupal AI capability whose default provider is Grok and whose model "
+"belongs to the old numbered model family will be updated. Other providers "
+"and model families are not changed."
+msgstr ""
+
+#: src/Form/UpdateModelReferencesConfirmForm.php
+msgid "The requested Grok model update is invalid."
+msgstr ""
+
+#: src/Form/UpdateModelReferencesConfirmForm.php
+msgid "Updated one Drupal AI capability to use @model."
+msgid_plural "Updated @count Drupal AI capabilities to use @model."
+msgstr[0] ""
+msgstr[1] ""
+
+#: grok.routing.yml
+msgid "Update Grok model references"
 msgstr ""
 
 #~ msgid "Grok xAi Provider"

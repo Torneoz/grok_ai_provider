@@ -7,6 +7,7 @@
 
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Returns the packaged Explorer prompt defaults keyed by operation.
@@ -54,6 +55,72 @@ function grok_config_schema_info_alter(array &$definitions): void {
     'label' => new TranslatableMarkup('Default text to video provider'),
     'type' => 'grok.default_operation_provider',
   ];
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() for Drupal AI settings.
+ */
+function grok_form_ai_settings_alter(array &$form, FormStateInterface $form_state): void {
+  if (!isset($form['installed_capabilities'])) {
+    return;
+  }
+  $latest = (string) \Drupal::state()->get('grok.latest_discovered_chat_model', '');
+  $latest_version = grok_numbered_model_version($latest);
+  if ($latest_version === NULL) {
+    return;
+  }
+
+  $upgrades = [];
+  $defaults = (array) \Drupal::config('ai.settings')->get('default_providers');
+  foreach ($defaults as $default) {
+    if (($default['provider_id'] ?? '') !== 'grok') {
+      continue;
+    }
+    $model = (string) ($default['model_id'] ?? '');
+    $version = grok_numbered_model_version($model);
+    if ($version !== NULL && version_compare($latest_version, $version, '>')) {
+      $upgrades[$version] = ['from' => $model, 'to' => $latest];
+    }
+  }
+  if ($upgrades === []) {
+    return;
+  }
+
+  $items = [];
+  foreach ($upgrades as $upgrade) {
+    $items[] = [
+      '#type' => 'link',
+      '#title' => new TranslatableMarkup('Update all Grok capability references from @old to @new', [
+        '@old' => 'Grok ' . grok_numbered_model_version($upgrade['from']),
+        '@new' => $upgrade['to'],
+      ]),
+      '#url' => Url::fromRoute('grok.update_model_references', [
+        'from' => $upgrade['from'],
+        'to' => $upgrade['to'],
+      ]),
+    ];
+  }
+  $form['installed_capabilities']['grok_model_updates'] = [
+    '#type' => 'container',
+    '#weight' => -100,
+    '#attributes' => ['class' => ['messages', 'messages--warning']],
+    'intro' => [
+      '#markup' => '<p>' . new TranslatableMarkup('Newer Grok models were found when the provider models were last loaded. Review and update the affected AI capabilities:') . '</p>',
+    ],
+    'links' => [
+      '#theme' => 'item_list',
+      '#items' => $items,
+    ],
+  ];
+}
+
+/**
+ * Extracts the numbered version family from a Grok model ID.
+ */
+function grok_numbered_model_version(string $model): ?string {
+  return preg_match('/^grok-(\d+(?:\.\d+)*)(?:-|$)/i', $model, $matches)
+    ? $matches[1]
+    : NULL;
 }
 
 /**
