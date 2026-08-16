@@ -5,3 +5,13 @@ grok.settings_form:
     _title: 'Configure Grok Integrations'
   requirements:
     _permission: 'administer ai providers'
+
+grok.update_model_references:
+  path: '/admin/config/ai/providers/grok/update-model-references/{from}/{to}'
+  defaults:
+    _form: '\Drupal\grok\Form\UpdateModelReferencesConfirmForm'
+    _title: 'Update Grok model references'
+  requirements:
+    _permission: 'administer ai providers'
+    from: 'grok-[A-Za-z0-9._-]+'
+    to: 'grok-[A-Za-z0-9._-]+'

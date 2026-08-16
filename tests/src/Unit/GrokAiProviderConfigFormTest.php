@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\Tests\grok\Unit;
 
 use Drupal\grok\Form\GrokAiProviderConfigForm;
+use Drupal\grok\Form\UpdateModelReferencesConfirmForm;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -33,9 +34,10 @@ final class GrokAiProviderConfigFormTest extends TestCase {
       ->newInstanceWithoutConstructor();
     $method = new \ReflectionMethod(GrokAiProviderConfigForm::class, 'preferredModel');
 
-    self::assertSame('grok-4.5-latest', $method->invoke($form, [
+    self::assertSame('grok-4.6', $method->invoke($form, [
       'grok-4.3' => 'grok-4.3',
       'grok-4.5-latest' => 'grok-4.5-latest',
+      'grok-4.6' => 'grok-4.6',
     ]));
     self::assertSame('grok-4.5', $method->invoke($form, [
       'grok-4.5' => 'grok-4.5',
@@ -44,6 +46,46 @@ final class GrokAiProviderConfigFormTest extends TestCase {
     self::assertSame('grok-4.3', $method->invoke($form, [
       'grok-4.3' => 'grok-4.3',
     ]));
+  }
+
+  /**
+   * Tests discovery of a newer numbered Grok family.
+   */
+  public function testModelUpgradeDetection(): void {
+    $form = (new \ReflectionClass(GrokAiProviderConfigForm::class))
+      ->newInstanceWithoutConstructor();
+    $method = new \ReflectionMethod(GrokAiProviderConfigForm::class, 'modelUpgrade');
+
+    self::assertSame([
+      'from' => 'grok-4.5-latest',
+      'to' => 'grok-4.6-latest',
+    ], $method->invoke($form, 'grok-4.5-latest', [
+      'grok-4.5-latest' => 'grok-4.5-latest',
+      'grok-4.6' => 'grok-4.6',
+      'grok-4.6-latest' => 'grok-4.6-latest',
+    ]));
+    self::assertNull($method->invoke($form, 'grok-4.6', [
+      'grok-4.5-latest' => 'grok-4.5-latest',
+      'grok-4.6' => 'grok-4.6',
+    ]));
+    self::assertNull($method->invoke($form, 'grok-beta', [
+      'grok-4.6' => 'grok-4.6',
+    ]));
+  }
+
+  /**
+   * Tests model-family extraction used by the confirmed bulk update.
+   */
+  public function testUpdateModelFamilyMatching(): void {
+    $form = (new \ReflectionClass(UpdateModelReferencesConfirmForm::class))
+      ->newInstanceWithoutConstructor();
+    $method = new \ReflectionMethod(UpdateModelReferencesConfirmForm::class, 'modelVersion');
+
+    self::assertSame('4.5', $method->invoke($form, 'grok-4.5'));
+    self::assertSame('4.5', $method->invoke($form, 'grok-4.5-latest'));
+    self::assertSame('4.6', $method->invoke($form, 'grok-4.6-fast'));
+    self::assertNull($method->invoke($form, 'grok-beta'));
+    self::assertNull($method->invoke($form, 'other-4.5'));
   }
 
   /**

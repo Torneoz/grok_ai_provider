@@ -396,6 +396,22 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         'message' => ['#plain_text' => $status['message']],
       ];
     }
+    if ($upgrade = $form_state->get('grok_model_upgrade')) {
+      $form['connection']['model_upgrade'] = [
+        '#type' => 'container',
+        '#attributes' => ['class' => ['messages', 'messages--warning']],
+        'message' => [
+          '#markup' => $this->t('A newer Grok model is available: <strong>@new</strong>. <a href=":url">Update all Drupal AI capability references from @old to @new</a>.', [
+            '@old' => $upgrade['from'],
+            '@new' => $upgrade['to'],
+            ':url' => Url::fromRoute('grok.update_model_references', [
+              'from' => $upgrade['from'],
+              'to' => $upgrade['to'],
+            ])->toString(),
+          ]),
+        ],
+      ];
+    }
 
     $permissions = (array) $config->get('hosted_tools');
     $form['hosted_tools'] = [
@@ -667,12 +683,14 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         rtrim((string) $form_state->getValue('host'), '/'),
       );
       $preferred = $this->preferredModel($models);
+      $configured = (string) ($this->config(self::CONFIG_NAME)->get('default_model') ?: '');
       $form_state->set('grok_models', $models);
       $form_state->set('grok_connection_fingerprint', hash('sha256', implode("\0", [
         (string) $form_state->getValue('api_key'),
         rtrim((string) $form_state->getValue('host'), '/'),
       ])));
       $form_state->setValue('default_model', $preferred);
+      $form_state->set('grok_model_upgrade', $this->modelUpgrade($configured, $models));
       $form_state->set('grok_connection_status', [
         'type' => 'status',
         'message' => (string) $this->formatPlural(
@@ -684,6 +702,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
     }
     catch (\Throwable $exception) {
       $form_state->set('grok_models', NULL);
+      $form_state->set('grok_model_upgrade', NULL);
       $form_state->set('grok_connection_status', [
         'type' => 'error',
         'message' => (string) $this->t('Connection failed: @message', ['@message' => $exception->getMessage()]),
@@ -805,12 +824,38 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    * Selects the best available default without assuming an alias exists.
    */
   private function preferredModel(array $models): string {
-    foreach (['grok-4.5-latest', 'grok-4.5'] as $preferred) {
-      if (isset($models[$preferred])) {
-        return $preferred;
+    $versioned = [];
+    foreach (array_keys($models) as $model) {
+      if (preg_match('/^grok-(\d+(?:\.\d+)*)(-latest)?$/i', (string) $model, $matches)) {
+        $versioned[] = [
+          'id' => (string) $model,
+          'version' => $matches[1],
+          'latest' => isset($matches[2]) && $matches[2] !== '',
+        ];
       }
     }
-    return (string) array_key_first($models);
+    usort($versioned, static function (array $a, array $b): int {
+      $comparison = version_compare($b['version'], $a['version']);
+      return $comparison !== 0 ? $comparison : ((int) $b['latest'] <=> (int) $a['latest']);
+    });
+    return $versioned[0]['id'] ?? (string) array_key_first($models);
+  }
+
+  /**
+   * Finds a newer versioned Grok model for the configured default.
+   */
+  private function modelUpgrade(string $configured, array $models): ?array {
+    if (!preg_match('/^grok-(\d+(?:\.\d+)*)(-latest)?$/i', $configured, $current)) {
+      return NULL;
+    }
+    $preferred = $this->preferredModel($models);
+    if (!preg_match('/^grok-(\d+(?:\.\d+)*)(-latest)?$/i', $preferred, $available)) {
+      return NULL;
+    }
+    if (version_compare($available[1], $current[1], '<=')) {
+      return NULL;
+    }
+    return ['from' => $configured, 'to' => $preferred];
   }
 
   /**
