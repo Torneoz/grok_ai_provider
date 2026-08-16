@@ -89,6 +89,24 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * Tests exact pricing coverage checks for discovered aliases.
+   */
+  public function testModelsMissingPricing(): void {
+    $form = (new \ReflectionClass(GrokAiProviderConfigForm::class))
+      ->newInstanceWithoutConstructor();
+    $method = new \ReflectionMethod(GrokAiProviderConfigForm::class, 'modelsMissingPricing');
+
+    self::assertSame(['grok-4.6', 'grok-4.6-latest'], $method->invoke($form, [
+      'grok-4.5',
+      'grok-4.6',
+      'grok-4.6-latest',
+    ], [
+      ['model' => 'grok-4.5', 'type' => 'tokens'],
+      ['model' => '*', 'operation' => 'text_to_speech', 'type' => 'characters'],
+    ]));
+  }
+
+  /**
    * Ensures Next Steps handles both AI Image Studio installation states.
    */
   public function testImageStudioNextStepsAreConditional(): void {

@@ -684,6 +684,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       );
       $preferred = $this->preferredModel($models);
       $configured = (string) ($this->config(self::CONFIG_NAME)->get('default_model') ?: '');
+      $this->syncDiscoveredPricing($form_state, array_keys($models));
       $form_state->set('grok_models', $models);
       $form_state->set('grok_connection_fingerprint', hash('sha256', implode("\0", [
         (string) $form_state->getValue('api_key'),
@@ -787,6 +788,84 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
    */
   public function pricingAjax(array &$form, FormStateInterface $form_state): array {
     return $form['cost_estimates'];
+  }
+
+  /**
+   * Adds published pricing rows for newly discovered models to the form.
+   */
+  private function syncDiscoveredPricing(FormStateInterface $form_state, array $models): void {
+    try {
+      $current_json = (string) ($form_state->getValue('pricing_json') ?: $this->getCostEstimator()->getPricingJson());
+      $current = json_decode(
+        $this->getCostEstimator()->normalizePricingJson($current_json),
+        TRUE,
+        512,
+        JSON_THROW_ON_ERROR,
+      );
+      $missing = $this->modelsMissingPricing($models, $current);
+      if ($missing === []) {
+        return;
+      }
+
+      $schedule = $this->getPricingScheduleFetcher()->fetch();
+      $latest = json_decode($schedule['json'], TRUE, 512, JSON_THROW_ON_ERROR);
+      $published = array_fill_keys($missing, TRUE);
+      $added = [];
+      foreach ($latest as $row) {
+        $model = (string) ($row['model'] ?? '');
+        if (isset($published[$model])) {
+          $current[] = $row;
+          $added[$model] = TRUE;
+        }
+      }
+      $unpriced = array_values(array_diff($missing, array_keys($added)));
+      if ($added !== []) {
+        $json = $this->getCostEstimator()->normalizePricingJson((string) json_encode($current, JSON_THROW_ON_ERROR));
+        $this->applyPricingSchedule($form_state, [
+          'json' => $json,
+          'source' => 'merged:' . $schedule['source'],
+          'checked_at' => $schedule['checked_at'],
+          'hash' => hash('sha256', $json),
+          'rows' => count($current),
+        ]);
+      }
+      $form_state->set('grok_pricing_status', [
+        'type' => $unpriced === [] ? 'status' : 'error',
+        'message' => $unpriced === []
+          ? (string) $this->formatPlural(
+            count($added),
+            'Added published pricing for one newly discovered model. Review and save the form to activate it.',
+            'Added published pricing for @count newly discovered models. Review and save the form to activate it.',
+        )
+          : (string) $this->t('No published fallback pricing is available for: @models. Actual costs reported by xAI will still be used.', [
+            '@models' => implode(', ', $unpriced),
+          ]),
+      ]);
+    }
+    catch (\Throwable $exception) {
+      $form_state->set('grok_pricing_status', [
+        'type' => 'error',
+        'message' => (string) $this->t('Models loaded, but their latest pricing could not be checked: @message', [
+          '@message' => $exception->getMessage(),
+        ]),
+      ]);
+    }
+  }
+
+  /**
+   * Returns discovered model IDs without an exact pricing row.
+   */
+  private function modelsMissingPricing(array $models, array $pricing): array {
+    $priced = [];
+    foreach ($pricing as $row) {
+      if (is_array($row) && isset($row['model'])) {
+        $priced[(string) $row['model']] = TRUE;
+      }
+    }
+    return array_values(array_filter(
+      array_map('strval', $models),
+      static fn (string $model): bool => !isset($priced[$model]),
+    ));
   }
 
   /**
