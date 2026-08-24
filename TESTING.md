@@ -43,7 +43,7 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
     rejected, and that the one-hour expiry is sent before the multipart file.
 13. Verify PDF chat returns clear errors with forced Chat Completions,
     Responses streaming, unsupported models, and Drupal function tools.
-14. Enable AI API Explorer and verify Grok PDF Explorer lists only PDF-capable
+14. Enable AI API Explorer and verify Grok PDF Explorer [beta] lists only PDF-capable
     Grok models, accepts one and multiple genuine PDFs, rejects non-PDF uploads,
     displays allowed response HTML and request diagnostics, and strips scripts,
     event handlers, and other unsafe response markup.

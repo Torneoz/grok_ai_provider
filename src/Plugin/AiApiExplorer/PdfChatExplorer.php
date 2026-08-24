@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 #[AiApiExplorer(
   id: 'grok_pdf_chat',
-  title: new TranslatableMarkup('Grok PDF Explorer'),
+  title: new TranslatableMarkup('Grok PDF Explorer [beta]'),
   description: new TranslatableMarkup('Upload PDFs and investigate Grok document understanding through the xAI Files and Responses APIs.'),
 )]
 final class PdfChatExplorer extends AiApiExplorerPluginBase {

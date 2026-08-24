@@ -212,7 +212,7 @@ currently be combined with Drupal function tools or streamed Responses
 requests.
 
 When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > Grok
-PDF Explorer** provides a Grok-specific test surface for uploading up to five
+PDF Explorer [beta]** provides a Grok-specific test surface for uploading up to five
 PDFs, trying PDF-capable models, applying system instructions, and inspecting
 the safely filtered HTML answer together with basic request diagnostics.
 
