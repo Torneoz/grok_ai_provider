@@ -6,6 +6,7 @@ namespace Drupal\grok\Plugin\AiApiExplorer;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\Component\Utility\Xss;
 use Drupal\ai\Enum\AiModelCapability;
 use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
@@ -30,6 +31,58 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
    * Maximum number of PDFs accepted in one exploratory request.
    */
   private const MAX_FILES = 5;
+
+  /**
+   * Semantic response tags permitted after XSS filtering.
+   */
+  private const RESPONSE_HTML_TAGS = [
+    'a',
+    'blockquote',
+    'br',
+    'caption',
+    'cite',
+    'code',
+    'dd',
+    'del',
+    'details',
+    'div',
+    'dl',
+    'dt',
+    'em',
+    'figcaption',
+    'figure',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'hr',
+    'ins',
+    'kbd',
+    'li',
+    'mark',
+    'ol',
+    'p',
+    'pre',
+    'q',
+    's',
+    'samp',
+    'small',
+    'span',
+    'strong',
+    'sub',
+    'summary',
+    'sup',
+    'table',
+    'tbody',
+    'td',
+    'tfoot',
+    'th',
+    'thead',
+    'tr',
+    'ul',
+    'var',
+  ];
 
   /**
    * {@inheritdoc}
@@ -58,7 +111,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
     $form['left']['system_prompt'] = [
       '#type' => 'textarea',
       '#title' => $this->t('System instructions'),
-      '#default_value' => 'Answer from the attached PDF documents. Cite the document filename and page number when the source makes that possible. Clearly identify uncertainty.',
+      '#default_value' => 'Answer from the attached PDF documents. Cite the document filename and page number when the source makes that possible. Clearly identify uncertainty. Return semantic HTML only, without Markdown or a surrounding code fence.',
       '#rows' => 3,
     ];
     $form['left']['prompt'] = [
@@ -167,9 +220,10 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
           '#value' => $this->t('Grok response'),
         ],
         'text' => [
-          '#type' => 'html_tag',
-          '#tag' => 'div',
-          '#plain_text' => $output->getText(),
+          '#type' => 'container',
+          'content' => [
+            '#markup' => Xss::filter($output->getText(), self::RESPONSE_HTML_TAGS),
+          ],
           '#attributes' => ['class' => ['ai-text-response']],
         ],
         'diagnostics' => [

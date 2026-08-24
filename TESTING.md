@@ -45,7 +45,8 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
     Responses streaming, unsupported models, and Drupal function tools.
 14. Enable AI API Explorer and verify Grok PDF Explorer lists only PDF-capable
     Grok models, accepts one and multiple genuine PDFs, rejects non-PDF uploads,
-    and displays the response and request diagnostics.
+    displays allowed response HTML and request diagnostics, and strips scripts,
+    event handlers, and other unsafe response markup.
 
 Live API tests incur xAI charges. Use tightly bounded prompts and record the
 model IDs and pricing-schedule hash with the release evidence.

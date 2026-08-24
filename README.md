@@ -214,7 +214,7 @@ requests.
 When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > Grok
 PDF Explorer** provides a Grok-specific test surface for uploading up to five
 PDFs, trying PDF-capable models, applying system instructions, and inspecting
-the answer together with basic request diagnostics.
+the safely filtered HTML answer together with basic request diagnostics.
 
 Streaming Responses requests and stateful response continuation are not yet
 included. Grok Integration includes Collections Search but does not itself
