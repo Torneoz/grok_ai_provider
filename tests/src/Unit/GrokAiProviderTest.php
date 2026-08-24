@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok\Unit;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\ai\Enum\AiModelCapability;
@@ -13,6 +15,7 @@ use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\AudioFile;
+use Drupal\ai\OperationType\GenericType\DocumentFile;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationInput;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationOutput;
@@ -25,6 +28,9 @@ use Drupal\ai\OperationType\SpeechToText\SpeechToTextInput;
 use Drupal\ai\OperationType\SpeechToText\SpeechToTextOutput;
 use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
 use Drupal\grok\Plugin\AiProvider\GrokAiProvider;
+use Drupal\grok\Service\XaiFilesClient;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -91,17 +97,68 @@ final class GrokAiProviderTest extends TestCase {
       ['id' => 'grok-2'],
       ['id' => 'grok-2-vision-1212'],
       ['id' => 'grok-3-mini'],
+      ['id' => 'grok-4.20'],
       ['id' => 'grok-4.5-latest'],
     ];
 
     self::assertSame([
       'grok-2-vision-1212' => 'grok-2-vision-1212',
+      'grok-4.20' => 'grok-4.20',
       'grok-4.5-latest' => 'grok-4.5-latest',
     ], $this->filterModels($models, [AiModelCapability::ChatWithImageVision]));
     self::assertSame([
+      'grok-4.20' => 'grok-4.20',
       'grok-4.5-latest' => 'grok-4.5-latest',
     ], $this->filterModels($models, [AiModelCapability::ChatCombinedToolsAndStructuredResponse]));
+    self::assertSame([
+      'grok-4.20' => 'grok-4.20',
+      'grok-4.5-latest' => 'grok-4.5-latest',
+    ], $this->filterModels($models, [AiModelCapability::ChatWithPdf]));
     self::assertSame([], $this->filterModels($models, [AiModelCapability::ChatWithAudio]));
+  }
+
+  /**
+   * Tests that Drupal PDF files become xAI Responses file attachments.
+   */
+  public function testBuildsPdfResponsesInput(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $http_client = $this->createMock(ClientInterface::class);
+    $http_client->expects(self::once())
+      ->method('request')
+      ->with('POST', GrokAiProvider::DEFAULT_ENDPOINT . '/files', self::anything())
+      ->willReturn(new Response(200, [], '{"id":"file_pdf-123"}'));
+    $translation_method = new \ReflectionMethod($provider, 'getStringTranslation');
+    $files_client = new XaiFilesClient($http_client, $translation_method->invoke($provider));
+
+    $config = $this->createMock(ImmutableConfig::class);
+    $config->method('get')->willReturnMap([
+      ['request_timeout', 300],
+    ]);
+    $config_factory = $this->createMock(ConfigFactoryInterface::class);
+    $config_factory->method('get')->with('grok.settings')->willReturn($config);
+    foreach ([
+      'filesClient' => $files_client,
+      'configFactory' => $config_factory,
+      'pluginDefinition' => ['provider' => 'grok'],
+      'apiKey' => 'secret',
+    ] as $property_name => $value) {
+      $property = new \ReflectionProperty(GrokAiProvider::class, $property_name);
+      $property->setValue($provider, $value);
+    }
+
+    $input = new ChatInput([
+      new ChatMessage('user', 'Summarize this.', [
+        new DocumentFile("%PDF-1.7\ncontent", 'application/pdf', 'report.pdf'),
+      ]),
+    ]);
+    $method = new \ReflectionMethod(GrokAiProvider::class, 'buildResponsesInput');
+    $messages = $method->invoke($provider, $input);
+
+    self::assertSame('input_text', $messages[0]['content'][0]['type']);
+    self::assertSame([
+      'type' => 'input_file',
+      'file_id' => 'file_pdf-123',
+    ], $messages[0]['content'][1]);
   }
 
   /**

@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.0-beta5
+
+- Added native PDF attachments to Grok chat through Drupal AI's
+  `ChatWithPdf` capability and xAI's Files and Responses APIs.
+- Automatically selects Responses transport for PDF chat in automatic mode and
+  returns clear errors for incompatible Chat Completions, streaming, and
+  Drupal-function-tool combinations.
+- Validates PDF MIME type, signature, size, and filename before upload.
+- Uploads private PDFs with a one-hour xAI expiry and attempts immediate
+  deletion after every successful or failed chat request.
+- Added Files API exception mapping and unit coverage for upload, attachment
+  conversion, cleanup calls, validation, and model-capability filtering.
+
 ## 1.0.0-beta4
 
 - Detects newer numbered Grok model families whenever an administrator uses

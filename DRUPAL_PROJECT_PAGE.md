@@ -1,7 +1,7 @@
 # Grok Integration
 
 Grok Integration connects Drupal's [AI module](https://www.drupal.org/project/ai)
-to xAI. It provides Grok chat and multimodal models, Grok Imagine image and
+to xAI. It provides Grok chat with image and PDF input, Grok Imagine image and
 video generation, voice operations, hosted tools, Drupal AI Explorer
 enhancements, and best-effort cost estimates.
 
@@ -11,7 +11,8 @@ is not affiliated with or endorsed by xAI.
 
 ## Supported Drupal AI operations
 
-- Chat, streaming chat, vision input, function tools, and structured output
+- Chat, streaming chat, vision and PDF input, function tools, and structured
+  output
 - Text to Image and Image to Image
 - Text to Video and Image to Video
 - Text to Speech and Speech to Text
@@ -23,8 +24,10 @@ is not affiliated with or endorsed by xAI.
   uploading documents, and queued bulk ingestion.
 
 Ordinary requests use Chat Completions. Requests that enable xAI-hosted tools
-use the Responses API automatically. Moderation is a probabilistic Grok
-assessment, not a dedicated safety or compliance endpoint.
+or attach PDFs use the Responses API automatically. Private PDF attachments
+are limited to 48 MB, uploaded with a one-hour expiry, and deleted immediately
+after the synchronous request on a best-effort basis. Moderation is a
+probabilistic Grok assessment, not a dedicated safety or compliance endpoint.
 
 ## Drupal AI Explorer enhancements
 

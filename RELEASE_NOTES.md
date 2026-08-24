@@ -1,5 +1,26 @@
 # Release notes
 
+## Grok Integration 1.0.0-beta5
+
+Grok Integration 1.0.0-beta5 adds native PDF document understanding to Drupal
+AI chat through xAI's Files and Responses APIs.
+
+### Highlights
+
+- Agentic Grok models are now advertised for Drupal AI's **Chat with PDF**
+  capability.
+- PDF attachments automatically use Responses transport when the provider is
+  in automatic mode.
+- Private PDFs are validated, uploaded with a one-hour expiry, and deleted
+  immediately after the synchronous request on a best-effort basis.
+- Explicit errors prevent PDFs from being silently dropped when Chat
+  Completions, Responses streaming, or Drupal function tools are selected.
+- PDF attachments are limited to 48 MB each.
+
+The consumer Grok PDF artifact skill is not exposed by xAI's developer API.
+This release supports reading and reasoning over PDF chat attachments; it does
+not claim native PDF artifact creation, merging, or splitting.
+
 ## Grok Integration 1.0.0-beta4
 
 Grok Integration 1.0.0-beta4 adds an administrator-controlled upgrade path for

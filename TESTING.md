@@ -37,6 +37,15 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
    redirect, and an oversized response are all rejected.
 10. Export and re-import configuration, uninstall the module, and confirm no
     unexpected configuration or temporary files remain.
+11. Attach one and multiple PDFs to chat and verify the provider uses Responses,
+    answers from each document, and removes the uploaded xAI files afterward.
+12. Verify empty, falsely labelled, malformed, and larger-than-48-MB PDFs are
+    rejected, and that the one-hour expiry is sent before the multipart file.
+13. Verify PDF chat returns clear errors with forced Chat Completions,
+    Responses streaming, unsupported models, and Drupal function tools.
+14. Enable AI API Explorer and verify Grok PDF Explorer lists only PDF-capable
+    Grok models, accepts one and multiple genuine PDFs, rejects non-PDF uploads,
+    and displays the response and request diagnostics.
 
 Live API tests incur xAI charges. Use tightly bounded prompts and record the
 model IDs and pricing-schedule hash with the release evidence.
@@ -48,7 +57,7 @@ Create a release-evidence record outside the distributable archive and include:
 - Commit and proposed tag.
 - Links to successful dependency-matrix CI jobs.
 - Drupal, PHP, AI, and Key versions used for each integration site.
-- Pass/fail results for integration checks 1–10 on Drupal 10.6 and Drupal 11.
+- Pass/fail results for integration checks 1–14 on Drupal 10.6 and Drupal 11.
 - The source alpha version used for every upgrade-path test.
 - Live smoke-test operation, model ID, result, UTC timestamp, and pricing hash.
 - Any accepted limitation, with an issue link and release-note text.

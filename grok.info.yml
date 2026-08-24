@@ -1,5 +1,5 @@
 name: Grok Integration
-description: Integrates xAI Grok models with Drupal AI for chat, images, video, classification, moderation, and hosted tools.
+description: Integrates xAI Grok models with Drupal AI for chat, PDF understanding, images, video, classification, moderation, and hosted tools.
 package: AI Providers
 type: module
 core_version_requirement: ^10.6 || ^11.2

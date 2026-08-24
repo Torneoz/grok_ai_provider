@@ -3,6 +3,10 @@ services:
     class: Drupal\grok\Service\XaiResponsesClient
     arguments: ['@http_client', '@string_translation']
 
+  grok.files_client:
+    class: Drupal\grok\Service\XaiFilesClient
+    arguments: ['@http_client', '@string_translation']
+
   grok.images_client:
     class: Drupal\grok\Service\XaiImagesClient
     arguments: ['@http_client', '@string_translation']

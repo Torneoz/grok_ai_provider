@@ -1,9 +1,9 @@
 # Grok Integration
 
-Provides xAI Grok chat, image generation, image editing, video generation,
-text-to-speech, and speech-to-text to Drupal through the AI module, together
-with model-based moderation and image classification using xAI's Chat
-Completions, Responses, Imagine, and Voice APIs.
+Provides xAI Grok chat with image and PDF input, image generation, image
+editing, video generation, text-to-speech, and speech-to-text to Drupal through
+the AI module, together with model-based moderation and image classification
+using xAI's Chat Completions, Responses, Files, Imagine, and Voice APIs.
 
 This is an unofficial community integration and is not affiliated with or
 endorsed by xAI.
@@ -154,6 +154,7 @@ translations independently.
 
 - Text chat and streaming
 - Image input on supported Grok models
+- PDF attachments on agentic Grok models through xAI Files and Responses APIs
 - Image classification with optional candidate labels and confidence scores
 - Model-based text moderation with safety categories, an explanation, and a
   confidence score
@@ -203,6 +204,18 @@ Responses are not stored by xAI unless an administrator opts in. Drupal
 function tools continue to use Chat Completions so the existing Drupal AI tool
 execution loop remains unchanged.
 
+PDF chat attachments always use the Responses API. Private PDFs are uploaded
+to xAI with a one-hour expiry, referenced by file ID for the synchronous chat
+request, and deleted immediately afterward on a best-effort basis. The expiry
+remains as a cleanup safety net if deletion fails. PDF attachments cannot
+currently be combined with Drupal function tools or streamed Responses
+requests.
+
+When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > Grok
+PDF Explorer** provides a Grok-specific test surface for uploading up to five
+PDFs, trying PDF-capable models, applying system instructions, and inspecting
+the answer together with basic request diagnostics.
+
 Streaming Responses requests and stateful response continuation are not yet
 included. Grok Integration includes Collections Search but does not itself
 manage collections or documents. Install the optional, separately maintained
@@ -238,11 +251,13 @@ individual decoded generated images above 20 MB. Transfer callbacks abort
 oversized audio and video responses while they are being received. Long video
 requests still occupy a PHP worker while the asynchronous xAI operation is
 polled; queue-based generation is not included in the current beta.
+PDF chat attachments are limited to 48 MB each and must contain a PDF file
+signature as well as the `application/pdf` MIME type.
 
 ## Privacy and security
 
-Prompts, uploaded media, generated content, and enabled hosted-tool activity
-are sent to the configured API endpoint. Web Search, X Search, Code
+Prompts, uploaded media and PDFs, generated content, and enabled hosted-tool
+activity are sent to the configured API endpoint. Web Search, X Search, Code
 Interpreter, Collections Search, and remote MCP can send request context to
 additional services. Review those services and the selected custom gateway
 against your organization's privacy, data-residency, and retention policies.

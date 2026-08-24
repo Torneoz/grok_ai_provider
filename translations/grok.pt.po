@@ -1779,6 +1779,47 @@ msgstr[1] ""
 msgid "Update Grok model references"
 msgstr ""
 
+msgid "The attached PDF is empty."
+msgstr ""
+
+msgid "PDF attachments must not exceed 48 MB."
+msgstr ""
+
+msgid "The attached file does not have a valid PDF signature."
+msgstr ""
+
+msgid "The xAI file-upload response could not be decoded: @message"
+msgstr ""
+
+msgid "xAI returned an invalid file-upload payload."
+msgstr ""
+
+msgid "A valid xAI file ID and API key are required for deletion."
+msgstr ""
+
+msgid "Could not connect to the xAI Files API during @operation: @message"
+msgstr ""
+
+msgid "xAI Files API returned HTTP @status during @operation: @message"
+msgstr ""
+
+msgid ""
+"PDF attachments cannot currently be combined with Drupal function tools."
+msgstr ""
+
+msgid ""
+"Hosted xAI tools and PDF attachments require the Responses API, but this "
+"provider is configured for Chat Completions only."
+msgstr ""
+
+msgid ""
+"Streaming xAI Responses requests are not yet supported. Disable streaming "
+"for hosted tools or PDF attachments."
+msgstr ""
+
+msgid "Each chat message must contain text or a supported attachment."
+msgstr ""
+
 #~ msgid "Grok xAi Provider"
 #~ msgstr "Fornecedor Grok xAi"
 

@@ -21,6 +21,7 @@ use Drupal\ai\OperationType\Chat\ChatInput;
 use Drupal\ai\OperationType\Chat\ChatMessage;
 use Drupal\ai\OperationType\Chat\ChatOutput;
 use Drupal\ai\OperationType\GenericType\AudioFile;
+use Drupal\ai\OperationType\GenericType\DocumentFile;
 use Drupal\ai\OperationType\GenericType\ImageFile;
 use Drupal\ai\OperationType\GenericType\VideoFile;
 use Drupal\ai\OperationType\ImageClassification\ImageClassificationInput;
@@ -47,6 +48,7 @@ use Drupal\grok\OperationType\TextToVideo\TextToVideoInput;
 use Drupal\grok\OperationType\TextToVideo\TextToVideoInterface;
 use Drupal\grok\OperationType\TextToVideo\TextToVideoOutput;
 use Drupal\grok\Service\XaiAudioClient;
+use Drupal\grok\Service\XaiFilesClient;
 use Drupal\grok\Service\XaiImagesClient;
 use Drupal\grok\Service\XaiResponsesClient;
 use Drupal\grok\Service\XaiVideosClient;
@@ -124,6 +126,18 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   private XaiResponsesClient $responsesClient;
 
   /**
+   * The xAI Files API transport.
+   */
+  private XaiFilesClient $filesClient;
+
+  /**
+   * File IDs uploaded for the current synchronous request.
+   *
+   * @var string[]
+   */
+  private array $uploadedFileIds = [];
+
+  /**
    * The xAI image generation transport.
    */
   private XaiImagesClient $imagesClient;
@@ -149,6 +163,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $instance = parent::create($container, $configuration, $plugin_id, $plugin_definition);
     $instance->responsesClient = $container->get('grok.responses_client');
+    $instance->filesClient = $container->get('grok.files_client');
     $instance->imagesClient = $container->get('grok.images_client');
     $instance->videosClient = $container->get('grok.videos_client');
     $instance->audioClient = $container->get('grok.audio_client');
@@ -592,22 +607,33 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     if ($this->streamed || ($input instanceof ChatInput && $input->isStreamedOutput())) {
       // Preserve Drupal AI streaming for ordinary chat until the Responses
       // SSE iterator is implemented. Hosted tools cannot be silently dropped.
-      if (!$this->hasRequestedHostedTools()) {
+      if (!$this->hasRequestedHostedTools() && !$this->hasPdfAttachment($input)) {
         return parent::chat($input, $model_id, $tags);
       }
-      throw new AiMissingFeatureException((string) $this->t('Streaming xAI Responses requests are not yet supported. Disable streaming or use Chat Completions.'));
+      throw new AiMissingFeatureException((string) $this->t('Streaming xAI Responses requests are not yet supported. Disable streaming for hosted tools or PDF attachments.'));
     }
 
     $this->loadClient();
-    $payload = $this->buildResponsesPayload($input, $model_id);
     $timeout = max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300)));
-    $response = $this->responsesClient->create(
-      $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
-      $this->apiKey ?: $this->loadApiKey(),
-      $payload,
-      $timeout,
-    );
-    return $this->normalizeResponsesOutput($response);
+    $endpoint = $this->getEndpoint() ?: self::DEFAULT_ENDPOINT;
+    $api_key = $this->apiKey ?: $this->loadApiKey();
+    $this->uploadedFileIds = [];
+    try {
+      $payload = $this->buildResponsesPayload($input, $model_id);
+      $response = $this->responsesClient->create($endpoint, $api_key, $payload, $timeout);
+      return $this->normalizeResponsesOutput($response);
+    }
+    finally {
+      foreach ($this->uploadedFileIds as $file_id) {
+        try {
+          $this->filesClient->delete($endpoint, $api_key, $file_id);
+        }
+        catch (\Throwable) {
+          // The one-hour upload expiry remains as a cleanup safety net.
+        }
+      }
+      $this->uploadedFileIds = [];
+    }
   }
 
   /**
@@ -1147,7 +1173,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       if (in_array($capability, [
         AiModelCapability::ChatWithAudio,
         AiModelCapability::ChatWithVideo,
-        AiModelCapability::ChatWithPdf,
       ], TRUE)) {
         return [];
       }
@@ -1161,6 +1186,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
       }
 
       if (in_array(AiModelCapability::ChatWithImageVision, $capabilities, TRUE) && !$this->supportsVision($model_id)) {
+        continue;
+      }
+      if (in_array(AiModelCapability::ChatWithPdf, $capabilities, TRUE) && !$this->supportsPdf($model_id)) {
         continue;
       }
       if (in_array(AiModelCapability::ChatCombinedToolsAndStructuredResponse, $capabilities, TRUE) && !$this->supportsCombinedStructuredTools($model_id)) {
@@ -1759,6 +1787,13 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
   }
 
   /**
+   * Determines whether a Grok model supports agentic file attachments.
+   */
+  private function supportsPdf(string $model_id): bool {
+    return (bool) preg_match('/^grok-4\.(?:20|5|6)(?:-|$)/i', $model_id);
+  }
+
+  /**
    * Determines whether a Grok model supports structured output.
    */
   private function supportsStructuredOutput(string $model_id): bool {
@@ -1783,18 +1818,39 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    * Selects Responses only when it can preserve the Drupal tool contract.
    */
   private function shouldUseResponses(array|string|ChatInput $input): bool {
+    $has_pdf = $this->hasPdfAttachment($input);
     // Drupal function tools use the established Chat Completions tool loop.
     if ($input instanceof ChatInput && $input->getChatTools()) {
+      if ($has_pdf) {
+        throw new AiMissingFeatureException((string) $this->t('PDF attachments cannot currently be combined with Drupal function tools.'));
+      }
       return FALSE;
     }
     $transport = (string) ($this->getConfig()->get('transport') ?: 'auto');
     if ($transport === 'chat_completions') {
-      if ($this->hasRequestedHostedTools()) {
-        throw new AiMissingFeatureException((string) $this->t('Hosted xAI tools require the Responses API, but this provider is configured for Chat Completions only.'));
+      if ($this->hasRequestedHostedTools() || $has_pdf) {
+        throw new AiMissingFeatureException((string) $this->t('Hosted xAI tools and PDF attachments require the Responses API, but this provider is configured for Chat Completions only.'));
       }
       return FALSE;
     }
-    return $transport === 'responses' || !empty($this->providerOptions['use_responses_api']) || $this->hasRequestedHostedTools();
+    return $transport === 'responses' || !empty($this->providerOptions['use_responses_api']) || $this->hasRequestedHostedTools() || $has_pdf;
+  }
+
+  /**
+   * Determines whether chat input contains a PDF attachment.
+   */
+  private function hasPdfAttachment(array|string|ChatInput $input): bool {
+    if (!$input instanceof ChatInput) {
+      return FALSE;
+    }
+    foreach ($input->getMessages() as $message) {
+      foreach ($message->getFiles() as $file) {
+        if ($file instanceof DocumentFile && strtolower($file->getMimeType()) === 'application/pdf') {
+          return TRUE;
+        }
+      }
+    }
+    return FALSE;
   }
 
   /**
@@ -1898,6 +1954,17 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
         if ($file instanceof ImageFile) {
           $content[] = ['type' => 'input_image', 'image_url' => $file->getAsBase64EncodedString()];
         }
+        elseif ($file instanceof DocumentFile && strtolower($file->getMimeType()) === 'application/pdf') {
+          $file_id = $this->filesClient->uploadPdf(
+            $this->getEndpoint() ?: self::DEFAULT_ENDPOINT,
+            $this->apiKey ?: $this->loadApiKey(),
+            $file->getBinary(),
+            $file->getFilename(),
+            max(10, min(3600, (int) ($this->getConfig()->get('request_timeout') ?: 300))),
+          );
+          $this->uploadedFileIds[] = $file_id;
+          $content[] = ['type' => 'input_file', 'file_id' => $file_id];
+        }
         else {
           throw new AiMissingFeatureException((string) $this->t('Responses input does not yet support the file type "@type".', [
             '@type' => $file->getMimeType(),
@@ -1905,7 +1972,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
         }
       }
       if ($content === []) {
-        throw new AiBadRequestException((string) $this->t('Each chat message must contain text or a supported image.'));
+        throw new AiBadRequestException((string) $this->t('Each chat message must contain text or a supported attachment.'));
       }
       $messages[] = [
         'role' => $message->getRole(),
