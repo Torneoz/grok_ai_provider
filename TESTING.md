@@ -44,8 +44,9 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
 13. Verify PDF chat returns clear errors with forced Chat Completions,
     Responses streaming, unsupported models, and Drupal function tools.
 14. Enable AI API Explorer and verify PDF Explorer [beta] lists only providers
-    and models advertising `ChatWithPdf`, switches provider configuration over
-    AJAX, accepts one and multiple genuine PDFs, rejects non-PDF uploads,
+    that are authenticated and have models advertising `ChatWithPdf`; verify
+    changing the provider reloads its filtered model and configuration controls
+    over AJAX. Confirm it accepts one and multiple genuine PDFs, rejects non-PDF uploads,
     displays allowed response HTML and request diagnostics, and strips scripts,
     event handlers, and other unsafe response markup.
 

@@ -92,12 +92,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
    * {@inheritdoc}
    */
   public function isActive(): bool {
-    $providers = $this->providerManager->getProvidersForOperationType(
-      'chat',
-      TRUE,
-      [AiModelCapability::ChatWithPdf],
-    );
-    return $providers !== [];
+    return $this->getPdfProviderOptions() !== [];
   }
 
   /**
@@ -135,19 +130,32 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       ],
     ];
 
-    $providers = $this->providerManager->getProvidersForOperationType(
-      'chat',
-      TRUE,
-      [AiModelCapability::ChatWithPdf],
-    );
+    $providers = $this->getPdfProviderOptions();
     $provider_options = [];
-    foreach ($providers as $provider_id => $definition) {
-      $provider_options[$provider_id] = (string) ($definition['label'] ?? $provider_id);
+    foreach ($providers as $provider_id => $provider) {
+      $provider_options[$provider_id] = $provider['label'];
+    }
+    if ($provider_options === []) {
+      $form['left']['provider_status'] = [
+        '#type' => 'status_messages',
+      ];
+      $form['left']['provider_error'] = [
+        '#type' => 'html_tag',
+        '#tag' => 'p',
+        '#value' => $this->t('No authenticated provider with a PDF-capable chat model is available.'),
+      ];
+      return $form;
     }
     $selected_provider = (string) $form_state->getValue('pdf_ai_provider');
     if (!isset($provider_options[$selected_provider])) {
       $selected_provider = (string) array_key_first($provider_options);
       $form_state->setValue('pdf_ai_provider', $selected_provider);
+    }
+    $model_options = $providers[$selected_provider]['models'];
+    $selected_model = (string) $form_state->getValue('pdf_ai_model');
+    if (!isset($model_options[$selected_model])) {
+      $selected_model = (string) array_key_first($model_options);
+      $form_state->setValue('pdf_ai_model', $selected_model);
     }
     $this->aiProviderHelper->generateAiProvidersForm(
       $form['left'],
@@ -158,12 +166,12 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
     );
     $form['left']['pdf_ai_provider']['#options'] = $provider_options;
     $form['left']['pdf_ai_provider']['#default_value'] = $selected_provider;
+    $form['left']['pdf_ai_provider']['#title'] = $this->t('Provider');
+    $form['left']['pdf_ai_provider']['#ajax']['callback'] = $this::class . '::loadModelsAjaxCallback';
     if (isset($form['left']['pdf_ajax_prefix']['pdf_ai_model'])) {
-      $provider = $this->providerManager->createInstance($selected_provider);
-      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#options'] = $provider->getConfiguredModels(
-        'chat',
-        [AiModelCapability::ChatWithPdf],
-      );
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#options'] = $model_options;
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#default_value'] = $selected_model;
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#ajax']['callback'] = $this::class . '::loadModelsAjaxCallback';
     }
 
     $form['left']['submit'] = [
@@ -346,6 +354,40 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       return number_format($bytes / 1024, 1) . ' KB';
     }
     return number_format($bytes / (1024 * 1024), 1) . ' MB';
+  }
+
+  /**
+   * Gets authenticated providers with at least one PDF-capable chat model.
+   *
+   * @return array<string, array{label: string, models: array<string, string>}>
+   *   Provider labels and their eligible model options.
+   */
+  private function getPdfProviderOptions(): array {
+    $providers = [];
+    foreach ($this->providerManager->getDefinitions() as $provider_id => $definition) {
+      try {
+        $provider = $this->providerManager->createInstance($provider_id);
+        if (!$provider->isUsable('chat')) {
+          continue;
+        }
+        $models = $provider->getConfiguredModels(
+          'chat',
+          [AiModelCapability::ChatWithPdf],
+        );
+        if ($models === []) {
+          continue;
+        }
+        $providers[$provider_id] = [
+          'label' => (string) ($definition['label'] ?? $provider_id),
+          'models' => $models,
+        ];
+      }
+      catch (\Throwable) {
+        // A provider that cannot load its authenticated model configuration is
+        // not usable in this Explorer.
+      }
+    }
+    return $providers;
   }
 
 }

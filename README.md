@@ -213,8 +213,8 @@ requests.
 
 When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > PDF
 Explorer [beta]** provides a provider-neutral test surface for uploading up to
-five PDFs, trying any configured provider and model that advertises Drupal AI's
-`ChatWithPdf` capability, applying system instructions, and inspecting the
+five PDFs, trying any authenticated provider and model that advertises Drupal
+AI's `ChatWithPdf` capability, applying system instructions, and inspecting the
 safely filtered HTML answer together with basic request diagnostics. Each
 provider remains responsible for its own PDF transport, validation, retention,
 and cleanup behavior.
