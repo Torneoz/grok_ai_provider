@@ -14,16 +14,15 @@ use Drupal\ai\OperationType\GenericType\DocumentFile;
 use Drupal\ai\Service\AiProviderFormHelper;
 use Drupal\ai_api_explorer\AiApiExplorerPluginBase;
 use Drupal\ai_api_explorer\Attribute\AiApiExplorer;
-use Drupal\grok\Service\XaiFilesClient;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Provides a focused explorer for Grok PDF understanding.
+ * Provides an explorer for PDF understanding across capable providers.
  */
 #[AiApiExplorer(
-  id: 'grok_pdf_chat',
-  title: new TranslatableMarkup('Grok PDF Explorer [beta]'),
-  description: new TranslatableMarkup('Upload PDFs and investigate Grok document understanding through the xAI Files and Responses APIs.'),
+  id: 'grok_pdf_explorer',
+  title: new TranslatableMarkup('PDF Explorer [beta]'),
+  description: new TranslatableMarkup('Upload PDFs and investigate document understanding across compatible AI providers and models.'),
 )]
 final class PdfChatExplorer extends AiApiExplorerPluginBase {
 
@@ -31,6 +30,11 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
    * Maximum number of PDFs accepted in one exploratory request.
    */
   private const MAX_FILES = 5;
+
+  /**
+   * Maximum size accepted by this Explorer for each PDF.
+   */
+  private const MAX_FILE_BYTES = 48 * 1024 * 1024;
 
   /**
    * Semantic response tags permitted after XSS filtering.
@@ -93,20 +97,20 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       TRUE,
       [AiModelCapability::ChatWithPdf],
     );
-    return isset($providers['grok']);
+    return $providers !== [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state): array {
-    $form = $this->getFormTemplate($form, 'grok-pdf-response');
+    $form = $this->getFormTemplate($form, 'pdf-explorer-response');
     $form['#attributes']['enctype'] = 'multipart/form-data';
 
     $form['left']['introduction'] = [
       '#type' => 'html_tag',
       '#tag' => 'p',
-      '#value' => $this->t('PDFs are uploaded privately to xAI with a one-hour expiry and deleted after the request on a best-effort basis. This explorer uses non-streamed Responses API requests.'),
+      '#value' => $this->t('The selected provider receives the attached PDFs using its own document transport. Provider limits, retention, privacy, and billing policies apply. This explorer sends non-streamed requests.'),
     ];
     $form['left']['system_prompt'] = [
       '#type' => 'textarea',
@@ -131,24 +135,32 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       ],
     ];
 
-    // Keep this Explorer deliberately tied to the Grok provider while reusing
-    // Drupal AI's model configuration controls.
-    $form['left']['grok_pdf_ai_provider'] = [
-      '#type' => 'hidden',
-      '#value' => 'grok',
-    ];
+    $providers = $this->providerManager->getProvidersForOperationType(
+      'chat',
+      TRUE,
+      [AiModelCapability::ChatWithPdf],
+    );
+    $provider_options = [];
+    foreach ($providers as $provider_id => $definition) {
+      $provider_options[$provider_id] = (string) ($definition['label'] ?? $provider_id);
+    }
+    $selected_provider = (string) $form_state->getValue('pdf_ai_provider');
+    if (!isset($provider_options[$selected_provider])) {
+      $selected_provider = (string) array_key_first($provider_options);
+      $form_state->setValue('pdf_ai_provider', $selected_provider);
+    }
     $this->aiProviderHelper->generateAiProvidersForm(
       $form['left'],
       $form_state,
       'chat',
-      'grok_pdf',
+      'pdf',
       AiProviderFormHelper::FORM_CONFIGURATION_FULL,
-      0,
-      'grok',
     );
-    if (isset($form['left']['grok_pdf_ajax_prefix']['grok_pdf_ai_model'])) {
-      $provider = $this->providerManager->createInstance('grok');
-      $form['left']['grok_pdf_ajax_prefix']['grok_pdf_ai_model']['#options'] = $provider->getConfiguredModels(
+    $form['left']['pdf_ai_provider']['#options'] = $provider_options;
+    $form['left']['pdf_ai_provider']['#default_value'] = $selected_provider;
+    if (isset($form['left']['pdf_ajax_prefix']['pdf_ai_model'])) {
+      $provider = $this->providerManager->createInstance($selected_provider);
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#options'] = $provider->getConfiguredModels(
         'chat',
         [AiModelCapability::ChatWithPdf],
       );
@@ -159,7 +171,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       '#value' => $this->t('Investigate PDFs'),
       '#ajax' => [
         'callback' => $this->getAjaxResponseId(),
-        'wrapper' => 'grok-pdf-response',
+        'wrapper' => 'pdf-explorer-response',
       ],
     ];
     return $form;
@@ -192,7 +204,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
         $form,
         $form_state,
         'chat',
-        'grok_pdf',
+        'pdf',
       );
       $input = new ChatInput([
         new ChatMessage('user', trim((string) $form_state->getValue('prompt')), $attachments),
@@ -205,19 +217,19 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       $started = microtime(TRUE);
       $output = $provider->chat(
         $input,
-        (string) $form_state->getValue('grok_pdf_ai_model'),
-        ['grok_pdf_explorer', 'ai_api_explorer'],
+        (string) $form_state->getValue('pdf_ai_model'),
+        ['pdf_explorer', 'ai_api_explorer'],
       )->getNormalized();
       $elapsed = microtime(TRUE) - $started;
       if (!$output instanceof ChatMessage) {
-        throw new \UnexpectedValueException((string) $this->t('Grok did not return a chat message.'));
+        throw new \UnexpectedValueException((string) $this->t('The provider did not return a chat message.'));
       }
 
       $form['right']['response']['#context']['ai_response'] = [
         'heading' => [
           '#type' => 'html_tag',
           '#tag' => 'h2',
-          '#value' => $this->t('Grok response'),
+          '#value' => $this->t('AI response'),
         ],
         'text' => [
           '#type' => 'container',
@@ -231,7 +243,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
           '#title' => $this->t('Request diagnostics'),
           '#open' => TRUE,
           'model' => [
-            '#markup' => '<strong>' . $this->t('Model:') . '</strong> ' . htmlspecialchars((string) $form_state->getValue('grok_pdf_ai_model')),
+            '#markup' => '<strong>' . $this->t('Provider:') . '</strong> ' . htmlspecialchars((string) $form_state->getValue('pdf_ai_provider')) . '<br><strong>' . $this->t('Model:') . '</strong> ' . htmlspecialchars((string) $form_state->getValue('pdf_ai_model')),
           ],
           'elapsed' => [
             '#markup' => '<br><strong>' . $this->t('Elapsed:') . '</strong> ' . number_format($elapsed, 2) . ' s',
@@ -285,7 +297,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
           '@name' => $file->getClientOriginalName(),
         ]));
       }
-      if ($file->getSize() > XaiFilesClient::MAX_FILE_BYTES) {
+      if ($file->getSize() > self::MAX_FILE_BYTES) {
         throw new \InvalidArgumentException((string) $this->t('The PDF "@name" exceeds the 48 MB limit.', [
           '@name' => $file->getClientOriginalName(),
         ]));

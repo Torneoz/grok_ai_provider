@@ -36,6 +36,11 @@ reasoning usage, xAI-reported or estimated request cost, shared image inputs,
 and optional generated audio/video saving to Drupal Media. Administrators can
 customize or disable the example prompts from the provider configuration form.
 
+The provider-neutral **PDF Explorer [beta]** discovers configured providers
+and models advertising Drupal AI's **Chat with PDF** capability. It supports
+multiple PDF attachments, custom system instructions, safely filtered HTML
+answers, and basic request diagnostics.
+
 Image operations can use an upload, the bundled example image, or a compatible
 Drupal Media item. The optional Media Library Form Element module provides a
 visual selector; entity autocomplete remains available without it.

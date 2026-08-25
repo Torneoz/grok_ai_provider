@@ -12,6 +12,9 @@
   deletion after every successful or failed chat request.
 - Added Files API exception mapping and unit coverage for upload, attachment
   conversion, cleanup calls, validation, and model-capability filtering.
+- Added a provider-neutral **PDF Explorer [beta]** that discovers configured
+  providers and models advertising Drupal AI's `ChatWithPdf` capability,
+  supports multi-document prompts, and safely renders semantic HTML answers.
 
 ## 1.0.0-beta4
 

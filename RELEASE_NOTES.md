@@ -16,6 +16,9 @@ AI chat through xAI's Files and Responses APIs.
 - Explicit errors prevent PDFs from being silently dropped when Chat
   Completions, Responses streaming, or Drupal function tools are selected.
 - PDF attachments are limited to 48 MB each.
+- The provider-neutral **PDF Explorer [beta]** can test any configured provider
+  and model advertising Drupal AI's **Chat with PDF** capability. Provider
+  implementations retain responsibility for transport and retention behavior.
 
 The consumer Grok PDF artifact skill is not exposed by xAI's developer API.
 This release supports reading and reasoning over PDF chat attachments; it does

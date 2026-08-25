@@ -211,10 +211,13 @@ remains as a cleanup safety net if deletion fails. PDF attachments cannot
 currently be combined with Drupal function tools or streamed Responses
 requests.
 
-When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > Grok
-PDF Explorer [beta]** provides a Grok-specific test surface for uploading up to five
-PDFs, trying PDF-capable models, applying system instructions, and inspecting
-the safely filtered HTML answer together with basic request diagnostics.
+When AI API Explorer is enabled, **Configuration > AI > AI API Explorer > PDF
+Explorer [beta]** provides a provider-neutral test surface for uploading up to
+five PDFs, trying any configured provider and model that advertises Drupal AI's
+`ChatWithPdf` capability, applying system instructions, and inspecting the
+safely filtered HTML answer together with basic request diagnostics. Each
+provider remains responsible for its own PDF transport, validation, retention,
+and cleanup behavior.
 
 Streaming Responses requests and stateful response continuation are not yet
 included. Grok Integration includes Collections Search but does not itself
