@@ -101,6 +101,7 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
   public function buildForm(array $form, FormStateInterface $form_state): array {
     $form = $this->getFormTemplate($form, 'pdf-explorer-response');
     $form['#attributes']['enctype'] = 'multipart/form-data';
+    $form['left']['#attributes']['id'] = 'pdf-explorer-controls';
 
     $form['left']['introduction'] = [
       '#type' => 'html_tag',
@@ -167,11 +168,13 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
     $form['left']['pdf_ai_provider']['#options'] = $provider_options;
     $form['left']['pdf_ai_provider']['#default_value'] = $selected_provider;
     $form['left']['pdf_ai_provider']['#title'] = $this->t('Provider');
-    $form['left']['pdf_ai_provider']['#ajax']['callback'] = $this::class . '::loadModelsAjaxCallback';
+    $form['left']['pdf_ai_provider']['#ajax']['callback'] = $this::class . '::reloadProviderControls';
+    $form['left']['pdf_ai_provider']['#ajax']['wrapper'] = 'pdf-explorer-controls';
     if (isset($form['left']['pdf_ajax_prefix']['pdf_ai_model'])) {
       $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#options'] = $model_options;
       $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#default_value'] = $selected_model;
-      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#ajax']['callback'] = $this::class . '::loadModelsAjaxCallback';
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#ajax']['callback'] = $this::class . '::reloadProviderControls';
+      $form['left']['pdf_ajax_prefix']['pdf_ai_model']['#ajax']['wrapper'] = 'pdf-explorer-controls';
     }
 
     $form['left']['submit'] = [
@@ -183,6 +186,14 @@ final class PdfChatExplorer extends AiApiExplorerPluginBase {
       ],
     ];
     return $form;
+  }
+
+  /**
+   * Rebuilds all provider-dependent controls after an AJAX selection change.
+   */
+  public static function reloadProviderControls(array &$form, FormStateInterface $form_state): array {
+    $form_state->setRebuild();
+    return $form['left'];
   }
 
   /**

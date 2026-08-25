@@ -45,8 +45,9 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
     Responses streaming, unsupported models, and Drupal function tools.
 14. Enable AI API Explorer and verify PDF Explorer [beta] lists only providers
     that are authenticated and have models advertising `ChatWithPdf`; verify
-    changing the provider reloads its filtered model and configuration controls
-    over AJAX. Confirm it accepts one and multiple genuine PDFs, rejects non-PDF uploads,
+    repeatedly changing between at least three providers reloads each filtered
+    model list and its configuration controls over AJAX. Confirm it accepts one
+    and multiple genuine PDFs, rejects non-PDF uploads,
     displays allowed response HTML and request diagnostics, and strips scripts,
     event handlers, and other unsafe response markup.
 
