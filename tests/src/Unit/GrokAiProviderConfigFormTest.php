@@ -162,6 +162,25 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * Keeps confirmation breadcrumbs clear of generic provider model routes.
+   */
+  public function testCapabilityUpdateRouteAvoidsProviderModelHierarchy(): void {
+    $routing = file_get_contents(
+      dirname((new \ReflectionClass(GrokAiProviderConfigForm::class))->getFileName(), 3) . '/grok.routing.yml',
+    );
+
+    self::assertIsString($routing);
+    self::assertStringContainsString(
+      "path: '/admin/config/ai/grok/update-capabilities/{from}/{to}'",
+      $routing,
+    );
+    self::assertStringNotContainsString(
+      "path: '/admin/config/ai/providers/grok/update-model-references",
+      $routing,
+    );
+  }
+
+  /**
    * Ensures Next Steps handles both AI Image Studio installation states.
    */
   public function testImageStudioNextStepsAreConditional(): void {
