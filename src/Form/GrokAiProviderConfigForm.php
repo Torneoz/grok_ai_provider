@@ -403,6 +403,7 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       '#name' => 'update_ai_capabilities',
       '#value' => $this->t('Update AI Capabilities'),
       '#submit' => ['::updateAiCapabilities'],
+      '#disabled' => $form_state->get('grok_models') === NULL,
       '#limit_validation_errors' => [
         ['default_model'],
       ],

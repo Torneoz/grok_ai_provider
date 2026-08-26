@@ -147,6 +147,21 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * Ensures capability updates require a successfully loaded model list.
+   */
+  public function testCapabilityUpdateButtonRequiresLoadedModels(): void {
+    $source = file_get_contents(
+      (new \ReflectionClass(GrokAiProviderConfigForm::class))->getFileName(),
+    );
+
+    self::assertIsString($source);
+    self::assertStringContainsString(
+      "'#disabled' => \$form_state->get('grok_models') === NULL",
+      $source,
+    );
+  }
+
+  /**
    * Ensures Next Steps handles both AI Image Studio installation states.
    */
   public function testImageStudioNextStepsAreConditional(): void {
