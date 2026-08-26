@@ -9,6 +9,10 @@ The xAI API key is stored in Drupal's [Key module](https://www.drupal.org/projec
 not in exported configuration. This is an unofficial community integration and
 is not affiliated with or endorsed by xAI.
 
+The planned **1.0.0-beta5** release is the final beta in the 1.0 release cycle.
+After beta5 validation and any required fixes, the next development milestone
+will be the first release candidate.
+
 ## Supported Drupal AI operations
 
 - Chat, streaming chat, vision and PDF input, function tools, and structured
@@ -81,8 +85,11 @@ Integration at `/admin/config/ai/providers/grok`. Use **Test connection and
 load models** to verify credentials and discover models available to the key.
 When discovery finds a newer numbered Grok family, Drupal AI's **AI
 Capabilities from Installed Providers** section offers a confirmed action to
-update older Grok defaults. Newly published pricing rows are also merged into
-the provider form for review without overwriting custom pricing.
+configure Grok for every supported operation. Chat-related operations use the
+selected model, while image, video, and speech operations use their appropriate
+Grok models. This replaces existing defaults from other providers for those
+operations. Newly published pricing rows are also merged into the provider
+form for review without overwriting custom pricing.
 
 Drupal 11.2+ sites can alternatively apply the included recipe after Composer
 installation:

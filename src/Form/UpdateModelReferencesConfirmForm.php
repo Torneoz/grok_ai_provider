@@ -106,15 +106,6 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
   }
 
   /**
-   * Checks route parameters before using them as model identifiers.
-   */
-  private function modelVersion(string $model): ?string {
-    return preg_match('/^grok-(\d+(?:\.\d+)*)(?:-|$)/i', $model, $matches)
-      ? $matches[1]
-      : NULL;
-  }
-
-  /**
    * Builds defaults for every capability advertised by the Grok provider.
    */
   private function capabilityDefaults(array $models, string $from, string $to): array {

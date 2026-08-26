@@ -1640,6 +1640,10 @@ msgid "A newer Grok model is available: <strong>@new</strong>. <a href=\":url\">
 msgstr ""
 
 #: src/Form/GrokAiProviderConfigForm.php
+msgid "Update AI Capabilities"
+msgstr ""
+
+#: src/Form/GrokAiProviderConfigForm.php
 msgid "Added published pricing for one newly discovered model. Review and save the form to activate it."
 msgid_plural "Added published pricing for @count newly discovered models. Review and save the form to activate it."
 msgstr[0] ""
@@ -1662,11 +1666,11 @@ msgid "Update all Grok capability references from @old to @new"
 msgstr ""
 
 #: src/Form/UpdateModelReferencesConfirmForm.php
-msgid "Update Grok capability references from @old to @new?"
+msgid "Update all AI capabilities for Grok using @new?"
 msgstr ""
 
 #: src/Form/UpdateModelReferencesConfirmForm.php
-msgid "Every Drupal AI capability whose default provider is Grok and whose model belongs to the old numbered model family will be updated. Other providers and model families are not changed."
+msgid "Grok will be set as the default provider for every AI capability it supports. Chat-related capabilities will use the selected model; image, video, and speech capabilities will use their appropriate Grok models."
 msgstr ""
 
 #: src/Form/UpdateModelReferencesConfirmForm.php
@@ -1680,7 +1684,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: grok.routing.yml
-msgid "Update Grok model references"
+msgid "Update Grok AI capabilities"
 msgstr ""
 msgid "The attached PDF is empty."
 msgstr ""

@@ -5,6 +5,10 @@
 Grok Integration 1.0.0-beta5 adds native PDF document understanding to Drupal
 AI chat through xAI's Files and Responses APIs.
 
+Beta5 is the final planned beta in the 1.0 release cycle. After this release is
+validated and any required fixes are completed, the next development milestone
+will be the first release candidate.
+
 ### Highlights
 
 - Agentic Grok models are now advertised for Drupal AI's **Chat with PDF**
@@ -19,6 +23,18 @@ AI chat through xAI's Files and Responses APIs.
 - The provider-neutral **PDF Explorer [beta]** can test any configured provider
   and model advertising Drupal AI's **Chat with PDF** capability. Provider
   implementations retain responsibility for transport and retention behavior.
+- After models are loaded successfully, **Update AI Capabilities** configures
+  Grok as the default provider for every operation it supports. Chat-related
+  operations use the selected model; image, video, and speech operations use
+  their appropriate Grok models.
+
+### Upgrade note
+
+The capability update is intentionally comprehensive. Confirming it replaces
+existing defaults from other providers for every operation supported by Grok.
+Review the confirmation before applying it. If Grok is not selected for any AI
+capability, the model-upgrade notice does not appear on Drupal AI's settings
+page.
 
 The consumer Grok PDF artifact skill is not exposed by xAI's developer API.
 This release supports reading and reasoning over PDF chat attachments; it does

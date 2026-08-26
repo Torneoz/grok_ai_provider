@@ -2,6 +2,9 @@
 
 ## 1.0.0-beta5
 
+- This is the final planned beta in the 1.0 release cycle. After beta5
+  validation and any required fixes, development will advance to the first
+  release candidate.
 - Added native PDF attachments to Grok chat through Drupal AI's
   `ChatWithPdf` capability and xAI's Files and Responses APIs.
 - Automatically selects Responses transport for PDF chat in automatic mode and
@@ -15,6 +18,14 @@
 - Added a provider-neutral **PDF Explorer [beta]** that discovers configured
   providers and models advertising Drupal AI's `ChatWithPdf` capability,
   supports multi-document prompts, and safely renders semantic HTML answers.
+- Added **Update AI Capabilities** beneath the loaded-model selector. The
+  action is enabled only after successful model discovery and configures Grok
+  defaults for every operation advertised by the provider, using
+  operation-specific image, video, and speech models where required.
+- Added a confirmation step that clearly explains that existing defaults from
+  other providers will be replaced for Grok-supported operations.
+- Moved the confirmation route outside Drupal AI's generic provider-model path
+  so administration breadcrumbs and sticky form actions render correctly.
 
 ## 1.0.0-beta4
 

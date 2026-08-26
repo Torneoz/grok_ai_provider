@@ -8,6 +8,10 @@ using xAI's Chat Completions, Responses, Files, Imagine, and Voice APIs.
 This is an unofficial community integration and is not affiliated with or
 endorsed by xAI.
 
+The planned `1.0.0-beta5` release is the final beta in the 1.0 release cycle.
+After beta5 validation and any required fixes, development will advance to the
+first release candidate.
+
 ## Requirements
 
 - PHP 8.1 or later
@@ -47,8 +51,10 @@ populate the default-model selector with the models accessible to that key.
 Model discovery records the newest available numbered Grok family. If Drupal
 AI capabilities still use an older family, the **AI Capabilities from
 Installed Providers** section displays a confirmed update action. The action
-updates only Grok defaults from that numbered family and leaves other providers
-and model families unchanged.
+sets Grok as the default for every operation it supports, uses the selected
+model for chat-related operations, and assigns the appropriate Grok image,
+video, and speech models. Review the confirmation carefully because existing
+defaults from other providers are replaced for those supported operations.
 After a working connection has been saved, a temporary xAI outage does not
 prevent administrators from saving unrelated provider settings. Changes to
 the key, endpoint, or default chat model continue to require validation.

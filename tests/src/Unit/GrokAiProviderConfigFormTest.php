@@ -74,21 +74,6 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
-   * Tests model-family extraction used by the confirmed bulk update.
-   */
-  public function testUpdateModelFamilyMatching(): void {
-    $form = (new \ReflectionClass(UpdateModelReferencesConfirmForm::class))
-      ->newInstanceWithoutConstructor();
-    $method = new \ReflectionMethod(UpdateModelReferencesConfirmForm::class, 'modelVersion');
-
-    self::assertSame('4.5', $method->invoke($form, 'grok-4.5'));
-    self::assertSame('4.5', $method->invoke($form, 'grok-4.5-latest'));
-    self::assertSame('4.6', $method->invoke($form, 'grok-4.6-fast'));
-    self::assertNull($method->invoke($form, 'grok-beta'));
-    self::assertNull($method->invoke($form, 'other-4.5'));
-  }
-
-  /**
    * Ensures bulk updates retain operation-specific models.
    */
   public function testCapabilityDefaultsCoverEveryAdvertisedOperation(): void {
