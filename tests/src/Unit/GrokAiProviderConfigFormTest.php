@@ -89,6 +89,27 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * Ensures bulk updates retain operation-specific models.
+   */
+  public function testCapabilityDefaultsCoverEveryAdvertisedOperation(): void {
+    $form = (new \ReflectionClass(UpdateModelReferencesConfirmForm::class))
+      ->newInstanceWithoutConstructor();
+    $method = new \ReflectionMethod(UpdateModelReferencesConfirmForm::class, 'capabilityDefaults');
+
+    self::assertSame([
+      'chat' => 'grok-4.6-latest',
+      'moderation' => 'grok-4.6-latest',
+      'text_to_image' => 'grok-imagine-image-quality',
+      'speech_to_text' => 'xai-stt',
+    ], $method->invoke($form, [
+      'chat' => 'grok-4.5-latest',
+      'moderation' => 'grok-4.5-latest',
+      'text_to_image' => 'grok-imagine-image-quality',
+      'speech_to_text' => 'xai-stt',
+    ], 'grok-4.5-latest', 'grok-4.6-latest'));
+  }
+
+  /**
    * Tests exact pricing coverage checks for discovered aliases.
    */
   public function testModelsMissingPricing(): void {

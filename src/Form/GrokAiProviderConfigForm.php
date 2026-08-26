@@ -398,6 +398,15 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
         : $this->t('Used as this provider’s default chat, vision, tools, and structured-output model.'),
       '#required' => TRUE,
     ];
+    $form['connection']['update_ai_capabilities'] = [
+      '#type' => 'submit',
+      '#name' => 'update_ai_capabilities',
+      '#value' => $this->t('Update AI Capabilities'),
+      '#submit' => ['::updateAiCapabilities'],
+      '#limit_validation_errors' => [
+        ['default_model'],
+      ],
+    ];
     if ($status = $form_state->get('grok_connection_status')) {
       $form['connection']['status'] = [
         '#type' => 'container',
@@ -722,6 +731,19 @@ final class GrokAiProviderConfigForm extends ConfigFormBase {
       ]);
     }
     $form_state->setRebuild();
+  }
+
+  /**
+   * Opens the existing model-reference update confirmation for this selection.
+   */
+  public function updateAiCapabilities(array &$form, FormStateInterface $form_state): void {
+    $from = (string) ($this->config(self::CONFIG_NAME)->get('default_model') ?: '');
+    $to = (string) $form_state->getValue('default_model');
+
+    $form_state->setRedirect('grok.update_model_references', [
+      'from' => $from,
+      'to' => $to,
+    ]);
   }
 
   /**

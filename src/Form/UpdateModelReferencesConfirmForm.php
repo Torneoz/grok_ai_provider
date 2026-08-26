@@ -7,6 +7,7 @@ namespace Drupal\grok\Form;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
+use Drupal\ai\AiProviderPluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -15,10 +16,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
 
   /**
+   * The Drupal AI provider manager.
+   */
+  private AiProviderPluginManager $providerManager;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container): static {
-    return (new static())->setConfigFactory($container->get('config.factory'));
+    $instance = (new static())->setConfigFactory($container->get('config.factory'));
+    $instance->providerManager = $container->get('ai.provider');
+    return $instance;
   }
 
   /**
@@ -32,8 +40,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion(): string {
-    return (string) $this->t('Update Grok capability references from @old to @new?', [
-      '@old' => $this->getRouteMatch()->getParameter('from'),
+    return (string) $this->t('Update all AI capabilities for Grok using @new?', [
       '@new' => $this->getRouteMatch()->getParameter('to'),
     ]);
   }
@@ -42,7 +49,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription(): string {
-    return (string) $this->t('Every Drupal AI capability whose default provider is Grok and whose model belongs to the old numbered model family will be updated. Other providers and model families are not changed.');
+    return (string) $this->t('Grok will be set as the default provider for every AI capability it supports. Chat-related capabilities will use the selected model; image, video, and speech capabilities will use their appropriate Grok models.');
   }
 
   /**
@@ -58,13 +65,7 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state): void {
     $from = (string) $this->getRouteMatch()->getParameter('from');
     $to = (string) $this->getRouteMatch()->getParameter('to');
-    $from_version = $this->modelVersion($from);
-    $to_version = $this->modelVersion($to);
-    if (
-      $from_version === NULL ||
-      $to_version === NULL ||
-      version_compare($to_version, $from_version, '<=')
-    ) {
+    if (!str_starts_with($from, 'grok-') || !str_starts_with($to, 'grok-')) {
       $this->messenger()->addError($this->t('The requested Grok model update is invalid.'));
       $form_state->setRedirect('ai.settings_form');
       return;
@@ -72,23 +73,26 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
 
     $ai_config = $this->configFactory()->getEditable('ai.settings');
     $defaults = (array) $ai_config->get('default_providers');
+    $provider = $this->providerManager->createInstance('grok');
+    $setup_models = (array) ($provider->getSetupData()['default_models'] ?? []);
+    $capability_defaults = $this->capabilityDefaults($setup_models, $from, $to);
     $updated = 0;
-    foreach ($defaults as &$default) {
-      if (
-        ($default['provider_id'] ?? '') === 'grok' &&
-        $this->modelVersion((string) ($default['model_id'] ?? '')) === $from_version
-      ) {
-        $default['model_id'] = $to;
+    foreach ($capability_defaults as $operation => $model) {
+      $new_default = [
+        'provider_id' => 'grok',
+        'model_id' => $model,
+      ];
+      if (($defaults[$operation] ?? NULL) !== $new_default) {
         $updated++;
       }
+      $defaults[$operation] = $new_default;
     }
-    unset($default);
     if ($updated > 0) {
       $ai_config->set('default_providers', $defaults)->save(TRUE);
     }
 
     $grok_config = $this->configFactory()->getEditable('grok.settings');
-    if ($this->modelVersion((string) $grok_config->get('default_model')) === $from_version) {
+    if ((string) $grok_config->get('default_model') !== $to) {
       $grok_config->set('default_model', $to)->save(TRUE);
     }
 
@@ -108,6 +112,19 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
     return preg_match('/^grok-(\d+(?:\.\d+)*)(?:-|$)/i', $model, $matches)
       ? $matches[1]
       : NULL;
+  }
+
+  /**
+   * Builds defaults for every capability advertised by the Grok provider.
+   */
+  private function capabilityDefaults(array $models, string $from, string $to): array {
+    foreach ($models as &$model) {
+      if ((string) $model === $from) {
+        $model = $to;
+      }
+    }
+    unset($model);
+    return $models;
   }
 
 }
