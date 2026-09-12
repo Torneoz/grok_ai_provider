@@ -19,6 +19,36 @@ first release candidate.
 - [AI 1.4 or later](https://www.drupal.org/project/ai)
 - [Key 1.22 or later](https://www.drupal.org/project/key)
 
+## Drupal AI events
+
+Always obtain Grok through Drupal AI's `ai.provider` service when calling an
+operation. Its `ProviderProxy` supplies the standard pre-generation,
+post-generation, exception, and streaming event handling. This applies to all
+Grok operations, including Responses chat with PDFs or hosted tools and the
+custom text-to-video operation, regardless of the underlying xAI API.
+
+```php
+$provider = \Drupal::service('ai.provider')->createInstance('grok');
+$output = $provider->chat(
+  new \Drupal\ai\OperationType\Chat\ChatInput([
+    new \Drupal\ai\OperationType\Chat\ChatMessage('user', 'Hello!'),
+  ]),
+  'grok-4.5-latest',
+  ['my-feature'],
+);
+```
+
+Inject `ai.provider` into application services. Do not instantiate
+`GrokAiProvider` directly, unwrap the proxy with `getPlugin()` to run an
+operation, or call the internal `grok.*_client` transports from application
+code: those paths bypass Drupal AI events. Grok's Explorers already use the
+provider proxy. Internal classification chat and video polling are part of
+their enclosing operation, so they do not emit duplicate generation events.
+
+Pre-generation subscribers can change the input or force an output before an
+API request is made. A forced output skips the request and post-generation
+event, following Drupal AI's standard behavior.
+
 ## Installation
 
 Install the Drupal.org project with Composer, then enable the module:

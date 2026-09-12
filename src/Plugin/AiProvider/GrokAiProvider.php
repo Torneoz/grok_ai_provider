@@ -325,7 +325,6 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     $definition['chat']['input']['default'][0]['content'] = (string) $this->t('You are a helpful assistant.');
     $definition['chat']['input']['default'][1]['content'] = (string) $this->t('Introduce yourself!');
     $definition['text_to_speech']['input']['default'] = (string) $this->t('Welcome to the Grok AI Provider for Drupal.');
-    $definition['image_to_video']['configuration']['prompt']['default'] = (string) $this->t('Make the flag wave. Halfway through, have a huge crack of lightning appear.');
 
     return $definition;
   }

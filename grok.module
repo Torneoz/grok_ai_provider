@@ -198,6 +198,19 @@ function grok_form_ai_api_explorer_form_alter(array &$form, FormStateInterface $
     return;
   }
 
+  if ($plugin_id === 'grok_image_to_video_generator') {
+    // Keep this bundled-image example out of shared provider configuration.
+    $input_name = 'image_video_generator_ajax_prefix_configuration_prompt';
+    grok_set_nested_explorer_default(
+      $form,
+      ['left', 'image_video_generator_ajax_prefix', $input_name],
+      $form_state,
+      $input_name,
+      new TranslatableMarkup('Make the flag wave. Halfway through, have a huge crack of lightning appear.'),
+    );
+    return;
+  }
+
   if ($plugin_id === 'image_classification_generator') {
     grok_add_explorer_image_source(
       $form,
@@ -407,8 +420,9 @@ function grok_set_nested_explorer_default(array &$form, array $path, FormStateIn
  */
 function grok_set_explorer_default(array &$element, FormStateInterface $form_state, string $input_name, string|TranslatableMarkup $default): void {
   $current = $form_state->getValue($input_name);
+  $user_input = $form_state->getUserInput() ?? [];
   $existing = $element['#default_value'] ?? NULL;
-  if ($current === NULL && ($existing === NULL || $existing === '' || $existing === [])) {
+  if ($current === NULL && !array_key_exists($input_name, $user_input) && ($existing === NULL || $existing === '' || $existing === [])) {
     $element['#default_value'] = $default;
   }
 }

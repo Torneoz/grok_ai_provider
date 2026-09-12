@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok\Unit;
 
+use Drupal\ai\Event\PreGenerateResponseEvent;
+use Drupal\Component\Uuid\UuidInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Drupal\ai\Plugin\ProviderProxy;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\Extension;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
@@ -37,6 +43,74 @@ use PHPUnit\Framework\TestCase;
  * Tests Grok-specific model filtering and settings.
  */
 final class GrokAiProviderTest extends TestCase {
+
+  /**
+   * Every advertised operation must participate in Drupal AI's event proxy.
+   */
+  public function testAllOperationsUseAiEvents(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $module = $this->createMock(Extension::class);
+    $module->method('getPath')->willReturn(dirname(__DIR__, 3));
+    $handler = $this->createMock(ModuleHandlerInterface::class);
+    $handler->method('getModule')->with('grok')->willReturn($module);
+    foreach ([
+      'moduleHandler' => $handler,
+      'pluginDefinition' => ['provider' => 'grok'],
+      'pluginId' => 'grok',
+    ] as $property => $value) {
+      (new \ReflectionProperty($provider, $property))->setValue($provider, $value);
+    }
+
+    // Only dependencies used before a forced response are needed. Leaving
+    // transport dependencies unset also proves that no API call is made.
+    $proxy = (new \ReflectionClass(ProviderProxy::class))->newInstanceWithoutConstructor();
+    $dispatcher = new EventDispatcher();
+    $uuid = $this->createMock(UuidInterface::class);
+    $uuid->method('generate')->willReturn('grok-event-test');
+    foreach ([
+      'plugin' => $provider,
+      'eventDispatcher' => $dispatcher,
+      'uuid' => $uuid,
+    ] as $property => $value) {
+      (new \ReflectionProperty($proxy, $property))->setValue($proxy, $value);
+    }
+
+    $events = [];
+    $forced = new ChatOutput(new ChatMessage('assistant', 'Cached result'), [], []);
+    $dispatcher->addListener(PreGenerateResponseEvent::EVENT_NAME, static function ($event) use (&$events, $forced): void {
+      $events[] = $event;
+      $event->setForcedOutputObject($forced);
+    });
+    $methods = $proxy->getOperationTypeTriggerMethods(GrokAiProvider::class);
+    foreach ($provider->getSupportedOperationTypes() as $operation) {
+      $method = lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $operation))));
+      self::assertContains($method, $methods, $operation);
+      self::assertSame($forced, $proxy->$method('Test input', 'test-model', ['grok-test']));
+      $event = end($events);
+      self::assertSame('grok', $event->getProviderId());
+      self::assertSame($operation, $event->getOperationType());
+      self::assertSame('Test input', $event->getInput());
+      self::assertSame('test-model', $event->getModelId());
+      self::assertContains('grok-test', $event->getTags());
+    }
+    self::assertCount(count($provider->getSupportedOperationTypes()), $events);
+  }
+
+  /**
+   * Ensures shared API definitions never supply the Explorer animation prompt.
+   */
+  public function testAnimationPromptHasNoSharedDefault(): void {
+    $provider = $this->newProviderWithoutConstructor();
+    $module = $this->createMock(Extension::class);
+    $module->method('getPath')->willReturn(dirname(__DIR__, 3));
+    $handler = $this->createMock(ModuleHandlerInterface::class);
+    $handler->method('getModule')->with('grok')->willReturn($module);
+    (new \ReflectionProperty($provider, 'moduleHandler'))->setValue($provider, $handler);
+    (new \ReflectionProperty($provider, 'pluginDefinition'))->setValue($provider, ['provider' => 'grok']);
+
+    $definition = $provider->getApiDefinition();
+    self::assertSame('', $definition['image_to_video']['configuration']['prompt']['default']);
+  }
 
   /**
    * Tests the Drupal AI string-input chat contract.
