@@ -526,7 +526,7 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
     $default_model = (string) ($this->getConfig()->get('default_model') ?: 'grok-4.5-latest');
     return [
       'key_config_name' => 'api_key',
-      'default_models' => [
+      'default_models' => ($this->supportsPdf($default_model) ? ['chat_with_pdf' => $default_model] : []) + [
         'chat' => $default_model,
         'chat_with_image_vision' => $default_model,
         'chat_with_complex_json' => $default_model,
@@ -600,6 +600,9 @@ final class GrokAiProvider extends OpenAiBasedProviderClientBase implements Imag
    */
   public function chat(array|string|ChatInput $input, string $model_id, array $tags = []): ChatOutput {
     $input = $this->normalizeChatInput($input);
+    if ($this->hasPdfAttachment($input) && !$this->supportsPdf($model_id)) {
+      throw new AiMissingFeatureException((string) $this->t('The selected Grok model does not support PDF attachments. Select a PDF-capable model.'));
+    }
     if (!$this->shouldUseResponses($input)) {
       return parent::chat($input, $model_id, $tags);
     }

@@ -1,5 +1,32 @@
 # Release notes
 
+## Grok Integration 1.0.0-rc1
+
+- Requires HTML5 serializer 2.9 or later after minimum-dependency integration
+  testing exposed a Drupal HTML rendering failure with version 2.7.
+
+- Requires Drupal AI 1.4.8 or later to exclude the affected 1.4 releases.
+- Raises the development PHP_CodeSniffer minimum to 3.13.6 and adds a
+  dependency security audit to both CI matrix jobs.
+- Includes Chat with PDF when configuring AI capability defaults. The confirmed
+  update selects the requested model when it supports PDFs, otherwise an
+  authenticated PDF-capable model. Existing PDF defaults are preserved when no
+  PDF-capable model is available.
+- Rejects PDF requests on unsupported models before uploading documents.
+- Adds regression coverage for multi-PDF requests, cleanup on partial upload and
+  response failures, cleanup failures, incompatible transports, provider
+  switching, and safe PDF Explorer output.
+- Keeps the example animation prompt scoped to the image-to-video Explorer.
+
+Upgrade using Composer, run database updates, and rebuild Drupal caches. No new
+configuration update hook is required. To configure PDF chat as a default,
+load models and confirm **Update AI Capabilities**; this intentionally replaces
+other providers' defaults for Grok-supported capabilities.
+
+Release validation results belong outside the distributable archive and must
+identify the exact tested commit. Attach the evidence record before publishing
+the GitHub release or Drupal.org project release.
+
 ## Grok Integration 1.0.0-beta5
 
 Grok Integration 1.0.0-beta5 adds native PDF document understanding to Drupal

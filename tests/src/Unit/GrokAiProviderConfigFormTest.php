@@ -95,6 +95,19 @@ final class GrokAiProviderConfigFormTest extends TestCase {
   }
 
   /**
+   * PDF defaults use authenticated capability discovery, including fallbacks.
+   */
+  public function testPdfCapabilityDefaults(): void {
+    $form = (new \ReflectionClass(UpdateModelReferencesConfirmForm::class))->newInstanceWithoutConstructor();
+    $method = new \ReflectionMethod($form, 'capabilityDefaults');
+    $setup = ['chat' => 'grok-4.5', 'chat_with_pdf' => 'grok-4.5'];
+    $models = ['grok-4.5' => 'Grok 4.5', 'grok-4.6' => 'Grok 4.6'];
+    self::assertSame('grok-4.6', $method->invoke($form, $setup, 'grok-4.5', 'grok-4.6', $models)['chat_with_pdf']);
+    self::assertSame('grok-4.5', $method->invoke($form, $setup, 'grok-4.5', 'grok-3', $models)['chat_with_pdf']);
+    self::assertArrayNotHasKey('chat_with_pdf', $method->invoke($form, $setup, 'grok-4.5', 'grok-3', []));
+  }
+
+  /**
    * Tests exact pricing coverage checks for discovered aliases.
    */
   public function testModelsMissingPricing(): void {

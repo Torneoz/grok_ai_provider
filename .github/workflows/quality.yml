@@ -38,6 +38,7 @@ jobs:
         run: composer update --no-interaction --prefer-dist --with-all-dependencies ${{ matrix.dependency_flags }}
       - run: composer phpcs
       - run: composer test
+      - run: composer audit
 
   release-archive:
     runs-on: ubuntu-latest

@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.0.0-rc1
+
+- Requires HTML5 serializer 2.9 or later after minimum-dependency integration
+  testing exposed a Drupal HTML rendering failure with version 2.7.
+
+- Raised the Drupal AI minimum to 1.4.8 and the development PHP_CodeSniffer
+  minimum to 3.13.6; added dependency auditing to the CI matrix.
+- Added PDF chat to capability defaults and authenticated PDF model selection
+  to the capability update confirmation.
+- Rejects unsupported PDF models before uploading attachments.
+- Added PDF lifecycle and Explorer regression tests, including cleanup after
+  failures, repeated provider changes, and response HTML filtering.
+- Scoped the example animation prompt to the Explorer, preserving user input.
+- Added coverage for the Drupal AI event proxy and string chat input contract.
+
 ## 1.0.0-beta5
 
 - This is the final planned beta in the 1.0 release cycle. After beta5

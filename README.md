@@ -8,15 +8,15 @@ using xAI's Chat Completions, Responses, Files, Imagine, and Voice APIs.
 This is an unofficial community integration and is not affiliated with or
 endorsed by xAI.
 
-The planned `1.0.0-beta5` release is the final beta in the 1.0 release cycle.
-After beta5 validation and any required fixes, development will advance to the
-first release candidate.
+The **1.0.0-rc1** candidate includes the beta5 PDF features, security dependency
+updates, and release-validation fixes. See [TESTING.md](TESTING.md) for the
+release gate and upgrade guidance.
 
 ## Requirements
 
 - PHP 8.1 or later
 - Drupal 10.6 or Drupal 11.2+
-- [AI 1.4 or later](https://www.drupal.org/project/ai)
+- [AI 1.4.8 or later](https://www.drupal.org/project/ai)
 - [Key 1.22 or later](https://www.drupal.org/project/key)
 
 ## Drupal AI events

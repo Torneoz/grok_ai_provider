@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\Tests\grok\Unit;
 
+use Drupal\grok\Service\XaiResponsesClient;
+use Drupal\ai\Exception\AiMissingFeatureException;
 use Drupal\ai\Event\PreGenerateResponseEvent;
 use Drupal\Component\Uuid\UuidInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -36,6 +38,7 @@ use Drupal\ai\OperationType\TextToSpeech\TextToSpeechOutput;
 use Drupal\grok\Plugin\AiProvider\GrokAiProvider;
 use Drupal\grok\Service\XaiFilesClient;
 use GuzzleHttp\ClientInterface;
+use Psr\Http\Client\ClientInterface as PsrClientInterface;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 
@@ -686,6 +689,136 @@ final class GrokAiProviderTest extends TestCase {
 
     $this->expectException(AiBadRequestException::class);
     $handles_method->invoke($provider, 'invalid-handle');
+  }
+
+  /**
+   * Exercises real transport clients through chat, including partial failures.
+   */
+  public function testPdfRequestLifecycle(): void {
+    foreach (['success', 'second_upload', 'response', 'cleanup'] as $scenario) {
+      $provider = $this->newProviderWithoutConstructor();
+      $requests = [];
+      $http = $this->createMock(ClientInterface::class);
+      $http->method('request')->willReturnCallback(static function (string $method, string $url, array $options) use (&$requests, $scenario): Response {
+        $requests[] = [$method, $url, $options];
+        if ($method === 'DELETE') {
+          if ($scenario === 'cleanup' && str_ends_with($url, 'file_one')) {
+            throw new \RuntimeException('Deletion unavailable');
+          }
+          return new Response(200);
+        }
+        if (str_ends_with($url, '/files')) {
+          if ($scenario === 'second_upload' && count($requests) === 2) {
+            throw new \RuntimeException('Upload unavailable');
+          }
+          return new Response(200, [], json_encode(['id' => count($requests) === 1 ? 'file_one' : 'file_two']));
+        }
+        if ($scenario === 'response') {
+          throw new \RuntimeException('Responses unavailable');
+        }
+        return new Response(200, [], json_encode([
+          'status' => 'completed',
+          'output' => [
+            [
+              'type' => 'message',
+              'content' => [['type' => 'output_text', 'text' => 'Both documents reviewed.']],
+            ],
+          ],
+        ]));
+      });
+      $this->configurePdfProvider($provider, $http);
+      $input = new ChatInput([new ChatMessage('user', 'Compare the documents.', [
+        new DocumentFile('%PDF-1.7 one', 'application/pdf', 'one.pdf'),
+        new DocumentFile('%PDF-1.7 two', 'application/pdf', 'two.pdf'),
+      ]),
+      ]);
+      try {
+        $output = $provider->chat($input, 'grok-4.5');
+        self::assertContains($scenario, ['success', 'cleanup']);
+        self::assertSame('Both documents reviewed.', $output->getNormalized()->getText());
+      }
+      catch (AiResponseErrorException $exception) {
+        self::assertContains($scenario, ['second_upload', 'response'], $exception->getMessage());
+      }
+      $deletes = array_values(array_filter($requests, static fn(array $request): bool => $request[0] === 'DELETE'));
+      self::assertSame($scenario === 'second_upload' ? 1 : 2, count($deletes));
+      self::assertStringEndsWith('/files/file_one', $deletes[0][1]);
+      if ($scenario !== 'second_upload') {
+        self::assertStringEndsWith('/files/file_two', $deletes[1][1]);
+        self::assertSame(['file_one', 'file_two'], array_column(array_slice($requests[2][2]['json']['input'][0]['content'], 1), 'file_id'));
+        self::assertFalse($requests[2][2]['json']['store']);
+      }
+      self::assertSame([], (new \ReflectionProperty($provider, 'uploadedFileIds'))->getValue($provider));
+    }
+  }
+
+  /**
+   * Rejects incompatible PDF requests before any upload or generation call.
+   */
+  public function testRejectsUnsupportedPdfRequestsBeforeUpload(): void {
+    foreach (['model', 'transport', 'stream'] as $scenario) {
+      $provider = $this->newProviderWithoutConstructor();
+      $http = $this->createMock(ClientInterface::class);
+      $http->expects(self::never())->method('request');
+      $this->configurePdfProvider($provider, $http, $scenario === 'transport' ? 'chat_completions' : 'auto');
+      $input = new ChatInput([new ChatMessage('user', 'Summarize.', [
+        new DocumentFile('%PDF-1.7', 'application/pdf', 'one.pdf'),
+      ]),
+      ]);
+      if ($scenario === 'stream') {
+        (new \ReflectionProperty($provider, 'streamed'))->setValue($provider, TRUE);
+      }
+      try {
+        $provider->chat($input, $scenario === 'model' ? 'grok-3' : 'grok-4.5');
+        self::fail('Expected an unsupported PDF request to fail.');
+      }
+      catch (AiMissingFeatureException $exception) {
+        self::assertNotSame('', $exception->getMessage());
+      }
+    }
+  }
+
+  /**
+   * Ensures setup advertises PDF defaults only for capable chat models.
+   */
+  public function testPdfCapabilityDefault(): void {
+    foreach (['grok-4.5', 'grok-3'] as $model) {
+      $provider = $this->newProviderWithoutConstructor();
+      $this->configurePdfProvider($provider, $this->createMock(ClientInterface::class), 'auto', $model);
+      $defaults = $provider->getSetupData()['default_models'];
+      if ($model === 'grok-4.5') {
+        self::assertSame($model, $defaults['chat_with_pdf']);
+      }
+      else {
+        self::assertArrayNotHasKey('chat_with_pdf', $defaults);
+      }
+    }
+  }
+
+  /**
+   * Wires real API adapters to an in-memory HTTP boundary.
+   */
+  private function configurePdfProvider(GrokAiProvider $provider, ClientInterface $http, string $transport = 'auto', string $model = 'grok-4.5'): void {
+    $config = $this->createMock(ImmutableConfig::class);
+    $config->method('get')->willReturnMap([
+      ['request_timeout', 300],
+      ['transport', $transport],
+      ['store_responses', FALSE],
+      ['default_model', $model],
+    ]);
+    $factory = $this->createMock(ConfigFactoryInterface::class);
+    $factory->method('get')->willReturn($config);
+    $translation = (new \ReflectionMethod($provider, 'getStringTranslation'))->invoke($provider);
+    foreach ([
+      'configFactory' => $factory,
+      'pluginDefinition' => ['provider' => 'grok'],
+      'apiKey' => 'test-only',
+      'client' => \OpenAI::factory()->withApiKey('test-only')->withHttpClient($this->createMock(PsrClientInterface::class))->make(),
+      'filesClient' => new XaiFilesClient($http, $translation),
+      'responsesClient' => new XaiResponsesClient($http, $translation),
+    ] as $name => $value) {
+      (new \ReflectionProperty($provider, $name))->setValue($provider, $value);
+    }
   }
 
   /**

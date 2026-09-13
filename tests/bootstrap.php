@@ -36,6 +36,7 @@ if ($loader instanceof ClassLoader) {
   }
   if (is_dir($ai_path)) {
     $loader->addPsr4('Drupal\\ai\\', $ai_path);
+    $loader->addPsr4('Drupal\\ai_api_explorer\\', dirname($ai_path) . '/modules/ai_api_explorer/src');
   }
 }
 

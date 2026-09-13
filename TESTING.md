@@ -1,4 +1,4 @@
-# Testing and beta release checklist
+# Testing and release candidate checklist
 
 ## Automated checks
 
@@ -9,11 +9,12 @@ composer install
 composer validate --strict
 composer phpcs
 composer test
+composer audit
 ```
 
 GitHub Actions runs these checks on PHP 8.1 and PHP 8.3. Dependency resolution
 explicitly covers Drupal 10.6 with minimum dependencies and Drupal 11 with
-current dependencies. This includes the minimum supported Drupal AI 1.4 and
+current dependencies. This includes the minimum supported Drupal AI 1.4.8 and
 the newest compatible AI 1.x release instead of relying only on Composer's
 normal resolution.
 
@@ -40,7 +41,9 @@ Run these checks in fresh Drupal 10.6 and Drupal 11 test sites:
 11. Attach one and multiple PDFs to chat and verify the provider uses Responses,
     answers from each document, and removes the uploaded xAI files afterward.
 12. Verify empty, falsely labelled, malformed, and larger-than-48-MB PDFs are
-    rejected, and that the one-hour expiry is sent before the multipart file.
+    rejected by the provider/API boundary, and that the one-hour expiry is sent
+    before the multipart file. Local validation checks size and signature;
+    structural PDF parsing is performed by xAI.
 13. Verify PDF chat returns clear errors with forced Chat Completions,
     Responses streaming, unsupported models, and Drupal function tools.
 14. Enable AI API Explorer and verify PDF Explorer [beta] lists only providers
@@ -83,7 +86,7 @@ translations, example asset, pricing data, README, changelog, testing guidance,
 and security policy. Confirm that it excludes dependency trees, editor files,
 test caches, credentials, generated media, and operating-system metadata.
 
-## Beta tag gate
+## Release candidate tag gate
 
 - Automated checks pass on both supported Drupal major versions.
 - The upgrade path from all published alphas passes.

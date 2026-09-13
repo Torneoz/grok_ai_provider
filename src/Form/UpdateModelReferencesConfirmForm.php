@@ -8,6 +8,7 @@ use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\ai\AiProviderPluginManager;
+use Drupal\ai\Enum\AiModelCapability;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -75,7 +76,10 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
     $defaults = (array) $ai_config->get('default_providers');
     $provider = $this->providerManager->createInstance('grok');
     $setup_models = (array) ($provider->getSetupData()['default_models'] ?? []);
-    $capability_defaults = $this->capabilityDefaults($setup_models, $from, $to);
+    // Check authenticated discovery before changing any saved defaults. A
+    // selected chat model need not support PDFs, especially on older families.
+    $pdf_models = $provider->getConfiguredModels('chat', [AiModelCapability::ChatWithPdf]);
+    $capability_defaults = $this->capabilityDefaults($setup_models, $from, $to, $pdf_models);
     $updated = 0;
     foreach ($capability_defaults as $operation => $model) {
       $new_default = [
@@ -108,13 +112,17 @@ final class UpdateModelReferencesConfirmForm extends ConfirmFormBase {
   /**
    * Builds defaults for every capability advertised by the Grok provider.
    */
-  private function capabilityDefaults(array $models, string $from, string $to): array {
+  private function capabilityDefaults(array $models, string $from, string $to, array $pdf_models = []): array {
     foreach ($models as &$model) {
       if ((string) $model === $from) {
         $model = $to;
       }
     }
     unset($model);
+    unset($models['chat_with_pdf']);
+    if ($pdf_models !== []) {
+      $models['chat_with_pdf'] = isset($pdf_models[$to]) ? $to : (string) array_key_first($pdf_models);
+    }
     return $models;
   }
 
